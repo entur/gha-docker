@@ -9,12 +9,12 @@ on:
 jobs:
   test-docker-lint-ok:
     name: Lint OK
-    uses: entur/gha-docker/.github/workflows/lint.yaml@main
+    uses: ./.github/workflows/lint.yaml
     with:
       dockerfile: fixture/Dockerfile.good
   test-docker-lint-ignore-ok:
     name: Lint Ignore OK
-    uses: entur/gha-docker/.github/workflows/lint.yaml@main
+    uses: ./.github/workflows/lint.yaml
     with:
       dockerfile: fixture/Dockerfile.bad
       ignores: DL3000
