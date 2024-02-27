@@ -44,13 +44,13 @@ jobs:
 
 ### Outputs
 
-The Action will store results in an environment variable that can be used in other steps in a workflow.
+The Action will provide ouputs that can be used in other steps in a workflow.
 
-| Name               | Description                           | Example                                                           |
-| ------------------ | ------------------------------------- | ----------------------------------------------------------------- |
-| `ENT_DOCKER_URI`   | The canonical full name of your image | `eu.gcr.io/entur-system-1287/my-awesome-app:main.2024-01-01T1200` |
-| `ENT_DOCKER_IMAGE` | The name of your image                | `eu.gcr.io/entur-system-1287/my-awesome-app`                      |
-| `ENT_DOCKER_TAG`   | The tag of your image                 | `main.2024-01-01T1200`                                            |
+| Name    | Description                           | Example                                                           |
+| ------- | ------------------------------------- | ----------------------------------------------------------------- |
+| `uri`   | The canonical full name of your image | `eu.gcr.io/entur-system-1287/my-awesome-app:main.2024-01-01T1200` |
+| `image` | The name of your image                | `eu.gcr.io/entur-system-1287/my-awesome-app`                      |
+| `tag`   | The tag of your image                 | `main.2024-01-01T1200`                                            |
 
 Example to create a comment in a PR with image name:
 
@@ -58,12 +58,13 @@ Example to create a comment in a PR with image name:
 - name: Show Image Tag
   uses: actions/github-script@v6
   if: github.event_name == 'pull_request'
+  needs: docker-build
   with:
     script: |
       const output = `
-      #### Docker Build: \`${{ steps.docker-build.outcome }}\`
+      #### Docker Build: \`${{ needs.docker-build.outcome }}\`
       \`\`\`
-      ${process.env.ENT_DOCKER_URI}
+      ${{ needs.docker-build.ouputs.uri }}
       \`\`\`
       `;
 
