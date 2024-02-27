@@ -15,6 +15,6 @@ jobs:
   test-docker-lint-ignore-ok:
     name: Lint Ignore OK
     uses: ./.github/workflows/lint.yaml
-    with:
-      dockerfile: fixture/Dockerfile.bad
-      ignores: DL3000
+    env: # Can also use env
+      ENT_DOCKER_LINT_DOCKERFILE: fixture/Dockerfile.bad
+      ENT_DOCKER_LINT_IGNORE: DL3000
