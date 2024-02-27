@@ -5,21 +5,22 @@ on:
       dockerfile:
         description: 'Which dockerfile to run, default Dockerfile'
         type: string
-        default: Dockerfile
-      ignores:
+      ignore:
         description: 'A comma separated list of Hadolint Ignores'
         type: string
-        default: ''
+
+env:
+  ENT_DOCKER_LINT_DOCKERFILE: ${{ inputs.dockerfile || 'Dockerfile' }}
+  ENT_DOCKER_LINT_IGNORE: ${{ inputs.ignore || '' }}
+
 jobs:
   lint:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      # id-token: write
-      # pull-requests: write
     steps:
       - uses: actions/checkout@v4.1.1
       - uses: hadolint/hadolint-action@v3.1.0
         with:
-          dockerfile: ${{ inputs.dockerfile }}
-          ignore: ${{ inputs.ignores }}
+          dockerfile: ${{ env.ENT_DOCKER_LINT_DOCKERFILE }}
+          ignore: ${{ env.ENT_DOCKER_LINT_IGNORE }}

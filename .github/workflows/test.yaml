@@ -17,4 +17,4 @@ jobs:
     uses: ./.github/workflows/lint.yaml
     with:
       dockerfile: fixture/Dockerfile.bad
-      ignores: DL3000
+      ignore: DL3000
