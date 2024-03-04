@@ -1,20 +1,17 @@
-name: Test
+name: Entur/Docker/CI
 
 on:
   pull_request:
-  push:
-    branches:
-      - main
 
 jobs:
   test-docker-lint-ok:
     name: Lint OK
-    uses: ./.github/workflows/lint.yaml
+    uses: ./.github/workflows/lint.yml
     with:
       dockerfile: fixture/Dockerfile.good
   test-docker-lint-ignore-ok:
     name: Lint Ignore OK
-    uses: ./.github/workflows/lint.yaml
+    uses: ./.github/workflows/lint.yml
     with:
       dockerfile: fixture/Dockerfile.bad
       ignore: DL3000
