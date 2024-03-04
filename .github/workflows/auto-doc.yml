@@ -1,7 +1,6 @@
 name: Entur/Meta/Doc
 on:
   pull_request:
-    types: [opened, reopened]
 
 jobs:
   update-lint-doc:
