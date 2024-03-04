@@ -1,5 +1,4 @@
-name: Update workflow README with input and outputs from shared workflow
-
+name: Entur/Meta/Doc
 on:
   pull_request:
     types: [opened, reopened]
