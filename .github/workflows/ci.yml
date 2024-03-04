@@ -7,8 +7,8 @@ jobs:
   update-lint-doc:
     uses: entur/gha-meta/.github/workflows/auto-doc.yml@main
     with:
-      workflowfile: .github/workflows/lint.yml
-      readmefile: README-lint.md
+      workflow_file: .github/workflows/lint.yml
+      readme_file: README-lint.md
   test-docker-lint-ok:
     name: Lint OK
     uses: ./.github/workflows/lint.yml
