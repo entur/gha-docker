@@ -5,12 +5,8 @@ on:
     types: [opened, reopened]
 
 jobs:
-  update-doc:
+  update-lint-doc:
     uses: entur/gha-meta/.github/workflows/auto-doc.yml@main
-    strategy:
-      matrix:
-        include:
-          - workflow-file: .github/workflows/lint.yml
-            readme-file: README-lint.md
-          #- workflow-file: .github/workflows/build.yml
-          #  readme-file: README-build.md
+    with:
+      workflow-file: .github/workflows/lint.yml
+      readme-file: README-lint.md
