@@ -1,12 +1,13 @@
 name: Entur/Docker/Lint
+
 on:
   workflow_call:
     inputs:
       dockerfile:
-        description: 'Which dockerfile to run, default Dockerfile'
+        description: "Which dockerfile to run, default Dockerfile"
         type: string
       ignore:
-        description: 'A comma separated list of Hadolint Ignores'
+        description: "A comma separated list of Hadolint Ignores"
         type: string
 
 env:
