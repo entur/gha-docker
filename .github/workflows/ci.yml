@@ -1,12 +1,14 @@
-name: Test
+name: Entur/Docker/CI
 
 on:
   pull_request:
-  push:
-    branches:
-      - main
 
 jobs:
+  update-lint-doc:
+    uses: entur/gha-meta/.github/workflows/auto-doc.yml@main
+    with:
+      workflowfile: .github/workflows/lint.yml
+      readmefile: README-lint.md
   test-docker-lint-ok:
     name: Lint OK
     uses: ./.github/workflows/lint.yml
