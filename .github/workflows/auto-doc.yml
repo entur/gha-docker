@@ -6,7 +6,7 @@ on:
 
 jobs:
   update-doc:
-    uses: ./.github/workflows/auto-doc.yml
+    uses: entur/gha-meta/.github/workflows/auto-doc.yml@main
     strategy:
       matrix:
         include:
