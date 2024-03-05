@@ -8,8 +8,8 @@
 
 GitHub Actions for working with Docker
 
-[Docker lint](./README-lint.md)
+[Docker lint](../README-lint.md)
 
-[Docker build](./README-build.md)
+[Docker build](../README-build.md)
 
-[Docker push](./README-push.md)
+[Docker push](../README-push.md)
