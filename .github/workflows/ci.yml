@@ -24,6 +24,8 @@ jobs:
     name: Lint Ignore Fail OK
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4.1.1
       - name: Run failed test
         id: fail-test
         uses: ./.github/workflows/lint.yml
