@@ -29,11 +29,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4.1.1
       - uses: hadolint/hadolint-action@v3.1.0
-        name: hadolint
+        id: hadolint
         continue-on-error: true
         with:
           dockerfile: fixture/Dockerfile.bad
       - uses: nick-fields/assert-action@v1
         with:
-          expected: failure
-          actual: ${{ steps.hadolint.outcome }}
+          expected: "fixture/Dockerfile.bad:2 DL3000 error: Use absolute WORKDIR"
+          actual: ${{ steps.hadolint.outputs.hadolint_results }}
