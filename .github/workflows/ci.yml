@@ -32,6 +32,7 @@ jobs:
         id: hadolint
         continue-on-error: true
         with:
+          no-fail: true
           dockerfile: fixture/Dockerfile.bad
       - uses: nick-fields/assert-action@v1
         with:
