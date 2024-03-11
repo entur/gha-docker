@@ -20,3 +20,17 @@ jobs:
     with:
       dockerfile: fixture/Dockerfile.bad
       ignore: DL3000
+  test-docker-lint-fail-ok:
+    name: Lint Ignore Fail OK
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run failed test
+        id: fail-test
+        uses: ./.github/workflows/lint.yml
+        with:
+          dockerfile: fixture/Dockerfile.bad
+      - name: Run assertion
+        uses: nick-fields/assert-action@v1
+        with:
+            expected: failure
+            actual: ${{ steps.fail-test.outcome }}
