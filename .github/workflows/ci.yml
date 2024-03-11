@@ -36,4 +36,4 @@ jobs:
       - uses: nick-fields/assert-action@v1
         with:
           expected: "fixture/Dockerfile.bad:2 DL3000 error: Use absolute WORKDIR"
-          actual: ${{ steps.hadolint.outputs.hadolint_results }}
+          actual: ${{ env.HADOLINT_RESULTS }}
