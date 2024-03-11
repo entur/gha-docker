@@ -9,14 +9,33 @@ jobs:
     with:
       workflow_file: .github/workflows/lint.yml
       readme_file: README-lint.md
-  test-docker-lint-ok:
-    name: Lint OK
+
+  test-lint-ok:
     uses: ./.github/workflows/lint.yml
     with:
       dockerfile: fixture/Dockerfile.good
-  test-docker-lint-ignore-ok:
-    name: Lint Ignore OK
+
+  test-lint-ignore-ok:
     uses: ./.github/workflows/lint.yml
     with:
       dockerfile: fixture/Dockerfile.bad
       ignore: DL3000
+
+  test-lint-fail-ok:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4.1.1
+      - run: |
+          echo "::remove-matcher owner=brpaz/hadolint-action::"
+      - uses: hadolint/hadolint-action@v3.1.0
+        id: hadolint
+        continue-on-error: true
+        with:
+          no-fail: true
+          dockerfile: fixture/Dockerfile.bad
+      - run: |
+          echo "::remove-matcher owner=brpaz/hadolint-action::"
+      - uses: nick-fields/assert-action@v2
+        with:
+          expected: "fixture/Dockerfile.bad:2 DL3000 error: Use absolute WORKDIR"
+          actual: ${{ env.HADOLINT_RESULTS }}
