@@ -28,12 +28,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4.1.1
+      - run: |
+          echo "::remove-matcher owner=brpaz/hadolint-action::"
       - uses: hadolint/hadolint-action@v3.1.0
         id: hadolint
         continue-on-error: true
         with:
           no-fail: true
           dockerfile: fixture/Dockerfile.bad
+      - run: |
+          echo "::remove-matcher owner=brpaz/hadolint-action::"
       - uses: nick-fields/assert-action@v1
         with:
           expected: "fixture/Dockerfile.bad:2 DL3000 error: Use absolute WORKDIR"
