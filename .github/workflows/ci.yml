@@ -11,20 +11,17 @@ jobs:
       readme_file: README-lint.md
 
   test-docker-lint-ok:
-    name: Lint OK
     uses: ./.github/workflows/lint.yml
     with:
       dockerfile: fixture/Dockerfile.good
 
   test-docker-lint-ignore-ok:
-    name: Lint Ignore OK
     uses: ./.github/workflows/lint.yml
     with:
       dockerfile: fixture/Dockerfile.bad
       ignore: DL3000
 
   test-docker-lint-fail-ok:
-    name: Verify Lint Fail OK
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4.1.1
