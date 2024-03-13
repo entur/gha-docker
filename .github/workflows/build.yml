@@ -4,10 +4,11 @@ on:
   workflow_call:
     inputs:
       dockerfile:
-        description: "Dockerfile to use for build. Default: Dockerfile."
+        description: "Dockerfile to use for build."
         type: string
+        default: Dockerfile
       image_name:
-        description: "Image name to use for the build. Default: repository name"
+        description: "Image name to use for the build. If not set repo name will be used."
         type: string
       artifact_name:
         description: "Name of artifact to add to build."
@@ -20,9 +21,7 @@ on:
         value: ${{ jobs.build.outputs.image_name }}
 
 env:
-  ENT_DOCKERFILE: ${{ inputs.dockerfile || 'Dockerfile' }}
   ENT_DOCKER_BUILD_REPO_NAME: ${GITHUB_REPOSITORY#*/}
-  ENT_DOCKER_BUILD_IMAGE_NAME: ${{ inputs.image_name || '$ENT_DOCKER_BUILD_REPO_NAME' }}
   ENT_DOCKER_ARTIFACT_PATH: ${{ inputs.artifact_path || 'build/libs' }}
 
 
@@ -34,6 +33,10 @@ jobs:
     outputs:
       image_name: ${ENT_DOCKER_BUILD_IMAGE_NAME}.tar
     steps:
+      - name: "Set environmental variables"
+        if: ${{ inputs.image_name != '' }}
+        run: |
+          echo "ENT_DOCKER_BUILD_IMAGE_NAME=${{ env.ENT_DOCKER_BUILD_REPO_NAME }}" >> $GITHUB_ENV
       - uses: actions/checkout@v4.1.1
       - id: meta
         uses: docker/metadata-action@v5
@@ -56,7 +59,7 @@ jobs:
       - id: build
         uses: docker/build-push-action@v5.2.0
         with:
-          file: ${{ env.ENT_DOCKERFILE }}
+          file: ${{ inputs.dockerfile || 'Dockerfile' }}
           push: false
           outputs: type=docker,dest=/tmp/${ENT_DOCKER_BUILD_IMAGE_NAME}.tar
           tags: ${{ steps.meta.outputs.tags }}
