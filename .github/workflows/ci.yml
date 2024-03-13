@@ -39,3 +39,21 @@ jobs:
         with:
           expected: "fixture/Dockerfile.bad:2 DL3000 error: Use absolute WORKDIR"
           actual: ${{ env.HADOLINT_RESULTS }}
+
+  prepare-test-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4.1.1
+      - uses: actions/upload-artifact@v4.3.1
+        with:
+          name: artifact.txt
+          path: fixture/artifact.txt
+          retention-days: 1
+          overwrite: true
+
+  test-build-ok:
+    uses: ./.github/workflows/build.yml
+    needs: prepare-test-build
+    with:
+      dockerfile: fixture/Dockerfile.good
+      artifact_name: artifact.txt
