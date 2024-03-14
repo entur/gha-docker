@@ -1,6 +1,6 @@
-## `gha-docker/push`
+# `gha-docker/push`
 
-### Usage
+## Usage
 
 Add the following step to your workflow configuration:
 
@@ -11,6 +11,6 @@ jobs:
     uses: entur/gha-docker/.github/workflows/push.yml@main
 ```
 
-### Inputs
+## Inputs
 
-### Outputs
+## Outputs

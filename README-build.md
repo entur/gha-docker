@@ -1,6 +1,6 @@
-## `gha-docker/build`
+# `gha-docker/build`
 
-### Usage
+## Usage
 
 Add the following step to your workflow configuration:
 
