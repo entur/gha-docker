@@ -32,6 +32,7 @@ jobs:
     outputs:
       image_artifact: ${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}.tar
       image_tag: ${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}:latest
+    timeout-minutes: 40
     steps:
       - id: set-env
         shell: bash
