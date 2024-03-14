@@ -11,6 +11,6 @@ jobs:
     uses: entur/gha-docker/.github/workflows/build.yml@main
 ```
 
-### Inputs
+## Inputs
 
-### Outputs
+## Outputs
