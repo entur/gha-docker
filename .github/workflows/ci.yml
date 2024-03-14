@@ -10,6 +10,12 @@ jobs:
       workflow_file: .github/workflows/lint.yml
       readme_file: README-lint.md
 
+  update-build-doc:
+    uses: entur/gha-meta/.github/workflows/auto-doc.yml@main
+    with:
+      workflow_file: .github/workflows/build.yml
+      readme_file: README-build.md
+
   test-lint-ok:
     uses: ./.github/workflows/lint.yml
     with:
@@ -38,7 +44,7 @@ jobs:
           expected: "fixture/Dockerfile.bad:2 DL3000 error: Use absolute WORKDIR"
           actual: ${{ env.HADOLINT_RESULTS }}
 
-  prepare-test-build:
+  test-build-prepare-artifact:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4.1.1
