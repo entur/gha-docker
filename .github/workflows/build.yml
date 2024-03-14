@@ -66,7 +66,3 @@ jobs:
           name: ${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}.tar
           path: /tmp/${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}.tar
           retention-days: 1
-      - name: testing
-        run: |
-          docker load --input /tmp/${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}.tar
-          docker image ls -a    
