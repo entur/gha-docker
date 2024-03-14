@@ -18,6 +18,8 @@ GitHub Actions for working with Docker
 - Image name is equal to repository name
 - Docker build needs no artifacts (it builds its own)
 
+### Example
+
 Let's look at an example, assume our repo is called `amazing-app`:
 
 ```sh
@@ -30,8 +32,8 @@ Let's look at an example, assume our repo is called `amazing-app`:
         └── ci.yml
 ```
 
-### Example
 ```yaml
+# ci.yml
 name: CI
 
 on:
