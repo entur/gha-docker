@@ -60,6 +60,7 @@ jobs:
           outputs: type=docker,dest=/tmp/${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}.tar
           tags: ${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}:latest
           labels: ${{ steps.set-docker-tags.outputs.labels }}
+          context: .
       - id: save-image
         uses: actions/upload-artifact@v4.3.1
         with:
