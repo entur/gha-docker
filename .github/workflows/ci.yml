@@ -57,7 +57,7 @@ jobs:
 
   test-build-ok-with-artifact:
     uses: ./.github/workflows/build.yml
-    needs: prepare-test-build
+    needs: test-build-prepare-artifact
     with:
       dockerfile: "fixture/Dockerfile.artifact"
       build_artifact_name: "some_build_artifact"
