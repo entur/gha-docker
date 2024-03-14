@@ -64,7 +64,7 @@ jobs:
       - uses: nick-fields/assert-action@v2
         with:
           expected: "gha-docker:latest"
-          actual: ${{ needs.test-build-ok-with-artifact.outputs.image_id }}
+          actual: ${{ needs.test-build-ok-with-artifact.outputs.image_tag }}
       - uses: nick-fields/assert-action@v2
         with:
           expected: "gha-docker.tar"
@@ -83,7 +83,7 @@ jobs:
       - uses: nick-fields/assert-action@v2
         with:
           expected: "custom_image_name:latest"
-          actual: ${{ needs.test-build-ok-with-custom-image-name.outputs.image_id }}
+          actual: ${{ needs.test-build-ok-with-custom-image-name.outputs.image_tag }}
       - uses: nick-fields/assert-action@v2
         with:
           expected: "custom_image_name.tar"

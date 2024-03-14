@@ -20,9 +20,9 @@ on:
         default: "build/libs"
     outputs:
       image_artifact:
-        value: ${{ jobs.build.outputs.image_artifact }} # gha-docker.tar
+        value: ${{ jobs.build.outputs.image_artifact }}
       image_tag:
-        value: ${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }} # gha-docker:latest
+        value: ${{ jobs.build.outputs.image_tag }}
 
 jobs:
   build:
@@ -31,7 +31,7 @@ jobs:
       contents: read
     outputs:
       image_artifact: ${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}.tar
-      image_id: ${{ steps.build.outputs.imageid }}
+      image_tag: ${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}
     steps:
       - id: set-env
         shell: bash
