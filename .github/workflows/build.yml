@@ -39,7 +39,7 @@ jobs:
           echo "GHA_DOCKER_BUILD_DOCKERFILE=${{ inputs.dockerfile }}" >> $GITHUB_ENV
           echo "GHA_DOCKER_BUILD_ARTIFACT_PATH=${{ inputs.build_artifact_path }}" >> $GITHUB_ENV
           echo "GHA_DOCKER_BUILD_ARTIFACT_NAME=${{ inputs.build_artifact_name }}" >> $GITHUB_ENV
-          if [ ${{ inputs.image_name }} -eq "repo_name" ]; then
+          if [ "${{ inputs.image_name }}" = "repo_name" ]; then
             echo "GHA_DOCKER_BUILD_IMAGE_NAME=${GITHUB_REPOSITORY#*/}" >> $GITHUB_ENV
           else
             echo "GHA_DOCKER_BUILD_IMAGE_NAME=${{ inputs.image_name }}" >> $GITHUB_ENV
