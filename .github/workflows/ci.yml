@@ -33,8 +33,6 @@ jobs:
         with:
           no-fail: true
           dockerfile: fixture/Dockerfile.bad
-      - run: |
-          echo "::remove-matcher owner=brpaz/hadolint-action::"
       - uses: nick-fields/assert-action@v2
         with:
           expected: "fixture/Dockerfile.bad:2 DL3000 error: Use absolute WORKDIR"
@@ -57,3 +55,10 @@ jobs:
     with:
       dockerfile: fixture/Dockerfile.good
       artifact_name: artifact.txt
+
+  test-build-outputs-ok:
+    uses: nick-fields/assert-action@v2
+    needs: test-build-ok
+    with:
+      expected: "${{ github.event.repository.name }}.tar"
+      actual: ${{ needs.test-build-ok.outputs.image_name }}
