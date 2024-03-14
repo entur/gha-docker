@@ -4,6 +4,22 @@ on:
   pull_request:
 
 jobs:
+  test1:
+    uses: ./.github/workflows/verify.yml
+  test2:
+    uses: ./.github/workflows/verify.yml
+    with:
+      release_name: my-name
+  test3:
+    uses: ./.github/workflows/verify.yml
+    with:
+      namespace: my-ns
+  test4:
+    uses: ./.github/workflows/verify.yml
+    with:
+      release_name: my-name
+      namespace: my-ns
+    
   update-lint-doc:
     uses: entur/gha-meta/.github/workflows/auto-doc.yml@main
     with:
