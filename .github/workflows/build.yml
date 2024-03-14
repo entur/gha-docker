@@ -60,12 +60,12 @@ jobs:
         with:
           file: ${{ inputs.dockerfile || 'Dockerfile' }}
           push: false
-          outputs: type=docker,dest=/tmp/${ENT_DOCKER_BUILD_IMAGE_NAME}.tar
+          outputs: type=docker,dest=/tmp/${{ env.ENT_DOCKER_BUILD_IMAGE_NAME }}.tar
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
       - id: save-image
         uses: actions/upload-artifact@v4.3.1
         with:
-          name: ${ENT_DOCKER_BUILD_IMAGE_NAME}.tar
-          path: /tmp/${ENT_DOCKER_BUILD_IMAGE_NAME}.tar
+          name: ${{ env.ENT_DOCKER_BUILD_IMAGE_NAME }}.tar
+          path: /tmp/${{ env.ENT_DOCKER_BUILD_IMAGE_NAME }}.tar
           retention-days: 1
