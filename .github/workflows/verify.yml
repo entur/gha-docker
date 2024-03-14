@@ -17,7 +17,7 @@ jobs:
     permissions:
       contents: read
     steps:
-      - id: set-env
+      - id: set-release-name
         shell: bash
         run: |
           if [ "${{ inputs.release_name}}" = "repo_name" ]; then
@@ -25,6 +25,9 @@ jobs:
           else
             echo "GHA_HELM_DEPLOY_RELEASE_NAME=${{ inputs.release_name}}" >> $GITHUB_ENV
           fi
+      - id: set-namespace
+        shell: bash
+        run: |
           if [ "${{ inputs.namespace }}" = "release_name" ]; then
             echo "GHA_HELM_DEPLOY_NAMESPACE=${{ env.GHA_HELM_DEPLOY_RELEASE_NAME }}" >> $GITHUB_ENV
           else
