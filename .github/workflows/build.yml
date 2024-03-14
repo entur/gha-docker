@@ -30,7 +30,7 @@ jobs:
     permissions:
       contents: read
     outputs:
-      image_name: ${ENT_DOCKER_BUILD_IMAGE_NAME}.tar
+      image_name: ${{ env.ENT_DOCKER_BUILD_IMAGE_NAME }}.tar
     steps:
       - name: "Set environmental variables"
         if: ${{ inputs.image_name == '' }}

@@ -8,7 +8,7 @@ Add the following step to your workflow configuration:
 jobs:
   docker-lint:
     name: Docker Lint
-    uses: entur/gha-docker/.github/workflows/lint.yaml@main
+    uses: entur/gha-docker/.github/workflows/lint.yml@main
 ```
 
 ## Inputs
