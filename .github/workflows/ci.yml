@@ -57,8 +57,10 @@ jobs:
       artifact_name: artifact.txt
 
   test-build-outputs-ok:
-    uses: nick-fields/assert-action@v2
+    runs-on: ubuntu-latest
     needs: test-build-ok
-    with:
-      expected: "${{ github.event.repository.name }}.tar"
-      actual: ${{ needs.test-build-ok.outputs.image_name }}
+    steps:
+      - uses: nick-fields/assert-action@v2
+        with:
+          expected: "${{ github.event.repository.name }}.tar"
+          actual: ${{ needs.test-build-ok.outputs.image_name }}
