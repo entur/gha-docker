@@ -1,0 +1,37 @@
+name: JustATest
+on:
+  workflow_call:
+    inputs:
+      release_name:
+        description: "Release name of your deployment"
+        type: string
+        default: "repo_name"
+      namespace:
+        description: "Namespace of your deployment"
+        type: string
+        default: "release_name"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - id: set-env
+        shell: bash
+        run: |
+          if [ "${{ inputs.release_name}}" = "repo_name" ]; then
+            echo "GHA_HELM_DEPLOY_RELEASE_NAME=${GITHUB_REPOSITORY#*/}" >> $GITHUB_ENV
+          else
+            echo "GHA_HELM_DEPLOY_RELEASE_NAME=${{ inputs.release_name}}" >> $GITHUB_ENV
+          fi
+          if [ "${{ inputs.namespace }}" = "release_name" ]; then
+            echo "GHA_HELM_DEPLOY_NAMESPACE=${{ env.GHA_HELM_DEPLOY_RELEASE_NAME }}" >> $GITHUB_ENV
+          else
+            echo "GHA_HELM_DEPLOY_NAMESPACE=${{ inputs.namespace}}" >> $GITHUB_ENV
+          fi
+      - id: test
+        shell: bash
+        run: |
+          echo "${{ env.GHA_HELM_DEPLOY_NAMESPACE }}"
+          echo "${{ env.GHA_HELM_DEPLOY_RELEASE_NAME }}"
