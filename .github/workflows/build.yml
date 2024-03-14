@@ -31,7 +31,7 @@ jobs:
       contents: read
     outputs:
       image_artifact: ${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}.tar
-      image_tag: ${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}
+      image_tag: ${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}:latest
     steps:
       - id: set-env
         shell: bash
@@ -51,23 +51,6 @@ jobs:
         with:
           name: ${{ env.GHA_DOCKER_BUILD_ARTIFACT_NAME }}
           path: ${{ env.GHA_DOCKER_BUILD_ARTIFACT_PATH }}
- 
-      - id: set-docker-tags
-        uses: docker/metadata-action@v5
-        with:
-          # list of Docker images to use as base name for tags
-          images: |
-            ${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}
-            eu.gcr.io/entur-system-1287/${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}
-          # generate Docker tags based on the following events/attributes
-          tags: |
-            type=schedule
-            type=ref,event=branch
-            type=ref,event=pr
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
-            type=sha
       - uses: docker/setup-buildx-action@v3.1.0
       - id: build
         uses: docker/build-push-action@v5.2.0
@@ -75,8 +58,7 @@ jobs:
           file: ${{ env.GHA_DOCKER_BUILD_DOCKERFILE }}
           push: false
           outputs: type=docker,dest=/tmp/${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}.tar
-          tags: ${{ steps.set-docker-tags.outputs.tags }}
-          labels: ${{ steps.set-docker-tags.outputs.labels }}
+          tags: ${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}:latest
           context: .
       - id: save-image
         uses: actions/upload-artifact@v4.3.1
