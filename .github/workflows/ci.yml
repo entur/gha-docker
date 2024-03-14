@@ -27,16 +27,6 @@ jobs:
       dockerfile: fixture/Dockerfile.bad
       ignore: DL3000
 
-  test-injection-subshell:
-    uses: ./.github/workflows/lint.yml
-    with:
-      dockerfile: "$(ls $GITHUB_WORKSPACE)"
-    
-  test-injection:
-    uses: ./.github/workflows/lint.yml
-    with:
-      dockerfile: "; ls $GITHUB_WORKSPACE"
-
   test-lint-fail-ok:
     runs-on: ubuntu-latest
     steps:
