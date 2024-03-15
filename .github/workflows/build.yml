@@ -36,16 +36,17 @@ jobs:
     steps:
       - id: set-env
         shell: bash
-        env:
-          IMAGE_NAME: ${{ inputs.image_name }}
         run: |
           echo "GHA_DOCKER_BUILD_DOCKERFILE=${{ inputs.dockerfile }}" >> $GITHUB_ENV
           echo "GHA_DOCKER_BUILD_ARTIFACT_PATH=${{ inputs.build_artifact_path }}" >> $GITHUB_ENV
           echo "GHA_DOCKER_BUILD_ARTIFACT_NAME=${{ inputs.build_artifact_name }}" >> $GITHUB_ENV
-          if [[ "$IMAGE_NAME" = "repo_name" ]]; then
+          echo "GHA_DOCKER_BUILD_IMAGE_NAME=${{ inputs.image_name }}" >> $GITHUB_ENV
+          fi
+      - id: set-image-name
+        shell: bash
+        run: |
+          if [[ "${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}" = "repo_name" ]]; then
             echo "GHA_DOCKER_BUILD_IMAGE_NAME=${GITHUB_REPOSITORY#*/}" >> $GITHUB_ENV
-          else
-            echo "GHA_DOCKER_BUILD_IMAGE_NAME=$IMAGE_NAME" >> $GITHUB_ENV
           fi
       - uses: actions/checkout@v4.1.1
       - id: download-artifact
