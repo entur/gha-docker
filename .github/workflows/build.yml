@@ -41,7 +41,6 @@ jobs:
           echo "GHA_DOCKER_BUILD_ARTIFACT_PATH=${{ inputs.build_artifact_path }}" >> $GITHUB_ENV
           echo "GHA_DOCKER_BUILD_ARTIFACT_NAME=${{ inputs.build_artifact_name }}" >> $GITHUB_ENV
           echo "GHA_DOCKER_BUILD_IMAGE_NAME=${{ inputs.image_name }}" >> $GITHUB_ENV
-          fi
       - id: set-image-name
         shell: bash
         run: |
