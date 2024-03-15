@@ -1,6 +1,6 @@
-## `gha-docker/build`
+# `gha-docker/build`
 
-### Usage
+## Usage
 
 Add the following step to your workflow configuration:
 
@@ -8,34 +8,29 @@ Add the following step to your workflow configuration:
 jobs:
   docker-build:
     name: Docker Build
-    uses: entur/gha-docker/.github/workflows/build.yaml@main
+    uses: entur/gha-docker/.github/workflows/build.yml@main
 ```
 
-### Inputs
+## Inputs
 
-### Outputs
+<!-- AUTO-DOC-INPUT:START - Do not remove or modify this section -->
 
-### Examples
-Example to create a comment in a PR with image name:
+|                                           INPUT                                           |  TYPE  | REQUIRED |    DEFAULT     |                 DESCRIPTION                  |
+|-------------------------------------------------------------------------------------------|--------|----------|----------------|----------------------------------------------|
+| <a name="input_build_artifact_name"></a>[build_artifact_name](#input_build_artifact_name) | string |  false   |                | Name of GitHub artifact to <br>add to build  |
+| <a name="input_build_artifact_path"></a>[build_artifact_path](#input_build_artifact_path) | string |  false   | `"build/libs"` |          Path to save artifact into          |
+|              <a name="input_dockerfile"></a>[dockerfile](#input_dockerfile)               | string |  false   | `"Dockerfile"` |         Dockerfile to use for build          |
+|              <a name="input_image_name"></a>[image_name](#input_image_name)               | string |  false   | `"repo_name"`  |     Image name to use for <br>the build      |
 
-```
-- name: Show Image Tag
-  uses: actions/github-script@v6
-  if: github.event_name == 'pull_request'
-  needs: docker-build
-  with:
-    script: |
-      const output = `
-      #### Docker Build: \`${{ needs.docker-build.outcome }}\`
-      \`\`\`
-      ${{ needs.docker-build.ouputs.uri }}
-      \`\`\`
-      `;
+<!-- AUTO-DOC-INPUT:END -->
 
-      github.rest.issues.createComment({
-        issue_number: context.issue.number,
-        owner: context.repo.owner,
-        repo: context.repo.repo,
-        body: output
-      })
-```
+## Outputs
+
+<!-- AUTO-DOC-OUTPUT:START - Do not remove or modify this section -->
+
+|                                    OUTPUT                                    |                    VALUE                     | DESCRIPTION |
+|------------------------------------------------------------------------------|----------------------------------------------|-------------|
+| <a name="output_image_artifact"></a>[image_artifact](#output_image_artifact) | `"${{ jobs.build.outputs.image_artifact }}"` |             |
+|        <a name="output_image_tag"></a>[image_tag](#output_image_tag)         |   `"${{ jobs.build.outputs.image_tag }}"`    |             |
+
+<!-- AUTO-DOC-OUTPUT:END -->

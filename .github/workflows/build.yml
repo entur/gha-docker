@@ -1,0 +1,71 @@
+name: Entur/Docker/Build
+
+on:
+  workflow_call:
+    inputs:
+      dockerfile:
+        description: "Dockerfile to use for build"
+        type: string
+        default: "Dockerfile"
+      image_name:
+        description: "Image name to use for the build"
+        type: string
+        default: "repo_name"
+      build_artifact_name:
+        description: "Name of GitHub artifact to add to build"
+        type: string
+      build_artifact_path:
+        description: "Path to save artifact into"
+        type: string
+        default: "build/libs"
+    outputs:
+      image_artifact:
+        value: ${{ jobs.build.outputs.image_artifact }}
+      image_tag:
+        value: ${{ jobs.build.outputs.image_tag }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      image_artifact: ${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}.tar
+      image_tag: ${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}:latest
+    timeout-minutes: 40
+    steps:
+      - id: set-env
+        shell: bash
+        run: |
+          echo "GHA_DOCKER_BUILD_DOCKERFILE=${{ inputs.dockerfile }}" >> $GITHUB_ENV
+          echo "GHA_DOCKER_BUILD_ARTIFACT_PATH=${{ inputs.build_artifact_path }}" >> $GITHUB_ENV
+          echo "GHA_DOCKER_BUILD_ARTIFACT_NAME=${{ inputs.build_artifact_name }}" >> $GITHUB_ENV
+          echo "GHA_DOCKER_BUILD_IMAGE_NAME=${{ inputs.image_name }}" >> $GITHUB_ENV
+      - id: set-image-name
+        shell: bash
+        run: |
+          if [[ "${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}" = "repo_name" ]]; then
+            echo "GHA_DOCKER_BUILD_IMAGE_NAME=${GITHUB_REPOSITORY#*/}" >> $GITHUB_ENV
+          fi
+      - uses: actions/checkout@v4.1.1
+      - id: download-artifact
+        uses: actions/download-artifact@v4
+        if: ${{ env.GHA_DOCKER_BUILD_ARTIFACT_NAME != '' }}
+        with:
+          name: ${{ env.GHA_DOCKER_BUILD_ARTIFACT_NAME }}
+          path: ${{ env.GHA_DOCKER_BUILD_ARTIFACT_PATH }}
+      - uses: docker/setup-buildx-action@v3.1.0
+      - id: build
+        uses: docker/build-push-action@v5.2.0
+        with:
+          file: ${{ env.GHA_DOCKER_BUILD_DOCKERFILE }}
+          push: false
+          outputs: type=docker,dest=/tmp/${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}.tar
+          tags: ${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}:latest
+          context: .
+      - id: save-image
+        uses: actions/upload-artifact@v4.3.1
+        with:
+          name: ${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}.tar
+          path: /tmp/${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}.tar
+          retention-days: 1

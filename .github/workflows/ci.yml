@@ -5,10 +5,16 @@ on:
 
 jobs:
   update-lint-doc:
-    uses: entur/gha-meta/.github/workflows/auto-doc.yml@main
+    uses: entur/gha-meta/.github/workflows/auto-doc.yml@v1.0.0
     with:
       workflow_file: .github/workflows/lint.yml
       readme_file: README-lint.md
+
+  update-build-doc:
+    uses: entur/gha-meta/.github/workflows/auto-doc.yml@v1.0.0
+    with:
+      workflow_file: .github/workflows/build.yml
+      readme_file: README-build.md
 
   test-lint-ok:
     uses: ./.github/workflows/lint.yml
@@ -25,8 +31,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4.1.1
-      - run: |
-          echo "::remove-matcher owner=brpaz/hadolint-action::"
       - uses: hadolint/hadolint-action@v3.1.0
         id: hadolint
         continue-on-error: true
@@ -34,8 +38,59 @@ jobs:
           no-fail: true
           dockerfile: fixture/Dockerfile.bad
       - run: |
-          echo "::remove-matcher owner=brpaz/hadolint-action::"
+          echo "::remove-matcher owner=hadolint/hadolint-action::"
       - uses: nick-fields/assert-action@v2
         with:
           expected: "fixture/Dockerfile.bad:2 DL3000 error: Use absolute WORKDIR"
           actual: ${{ env.HADOLINT_RESULTS }}
+
+  test-build-prepare-artifact:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4.1.1
+      - uses: actions/upload-artifact@v4.3.1
+        with:
+          name: "some_build_artifact"
+          path: "fixture/artifact.txt"
+          retention-days: 1
+          overwrite: true
+
+  test-build-ok-with-artifact:
+    uses: ./.github/workflows/build.yml
+    needs: test-build-prepare-artifact
+    with:
+      dockerfile: "fixture/Dockerfile.artifact"
+      build_artifact_name: "some_build_artifact"
+      build_artifact_path: "data"
+
+  test-build-ok-with-artifact-outputs:
+    runs-on: ubuntu-latest
+    needs: test-build-ok-with-artifact
+    steps:
+      - uses: nick-fields/assert-action@v2
+        with:
+          expected: "gha-docker:latest"
+          actual: ${{ needs.test-build-ok-with-artifact.outputs.image_tag }}
+      - uses: nick-fields/assert-action@v2
+        with:
+          expected: "gha-docker.tar"
+          actual: ${{ needs.test-build-ok-with-artifact.outputs.image_artifact }}
+
+  test-build-ok-with-custom-image-name:
+    uses: ./.github/workflows/build.yml
+    with:
+      dockerfile: "fixture/Dockerfile.good"
+      image_name: "custom_image_name"
+
+  test-build-ok-with-custom-image-name-outputs:
+    runs-on: ubuntu-latest
+    needs: test-build-ok-with-custom-image-name
+    steps:
+      - uses: nick-fields/assert-action@v2
+        with:
+          expected: "custom_image_name:latest"
+          actual: ${{ needs.test-build-ok-with-custom-image-name.outputs.image_tag }}
+      - uses: nick-fields/assert-action@v2
+        with:
+          expected: "custom_image_name.tar"
+          actual: ${{ needs.test-build-ok-with-custom-image-name.outputs.image_artifact }}

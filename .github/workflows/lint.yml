@@ -4,24 +4,27 @@ on:
   workflow_call:
     inputs:
       dockerfile:
-        description: "Which dockerfile to run, default Dockerfile"
+        description: "Which dockerfile to run"
         type: string
+        default: "Dockerfile"
       ignore:
         description: "A comma separated list of Hadolint Ignores"
         type: string
-
-env:
-  ENT_DOCKER_LINT_DOCKERFILE: ${{ inputs.dockerfile || 'Dockerfile' }}
-  ENT_DOCKER_LINT_IGNORE: ${{ inputs.ignore || '' }}
 
 jobs:
   lint:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+    timeout-minutes: 5
     steps:
+      - id: set-env
+        shell: bash
+        run: |
+          echo "GHA_DOCKER_LINT_DOCKERFILE=${{ inputs.dockerfile }}" >> $GITHUB_ENV
+          echo "GHA_DOCKER_LINT_IGNORE=${{ inputs.ignore }}" >> $GITHUB_ENV
       - uses: actions/checkout@v4.1.1
       - uses: hadolint/hadolint-action@v3.1.0
         with:
-          dockerfile: ${{ env.ENT_DOCKER_LINT_DOCKERFILE }}
-          ignore: ${{ env.ENT_DOCKER_LINT_IGNORE }}
+          dockerfile: ${{ env.GHA_DOCKER_LINT_DOCKERFILE }}
+          ignore: ${{ env.GHA_DOCKER_LINT_IGNORE }}
