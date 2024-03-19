@@ -11,14 +11,14 @@ on:
         type: string
         description: "Project id for artifact registry"
         default: "entur-system-1287"
-      workload_identity_provider:
-        type: string
-        description: "The full identifier of the Workload Identity Provider, including the project number, pool name, and provider name"
-        required: true
-      service_account:
-        type: string
-        description: "Email address or unique identifier of the Google Cloud service account for which to impersonate and generate credentials"
-        required: true
+#      workload_identity_provider:
+#        type: string
+#        description: "The full identifier of the Workload Identity Provider, including the project number, pool name, and provider name"
+#        required: true
+#      service_account:
+#        type: string
+#        description: "Email address or unique identifier of the Google Cloud service account for which to impersonate and generate credentials"
+#        required: true
     outputs:
       imageid:
         value: ${{ jobs.push.outputs.imageid }}
@@ -52,7 +52,6 @@ jobs:
           workload_identity_provider: ${{ vars.WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ vars.SERVICE_ACCOUNT }}
           token_format: 'access_token'
-          context: .
       - id: login-gcr
         uses: docker/login-action@v3.1.0
         with:
