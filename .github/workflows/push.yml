@@ -11,6 +11,10 @@ on:
         type: string
         description: "Project id for artifact registry"
         default: "entur-system-1287"
+      environment:
+        type: string
+        description: "GitHub environment to use"
+        default: "prd"
 #      workload_identity_provider:
 #        type: string
 #        description: "The full identifier of the Workload Identity Provider, including the project number, pool name, and provider name"
@@ -26,6 +30,7 @@ on:
 jobs:
   push:
     runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
     permissions:
       contents: read
       id-token: write
