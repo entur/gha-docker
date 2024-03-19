@@ -96,6 +96,7 @@ jobs:
   test-push-ok:
     needs: test-build-ok-with-artifact
     uses: ./.github/workflows/push.yml
+    environment: dev
 #    with:
 #      workload_identity_provider: ${{ vars.WORKLOAD_IDENTITY_PROVIDER }}
 #      service_account: ${{ vars.SERVICE_ACCOUNT }}
