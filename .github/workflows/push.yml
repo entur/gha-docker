@@ -41,8 +41,8 @@ jobs:
         uses: google-github-actions/auth@v2.1.2
         with:
           project_id: ${{ env.GHA_GCR_PROJECT_ID }}
-          workload_identity_provider: ${{ vars.workload_identity_provider }}
-          service_account: ${{ vars.service_account }}
+          workload_identity_provider: ${{ vars.WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ vars.SERVICE_ACCOUNT }}
           token_format: 'access_token'
       - id: login-gcr
         uses: docker/login-action@v3.1.0
