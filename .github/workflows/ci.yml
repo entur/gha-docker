@@ -109,9 +109,7 @@ jobs:
       - id: print-outputs
         shell: bash
         run: |
-          echo "metadata: ${{ needs.test-push-ok.outputs.metadata }}"
-          echo "imageid: ${{ needs.test-push-ok.outputs.imageid }}"
-          echo "pushMetadata: ${{ needs.test-push-ok.outputs.pushMetadata }}"
+          echo "image: ${{ needs.test-push-ok.outputs.image }}"
 
 #  test-push-outputs-ok:
 #    runs-on: ubuntu-latest
