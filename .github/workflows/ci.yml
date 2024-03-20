@@ -98,8 +98,6 @@ jobs:
     uses: ./.github/workflows/push.yml
     with:
       environment: dev
-#      workload_identity_provider: ${{ vars.WORKLOAD_IDENTITY_PROVIDER }}
-#      service_account: ${{ vars.SERVICE_ACCOUNT }}
 
   debug-print-metadata:
     needs: test-push-ok
