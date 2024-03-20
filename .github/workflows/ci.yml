@@ -110,9 +110,8 @@ jobs:
         shell: bash
         run: |
           echo "metadata: ${{ needs.test-push-ok.outputs.metadata }}"
-          echo "imagename: ${{ needs.test-push-ok.outputs.imageName }}"
-          echo "imageFullName: ${{ needs.test-push-ok.outputs.imageFullName }}"
-          echo "tags: ${{ needs.test-push-ok.outputs.tags }}"
+          echo "imageid: ${{ needs.test-push-ok.outputs.imageid }}"
+          echo "pushMetadata: ${{ needs.test-push-ok.outputs.pushMetadata }}"
 
 #  test-push-outputs-ok:
 #    runs-on: ubuntu-latest
