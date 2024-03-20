@@ -22,8 +22,12 @@ on:
     outputs:
       metadata:
         value: ${{ jobs.push.outputs.metadata }}
-      imagename:
+      imageName:
         value: ${{ jobs.push.outputs.imageName }}
+      imageFullName:
+        value: ${{ jobs.push.outputs.imageFullName }}
+      tags:
+        value: ${{ jobs.push.outputs.tags }}
 
 jobs:
   push:
@@ -35,6 +39,8 @@ jobs:
     outputs:
       metadata: ${{ steps.meta.outputs.json }}
       imageName: ${{ steps.push.outputs.imageName }}
+      imageFullName: ${{ steps.push.outputs.imageFullName }}
+      tags: ${{ steps.push.outputs.tags }}
     timeout-minutes: 10
     steps:
       - id: set-env
