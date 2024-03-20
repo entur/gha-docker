@@ -24,6 +24,8 @@ on:
         value: ${{ jobs.push.outputs.imageid }}
       metadata:
         value: ${{ jobs.push.outputs.metadata }}
+      imagename:
+        value: ${{ jobs.push.outputs.imageName }}
 
 jobs:
   push:
@@ -33,8 +35,9 @@ jobs:
       contents: read
       id-token: write
     outputs:
-      imageid: ${{ steps.push.outputs.imageid }}
-      metadata: ${{ steps.push.outputs.metdata }}
+      imageid: ${{ steps.meta.outputs.imageid }}
+      metadata: ${{ steps.meta.outputs.metdata }}
+      imageName: ${{ steps.push.outputs.imageName }}
     timeout-minutes: 10
     steps:
       - id: set-env
