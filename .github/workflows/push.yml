@@ -48,7 +48,7 @@ jobs:
           if [[ "${{ env.GHA_DOCKER_BUILD_IMAGE_ARTIFACT_NAME }}" = "repo_name" ]]; then
             echo "GHA_DOCKER_BUILD_IMAGE_ARTIFACT_NAME=${GITHUB_REPOSITORY#*/}" >> $GITHUB_ENV
           fi
-#      - uses: actions/checkout@v4.1.1
+      - uses: actions/checkout@v4.1.1
       - id: auth
         uses: google-github-actions/auth@v2.1.2
         with:
