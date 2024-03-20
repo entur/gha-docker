@@ -109,7 +109,7 @@ jobs:
       - id: print-outputs
         shell: bash
         run: |
-          echo "image: ${{ needs.test-push-ok.outputs.image }}"
+          echo "${{ needs.test-push-ok.outputs.image }}"
 
 #  test-push-outputs-ok:
 #    runs-on: ubuntu-latest
