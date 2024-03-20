@@ -31,7 +31,7 @@ jobs:
       contents: read
       id-token: write
     outputs:
-      image: ${{ (steps.push.outputs.metadata) }}
+      image: ${{ fromJson(steps.push.outputs.metadata) }}
     timeout-minutes: 10
     steps:
       - id: set-env
