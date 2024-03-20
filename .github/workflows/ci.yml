@@ -109,8 +109,8 @@ jobs:
       - id: print-outputs
         shell: bash
         run: |
-          echo "${{ needs.test-build-ok-with-artifact.outputs.metadata }}"
-          echo "${{ needs.test-build-ok-with-artifact.outputs.imageid }}"
+          echo "${{ needs.test-push-ok.outputs.metadata }}"
+          echo "${{ needs.test-push-ok.outputs.imageid }}"
 
 #  test-push-outputs-ok:
 #    runs-on: ubuntu-latest
