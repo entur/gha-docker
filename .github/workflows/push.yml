@@ -15,14 +15,10 @@ on:
         type: string
         description: "GitHub environment to use"
         default: "prd"
-#      workload_identity_provider:
-#        type: string
-#        description: "The full identifier of the Workload Identity Provider, including the project number, pool name, and provider name"
-#        required: true
-#      service_account:
-#        type: string
-#        description: "Email address or unique identifier of the Google Cloud service account for which to impersonate and generate credentials"
-#        required: true
+      dockerfile:
+        description: "Dockerfile to use for build"
+        type: string
+        default: "Dockerfile"
     outputs:
       imageid:
         value: ${{ jobs.push.outputs.imageid }}
@@ -45,6 +41,7 @@ jobs:
           echo "GHA_GCR_PROJECT_ID=${{ inputs.artifact_registry_project_id }}" >> $GITHUB_ENV
           echo "WORKLOAD_IDENTITY_PROVIDER=${{ vars.WORKLOAD_IDENTITY_PROVIDER }}" >> $GITHUB_ENV
           echo "SERVICE_ACCOUNT=${{ vars.SERVICE_ACCOUNT }}" >> $GITHUB_ENV
+          echo "GHA_DOCKER_BUILD_DOCKERFILE=${{ inputs.dockerfile }}" >> $GITHUB_ENV
       - id: set-image-name
         shell: bash
         run: |
@@ -91,7 +88,8 @@ jobs:
       - id: push
         uses: docker/build-push-action@v5.2.0
         with:
-#          context: .
+          file: ${{ env.GHA_DOCKER_BUILD_DOCKERFILE }}
+          context: .
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
