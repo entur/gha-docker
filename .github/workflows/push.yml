@@ -20,8 +20,6 @@ on:
         type: string
         default: "Dockerfile"
     outputs:
-      imageid:
-        value: ${{ jobs.push.outputs.imageid }}
       metadata:
         value: ${{ jobs.push.outputs.metadata }}
       imagename:
@@ -35,8 +33,7 @@ jobs:
       contents: read
       id-token: write
     outputs:
-      imageid: ${{ steps.meta.outputs.imageid }}
-      metadata: ${{ steps.meta.outputs.metdata }}
+      metadata: ${{ steps.meta.outputs.json }}
       imageName: ${{ steps.push.outputs.imageName }}
     timeout-minutes: 10
     steps:

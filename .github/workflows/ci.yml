@@ -110,7 +110,6 @@ jobs:
         shell: bash
         run: |
           echo "metadata: ${{ needs.test-push-ok.outputs.metadata }}"
-          echo "imageid: ${{ needs.test-push-ok.outputs.imageid }}"
           echo "imagename: ${{ needs.test-push-ok.outputs.imagename }}"
 
 #  test-push-outputs-ok:
