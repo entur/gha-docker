@@ -109,7 +109,7 @@ jobs:
       - id: print-outputs
         shell: bash
         run: |
-          echo '${{ needs.test-push-ok.outputs.image }}' | jq '.["image.name"]' | cut -d"," -f1
+          echo '${{ needs.test-push-ok.outputs.image }}' | jq '.["image.name"]'
 
 #  test-push-outputs-ok:
 #    runs-on: ubuntu-latest
