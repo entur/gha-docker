@@ -109,7 +109,8 @@ jobs:
       - id: print-outputs
         shell: bash
         run: |
-          echo "${{ needs.test-push-ok.outputs.image }}"
+          echo "IMAGE=${{ needs.test-push-ok.outputs.image }}" >> $GITHUB_ENV
+          echo '${{ fromJson(env.IMAGE).image }}'
 
 #  test-push-outputs-ok:
 #    runs-on: ubuntu-latest
