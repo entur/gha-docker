@@ -99,22 +99,3 @@ jobs:
     with:
       environment: dev
       dockerfile: "fixture/Dockerfile.artifact"
-
-  debug-print-metadata:
-    needs: test-push-ok
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    steps:
-      - id: print-outputs
-        shell: bash
-        run: |
-          echo '${{ needs.test-push-ok.outputs.image }}' | jq '.["image.name"]'
-
-#  test-push-outputs-ok:
-#    runs-on: ubuntu-latest
-#    needs: test-push-ok
-#    steps:
-#      - uses: nick-fields/assert-action@v2
-#        with:
-#          expected:
