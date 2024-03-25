@@ -86,7 +86,7 @@ jobs:
             echo "GHA_DOCKER_PUSH_DOCKER_TAG=${{ env.GHA_DOCKER_PUSH_BRANCH_TAG }}.${{ env.GHA_DOCKER_PUSH_DATE }}-SHA$SHORT_SHA" >> $GITHUB_ENV
           fi
       - uses: actions/checkout@v4.1.2
-      - uses: docker/setup-buildx-action@v3.1.0
+      - uses: docker/setup-buildx-action@v3.2.0
       - id: auth
         uses: google-github-actions/auth@v2.1.2
         with:
