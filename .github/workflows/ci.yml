@@ -93,10 +93,10 @@ jobs:
           expected: "custom_image_name"
           actual: ${{ needs.test-build-ok-with-custom-image-name.outputs.image_artifact }}
 
-  test-push-ok:
+  test-push-ok-with-tag:
     needs: test-build-ok-with-artifact
     uses: ./.github/workflows/push.yml
     with:
       environment: dev
-      dockerfile: "fixture/Dockerfile.artifact"
-      docker_tag: "ci-test-tag"
+      dockerfile_name: "fixture/Dockerfile.artifact"
+#      docker_tag: "ci-test-tag"

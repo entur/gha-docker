@@ -3,7 +3,7 @@ name: Entur/Docker/Push
 on:
   workflow_call:
     inputs:
-      image_artifact:
+      image_artifact_name:
         description: "GitHub artifact with Docker image"
         type: string
         default: "repo_name"
@@ -11,17 +11,17 @@ on:
         type: string
         description: "GitHub environment to use"
         default: "prd"
-      dockerfile:
+      dockerfile_name:
         description: "Dockerfile to use for build"
         type: string
         default: "Dockerfile"
       docker_tag:
         description: "Docker tag"
         type: string
-        default: ""
+        default: "docker_tag"
     outputs:
-      image:
-        value: ${{ jobs.push.outputs.image }}
+      image_name:
+        value: ${{ jobs.push.outputs.image_name }}
 
 jobs:
   push:
@@ -31,16 +31,17 @@ jobs:
       contents: read
       id-token: write
     outputs:
-      image: ${{ steps.push.outputs.metadata }}
+      image_name: ${{ steps.push.outputs.metadata }}
+
     timeout-minutes: 10
     steps:
       - id: set-env
         shell: bash
         run: |
-          echo "GHA_DOCKER_PUSH_IMAGE_ARTIFACT_NAME=${{ inputs.image_artifact }}" >> $GITHUB_ENV
+          echo "GHA_DOCKER_PUSH_IMAGE_ARTIFACT_NAME=${{ inputs.image_artifact_name }}" >> $GITHUB_ENV
           echo "GHA_DOCKER_PUSH_GCR_PROJECT_ID=entur-system-1287" >> $GITHUB_ENV
-          echo "GHA_DOCKER_PUSH_DOCKERFILE=${{ inputs.dockerfile }}" >> $GITHUB_ENV
-          echo "GHA_DOCKER_PUSH_TAG_INPUT=${{ inputs.docker_tag }}" >> $GITHUB_ENV
+          echo "GHA_DOCKER_PUSH_DOCKERFILE_NAME=${{ inputs.dockerfile_name }}" >> $GITHUB_ENV
+          echo "GHA_DOCKER_PUSH_DOCKER_TAG=${{ inputs.docker_tag }}" >> $GITHUB_ENV
       - id: set-image-name
         shell: bash
         run: |
@@ -70,6 +71,17 @@ jobs:
           SHORT_BRANCH_NAME=${SHORT_BRANCH_NAME//./-}
           SHORT_BRANCH_NAME=${SHORT_BRANCH_NAME//!/-}
           echo "GHA_DOCKER_PUSH_BRANCH_TAG=$SHORT_BRANCH_NAME" >> $GITHUB_ENV
+      - id: set-date-env
+        shell: bash
+        run: echo "GHA_DOCKER_PUSH_DATE=$(date +'%Y.%m.%d')" >> $GITHUB_ENV
+      - id: set-docker-tag-from-input-env
+        shell: bash
+        run: |
+          if [[ "${{ env.GHA_DOCKER_PUSH_DOCKER_TAG }}" = "docker_tag" ]]; then
+            SHA=${{ github.sha }}
+            SHORT_SHA=${SHA:0:7}
+            echo "GHA_DOCKER_PUSH_DOCKER_TAG=${{ env.GHA_DOCKER_PUSH_BRANCH_TAG }}.${{ env.GHA_DOCKER_PUSH_DATE }}-SHA$SHORT_SHA" >> $GITHUB_ENV
+          fi
       - uses: actions/checkout@v4.1.1
       - uses: docker/setup-buildx-action@v3.1.0
       - id: auth
@@ -107,11 +119,11 @@ jobs:
             type=semver,pattern={{major}}
             type=sha
             type=raw,value=${{ env.GHA_DOCKER_PUSH_BRANCH_TAG }}
-            type=raw,value=${{ env.GHA_DOCKER_PUSH_TAG_INPUT }}
+            type=raw,value=${{ env.GHA_DOCKER_PUSH_DOCKER_TAG }}
       - id: push
         uses: docker/build-push-action@v5.2.0
         with:
-          file: ${{ env.GHA_DOCKER_PUSH_DOCKERFILE }}
+          file: ${{ env.GHA_DOCKER_PUSH_DOCKERFILE_NAME }}
           context: .
           push: true
           tags: ${{ steps.meta.outputs.tags }}
