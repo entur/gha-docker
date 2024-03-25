@@ -99,3 +99,4 @@ jobs:
     with:
       environment: dev
       dockerfile: "fixture/Dockerfile.artifact"
+      docker_tag: "ci-test-tag"

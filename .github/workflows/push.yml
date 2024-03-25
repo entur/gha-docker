@@ -15,6 +15,10 @@ on:
         description: "Dockerfile to use for build"
         type: string
         default: "Dockerfile"
+      docker_tag:
+        description: "Docker tag"
+        type: string
+        default: ""
     outputs:
       image:
         value: ${{ jobs.push.outputs.image }}
@@ -36,6 +40,7 @@ jobs:
           echo "GHA_DOCKER_PUSH_IMAGE_ARTIFACT_NAME=${{ inputs.image_artifact }}" >> $GITHUB_ENV
           echo "GHA_DOCKER_PUSH_GCR_PROJECT_ID=entur-system-1287" >> $GITHUB_ENV
           echo "GHA_DOCKER_PUSH_DOCKERFILE=${{ inputs.dockerfile }}" >> $GITHUB_ENV
+          echo "GHA_DOCKER_PUSH_TAG_INPUT=${{ inputs.docker_tag }}" >> $GITHUB_ENV
       - id: set-image-name
         shell: bash
         run: |
@@ -102,6 +107,7 @@ jobs:
             type=semver,pattern={{major}}
             type=sha
             type=raw,value=${{ env.GHA_DOCKER_PUSH_BRANCH_TAG }}
+            type=raw,value=${{ env.GHA_DOCKER_PUSH_TAG_INPUT }}
       - id: push
         uses: docker/build-push-action@v5.2.0
         with:
