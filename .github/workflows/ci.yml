@@ -37,8 +37,6 @@ jobs:
         with:
           no-fail: true
           dockerfile: fixture/Dockerfile.bad
-      - run: |
-          echo "::remove-matcher owner=hadolint/hadolint-action::"
       - uses: nick-fields/assert-action@v2
         with:
           expected: "fixture/Dockerfile.bad:2 DL3000 error: Use absolute WORKDIR"
@@ -73,7 +71,7 @@ jobs:
           actual: ${{ needs.test-build-ok-with-artifact.outputs.image_tag }}
       - uses: nick-fields/assert-action@v2
         with:
-          expected: "gha-docker.tar"
+          expected: "gha-docker"
           actual: ${{ needs.test-build-ok-with-artifact.outputs.image_artifact }}
 
   test-build-ok-with-custom-image-name:
@@ -92,5 +90,22 @@ jobs:
           actual: ${{ needs.test-build-ok-with-custom-image-name.outputs.image_tag }}
       - uses: nick-fields/assert-action@v2
         with:
-          expected: "custom_image_name.tar"
+          expected: "custom_image_name"
           actual: ${{ needs.test-build-ok-with-custom-image-name.outputs.image_artifact }}
+
+  test-push-ok-with-tag:
+    needs: test-build-ok-with-artifact
+    uses: ./.github/workflows/push.yml
+    with:
+      environment: dev
+      dockerfile_name: "fixture/Dockerfile.artifact"
+      docker_tag: "ci-test-tag"
+
+  test-push-ok-with-tag-outputs:
+    runs-on: ubuntu-latest
+    needs: test-push-ok-with-tag
+    steps:
+      - uses: nick-fields/assert-action@v2
+        with:
+          expected: "ci-test-tag"
+          actual: ${{ needs.test-push-ok-with-tag.outputs.docker_tag }}

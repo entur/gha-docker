@@ -30,7 +30,7 @@ jobs:
     permissions:
       contents: read
     outputs:
-      image_artifact: ${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}.tar
+      image_artifact: ${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}
       image_tag: ${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}:latest
     timeout-minutes: 40
     steps:
@@ -66,6 +66,6 @@ jobs:
       - id: save-image
         uses: actions/upload-artifact@v4.3.1
         with:
-          name: ${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}.tar
+          name: ${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}
           path: /tmp/${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}.tar
           retention-days: 1
