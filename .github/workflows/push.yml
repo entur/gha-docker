@@ -22,6 +22,8 @@ on:
     outputs:
       image_name:
         value: ${{ jobs.push.outputs.image_name }}
+      docker_tag:
+        value: ${{ jobs.push.outputs.docker_tag }}
 
 jobs:
   push:
@@ -32,6 +34,7 @@ jobs:
       id-token: write
     outputs:
       image_name: ${{ steps.push.outputs.metadata }}
+      docker_tag: ${{ env.GHA_DOCKER_PUSH_DOCKER_TAG }}
 
     timeout-minutes: 10
     steps:
