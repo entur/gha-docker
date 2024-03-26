@@ -19,6 +19,10 @@ on:
         description: "Docker tag"
         type: string
         default: "docker_tag"
+      repository_type:
+        description: "Which repository to use. GCR/ACR"
+        type: string
+        default: "GCR"
     outputs:
       image_name:
         value: ${{ jobs.push.outputs.image_name }}
@@ -85,20 +89,42 @@ jobs:
             SHORT_SHA=${SHA:0:7}
             echo "GHA_DOCKER_PUSH_DOCKER_TAG=${{ env.GHA_DOCKER_PUSH_BRANCH_TAG }}.${{ env.GHA_DOCKER_PUSH_DATE }}-SHA$SHORT_SHA" >> $GITHUB_ENV
           fi
+      - id: set-repository-env
+        shell: bash
+        run: |
+          if [[ "${{ inputs.repository_type }}" = "GCR" ]]; then
+            echo "GHA_DOCKER_PUSH_META_IMAGES=eu.gcr.io/${{ env.GHA_DOCKER_PUSH_GCR_PROJECT_ID }}/${{ env.GHA_DOCKER_PUSH_IMAGE_ARTIFACT_NAME }}" >> $GITHUB_ENV
+          elif [[ "${{ inputs.repository_type }}" = "ACR" ]]; then
+            echo "GHA_DOCKER_PUSH_META_IMAGES=acrentur001.azurecr.io/${{ env.GHA_DOCKER_PUSH_IMAGE_ARTIFACT_NAME }}" >> $GITHUB_ENV
+          fi
       - uses: actions/checkout@v4.1.2
       - uses: docker/setup-buildx-action@v3.2.0
       - id: auth
         uses: google-github-actions/auth@v2.1.2
+        if: ${{ inputs.repository_type == 'GCR' }}
         with:
           workload_identity_provider: ${{ vars.WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ vars.SERVICE_ACCOUNT }}
           token_format: 'access_token'
       - id: login-gcr
         uses: docker/login-action@v3.1.0
+        if: ${{ inputs.repository_type == 'GCR' }}
         with:
           registry: eu.gcr.io
           username: oauth2accesstoken
           password: ${{ steps.auth.outputs.access_token }}
+      - id: login-azure
+        uses: Azure/login@v2
+        if: ${{ inputs.repository_type == 'ACR' }}
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+      - id: login-acr
+        if: ${{ inputs.repository_type == 'ACR' }}
+        shell: bash
+        run: |
+          az acr login --name acrentur001
       - id: download-image-artifact
         uses: actions/download-artifact@v4
         with:
@@ -110,8 +136,7 @@ jobs:
       - id: meta
         uses: docker/metadata-action@v5.5.1
         with:
-          images: |
-            eu.gcr.io/${{ env.GHA_DOCKER_PUSH_GCR_PROJECT_ID }}/${{ env.GHA_DOCKER_PUSH_IMAGE_ARTIFACT_NAME }}
+          images: ${{ env.GHA_DOCKER_PUSH_META_IMAGES }}
           tags: |
             type=schedule
             type=ref,event=branch
