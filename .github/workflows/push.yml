@@ -65,7 +65,7 @@ jobs:
           echo "GHA_DOCKER_PUSH_BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
       - id: verify-cloud-provider
         shell: bash
-        if: env.GHA_DOCKER_PUSH_CLOUD_PROVIDER != "GCR" && env.GHA_DOCKER_PUSH_CLOUD_PROVIDER != "Azure"
+        if: env.GHA_DOCKER_PUSH_CLOUD_PROVIDER != 'GCR' && env.GHA_DOCKER_PUSH_CLOUD_PROVIDER != 'Azure'
         run: |
           echo "cloud_provider can only be GCR or Azure"
           exit 1
