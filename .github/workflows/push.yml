@@ -80,7 +80,7 @@ jobs:
         run: |
           SHA=${{ github.sha }}
           SHORT_SHA=${SHA:0:7}
-          echo "GHA_DOCKER_PUSH_IMAGE_TAG=${{ env.GHA_DOCKER_PUSH_BRANCH_NAME }}.${{ env.GHA_DOCKER_PUSH_DATE }}-SHA$SHORT_SHA" >> $GITHUB_ENV
+          echo "GHA_DOCKER_PUSH_IMAGE_TAG=${{ env.GHA_DOCKER_PUSH_BRANCH_NAME }}.${{ env.GHA_DOCKER_PUSH_DATE }}-SHA${SHORT_SHA}" >> $GITHUB_ENV
       - id: set-registry-azure
         shell: bash
         if: env.GHA_DOCKER_PUSH_CLOUD_PROVIDER  == 'Azure'
