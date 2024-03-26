@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/entur/gha-docker/compare/v1.0.0...v1.1.0) (2024-03-26)
+
+
+### Features
+
+* Add support for Azure Container Registry ([#28](https://github.com/entur/gha-docker/issues/28)) ([4a29710](https://github.com/entur/gha-docker/commit/4a297104553a9b283ae6e44ddabd3d1e8839839c))
+
 ## 1.0.0 (2024-03-25)
 
 
