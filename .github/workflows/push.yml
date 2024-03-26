@@ -120,6 +120,11 @@ jobs:
           client-id: ${{ vars.AZURE_CLIENT_ID }}
           tenant-id: ${{ vars.AZURE_TENANT_ID }}
           subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+      - id: login-acr
+        if: ${{ inputs.repository_type == 'ACR' }}
+        shell: bash
+        run: |
+          az acr login --name acrentur001
       - id: download-image-artifact
         uses: actions/download-artifact@v4
         with:
