@@ -20,7 +20,7 @@ on:
         type: string
         default: "docker_tag"
       repository_type:
-        description: "Which repository to use. GCR/ACR/GAR"
+        description: "Which repository to use. GCR/ACR"
         type: string
         default: "GCR"
     outputs:
@@ -96,13 +96,12 @@ jobs:
             echo "GHA_DOCKER_PUSH_META_IMAGES=eu.gcr.io/${{ env.GHA_DOCKER_PUSH_GCR_PROJECT_ID }}/${{ env.GHA_DOCKER_PUSH_IMAGE_ARTIFACT_NAME }}" >> $GITHUB_ENV
           elif [[ "${{ inputs.repository_type }}" = "ACR" ]]; then
             echo "GHA_DOCKER_PUSH_META_IMAGES=acrentur001.azurecr.io/${{ env.GHA_DOCKER_PUSH_IMAGE_ARTIFACT_NAME }}" >> $GITHUB_ENV
-          else
-            echo "GHA_DOCKER_PUSH_META_IMAGES=eu.gcr.io/${{ env.GHA_DOCKER_PUSH_GCR_PROJECT_ID }}/${{ env.GHA_DOCKER_PUSH_IMAGE_ARTIFACT_NAME }}" >> $GITHUB_ENV
           fi
       - uses: actions/checkout@v4.1.2
       - uses: docker/setup-buildx-action@v3.2.0
       - id: auth
         uses: google-github-actions/auth@v2.1.2
+        if: ${{ inputs.repository_type }} = "GCR"
         with:
           workload_identity_provider: ${{ vars.WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ vars.SERVICE_ACCOUNT }}
