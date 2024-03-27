@@ -98,14 +98,12 @@ jobs:
     uses: ./.github/workflows/push.yml
     with:
       environment: dev
-      dockerfile: "fixture/Dockerfile.artifact"
 
   test-push-gcr-ok-with-tag:
     needs: test-build-ok-with-artifact
     uses: ./.github/workflows/push.yml
     with:
       environment: dev
-      dockerfile: "fixture/Dockerfile.artifact"
       image_tag: "ci-test-tag"
 
   test-tag-gcr-outputs-ok:
@@ -123,7 +121,6 @@ jobs:
     with:
       environment: az-dev
       cloud_provider: Azure
-      dockerfile: "fixture/Dockerfile.artifact"
       image_tag: "ci-test-tag"
 
   test-tag-acr-outputs-ok:
