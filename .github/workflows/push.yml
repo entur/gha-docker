@@ -131,13 +131,6 @@ jobs:
       - id: load-image
         run: |
           docker load --input /tmp/${{ env.GHA_DOCKER_PUSH_IMAGE_NAME }}.tar
-      - id: load-with-tag
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          load: true
-          file: ${{ env.GHA_DOCKER_PUSH_DOCKERFILE }}
-          tags: ${{ env.GHA_DOCKER_PUSH_IMAGE_NAME }}:latest
       - id: meta
         uses: docker/metadata-action@v5.5.1
         with:
@@ -158,6 +151,7 @@ jobs:
         with:
           context: .
           push: true
+          cache-from: ${{ env.GHA_DOCKER_PUSH_IMAGE_NAME }}:latest
           file: ${{ env.GHA_DOCKER_PUSH_DOCKERFILE }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
