@@ -93,13 +93,20 @@ jobs:
           expected: "custom_image_name"
           actual: ${{ needs.test-build-ok-with-custom-image-name.outputs.image_artifact }}
 
+  test-push-gcr-ok:
+    needs: test-build-ok-with-artifact
+    uses: ./.github/workflows/push.yml
+    with:
+      environment: dev
+      dockerfile: "fixture/Dockerfile.artifact"
+
   test-push-gcr-ok-with-tag:
     needs: test-build-ok-with-artifact
     uses: ./.github/workflows/push.yml
     with:
       environment: dev
-      dockerfile_name: "fixture/Dockerfile.artifact"
-      docker_tag: "ci-test-tag"
+      dockerfile: "fixture/Dockerfile.artifact"
+      image_tag: "ci-test-tag"
 
   test-tag-gcr-outputs-ok:
     runs-on: ubuntu-latest
@@ -108,16 +115,16 @@ jobs:
       - uses: nick-fields/assert-action@v2
         with:
           expected: "ci-test-tag"
-          actual: ${{ needs.test-push-gcr-ok-with-tag.outputs.docker_tag }}
+          actual: ${{ needs.test-push-gcr-ok-with-tag.outputs.image_tag }}
 
   test-push-acr-ok-with-tag:
     needs: test-build-ok-with-artifact
     uses: ./.github/workflows/push.yml
     with:
       environment: az-dev
-      repository_type: ACR
-      dockerfile_name: "fixture/Dockerfile.artifact"
-      docker_tag: "ci-test-tag"
+      cloud_provider: Azure
+      dockerfile: "fixture/Dockerfile.artifact"
+      image_tag: "ci-test-tag"
 
   test-tag-acr-outputs-ok:
     runs-on: ubuntu-latest
@@ -126,4 +133,4 @@ jobs:
       - uses: nick-fields/assert-action@v2
         with:
           expected: "ci-test-tag"
-          actual: ${{ needs.test-push-acr-ok-with-tag.outputs.docker_tag }}
+          actual: ${{ needs.test-push-acr-ok-with-tag.outputs.image_tag }}

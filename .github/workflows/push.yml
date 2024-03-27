@@ -3,7 +3,7 @@ name: Entur/Docker/Push
 on:
   workflow_call:
     inputs:
-      image_artifact_name:
+      image_name:
         description: "GitHub artifact with Docker image"
         type: string
         default: "repo_name"
@@ -11,23 +11,23 @@ on:
         type: string
         description: "GitHub environment to use"
         default: "prd"
-      dockerfile_name:
+      dockerfile:
         description: "Dockerfile to use for build"
         type: string
         default: "Dockerfile"
-      docker_tag:
+      image_tag:
         description: "Docker tag"
         type: string
-        default: "docker_tag"
-      repository_type:
-        description: "Which repository to use. GCR/ACR"
+        default: "image_tag"
+      cloud_provider:
+        description: "Which repository to use. GCP/Azure"
         type: string
-        default: "GCR"
+        default: "GCP"
     outputs:
       image_name:
         value: ${{ jobs.push.outputs.image_name }}
-      docker_tag:
-        value: ${{ jobs.push.outputs.docker_tag }}
+      image_tag:
+        value: ${{ jobs.push.outputs.image_tag }}
 
 jobs:
   push:
@@ -38,105 +38,103 @@ jobs:
       id-token: write
     outputs:
       image_name: ${{ steps.push.outputs.metadata }}
-      docker_tag: ${{ env.GHA_DOCKER_PUSH_DOCKER_TAG }}
+      image_tag: ${{ env.GHA_DOCKER_PUSH_IMAGE_TAG }}
 
     timeout-minutes: 10
     steps:
       - id: set-env
         shell: bash
         run: |
-          echo "GHA_DOCKER_PUSH_IMAGE_ARTIFACT_NAME=${{ inputs.image_artifact_name }}" >> $GITHUB_ENV
-          echo "GHA_DOCKER_PUSH_GCR_PROJECT_ID=entur-system-1287" >> $GITHUB_ENV
-          echo "GHA_DOCKER_PUSH_DOCKERFILE_NAME=${{ inputs.dockerfile_name }}" >> $GITHUB_ENV
-          echo "GHA_DOCKER_PUSH_DOCKER_TAG=${{ inputs.docker_tag }}" >> $GITHUB_ENV
-      - id: set-image-name
-        shell: bash
-        run: |
-          if [[ "${{ env.GHA_DOCKER_PUSH_IMAGE_ARTIFACT_NAME }}" = "repo_name" ]]; then
-            echo "GHA_DOCKER_PUSH_IMAGE_ARTIFACT_NAME=${GITHUB_REPOSITORY#*/}" >> $GITHUB_ENV
-          fi
-      - id: set-shorten-branch-name-env
-        shell: bash
-        # This shortens a branch name (max 63 chars) and removes illegal characters for tags/labels in Helm / GCP.
-        # It will:
-        # Shorten to max length
-        # Removes any "-" if last
-        # Convert to lowercase and removes Norwegian characters
-        # Removes "/" slashes, e.g. feature/ETU... to feature-ETU... because illegal in labels in Helm / GCP
-        # Removes dots, e.g. feature.ETU... to feature-ETU... because it fails matching in Deploy system
-        # Removes exclamation marks, e.g. feature!ETU... to feature-ETU... because it fails matching in Deploy system
-        run: |
+          echo "GHA_DOCKER_PUSH_IMAGE_NAME=${{ inputs.image_name }}" >> $GITHUB_ENV
+          echo "GHA_DOCKER_PUSH_DOCKERFILE=${{ inputs.dockerfile }}" >> $GITHUB_ENV
+          echo "GHA_DOCKER_PUSH_IMAGE_TAG=${{ inputs.image_tag }}" >> $GITHUB_ENV
+          echo "GHA_DOCKER_PUSH_DATE=$(date +'%Y%m%d')" >> $GITHUB_ENV
+          echo "GHA_DOCKER_PUSH_CLOUD_PROVIDER=${{ inputs.cloud_provider }}" >> $GITHUB_ENV
+          # Convert ref name to a valid git & docker tag name
           if [[ "${{ github.event_name }}" = "pull_request" ]]; then
             BRANCH_NAME=${{ github.head_ref }}
           else
             BRANCH_NAME=${{ github.ref_name }}
           fi
-          SHORT_BRANCH_NAME=${BRANCH_NAME:0:55}
-          SHORT_BRANCH_NAME=$(echo "$SHORT_BRANCH_NAME" | sed s'/[-]$//')
-          SHORT_BRANCH_NAME=$(echo "$SHORT_BRANCH_NAME" | tr '[:upper:]' '[:lower:]' | tr -d '[ÆØÅæøå]')
-          SHORT_BRANCH_NAME=${SHORT_BRANCH_NAME//\//-}
-          SHORT_BRANCH_NAME=${SHORT_BRANCH_NAME//./-}
-          SHORT_BRANCH_NAME=${SHORT_BRANCH_NAME//!/-}
-          echo "GHA_DOCKER_PUSH_BRANCH_TAG=$SHORT_BRANCH_NAME" >> $GITHUB_ENV
-      - id: set-date-env
+          BRANCH_NAME=${BRANCH_NAME:0:43} # truncate to max_len - len(.YYYYMMDD-SHA1234567)
+          BRANCH_NAME=$(echo "$BRANCH_NAME" | sed s'/[-]$//') # remove trailing -
+          BRANCH_NAME=$(echo "$BRANCH_NAME" | tr '[:upper:]' '[:lower:]' | tr -d '[ÆØÅæøå]') # to ASCII lower case
+          BRANCH_NAME=${BRANCH_NAME//\//-} # replace / with -
+          BRANCH_NAME=${BRANCH_NAME//./-}  # replace . with -
+          BRANCH_NAME=${BRANCH_NAME//!/-}  # replace ! with -
+          echo "GHA_DOCKER_PUSH_BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
+      - id: verify-cloud-provider
         shell: bash
-        run: echo "GHA_DOCKER_PUSH_DATE=$(date +'%Y.%m.%d')" >> $GITHUB_ENV
-      - id: set-docker-tag-from-input-env
+        if: env.GHA_DOCKER_PUSH_CLOUD_PROVIDER != 'GCP' && env.GHA_DOCKER_PUSH_CLOUD_PROVIDER != 'Azure'
+        run: |
+          echo "cloud_provider can only be GCP or Azure"
+          exit 1
+      - id: set-image-artifact-name
+        shell: bash
+        if: env.GHA_DOCKER_PUSH_IMAGE_NAME == 'repo_name'
+        run: |
+          echo "GHA_DOCKER_PUSH_IMAGE_NAME=${GITHUB_REPOSITORY#*/}" >> $GITHUB_ENV
+      - id: set-image-tag
+        shell: bash
+        if: env.GHA_DOCKER_PUSH_IMAGE_TAG  == 'image_tag'
+        run: |
+          SHA=${{ github.sha }}
+          SHORT_SHA=${SHA:0:7}
+          echo "GHA_DOCKER_PUSH_IMAGE_TAG=${{ env.GHA_DOCKER_PUSH_BRANCH_NAME }}.${{ env.GHA_DOCKER_PUSH_DATE }}-SHA${SHORT_SHA}" >> $GITHUB_ENV
+      - id: set-registry-azure
+        shell: bash
+        if: env.GHA_DOCKER_PUSH_CLOUD_PROVIDER  == 'Azure'
+        run: |
+          echo "GHA_DOCKER_PUSH_DOCKER_REGISTRY=acrentur001.azurecr.io" >> $GITHUB_ENV
+      - id: set-registry-gcp
+        shell: bash
+        if: env.GHA_DOCKER_PUSH_CLOUD_PROVIDER  == 'GCP'
+        run: |
+          echo "GHA_DOCKER_PUSH_DOCKER_REGISTRY=eu.gcr.io/entur-system-1287" >> $GITHUB_ENV
+      - id: set-image
         shell: bash
         run: |
-          if [[ "${{ env.GHA_DOCKER_PUSH_DOCKER_TAG }}" = "docker_tag" ]]; then
-            SHA=${{ github.sha }}
-            SHORT_SHA=${SHA:0:7}
-            echo "GHA_DOCKER_PUSH_DOCKER_TAG=${{ env.GHA_DOCKER_PUSH_BRANCH_TAG }}.${{ env.GHA_DOCKER_PUSH_DATE }}-SHA$SHORT_SHA" >> $GITHUB_ENV
-          fi
-      - id: set-repository-env
-        shell: bash
-        run: |
-          if [[ "${{ inputs.repository_type }}" = "GCR" ]]; then
-            echo "GHA_DOCKER_PUSH_META_IMAGES=eu.gcr.io/${{ env.GHA_DOCKER_PUSH_GCR_PROJECT_ID }}/${{ env.GHA_DOCKER_PUSH_IMAGE_ARTIFACT_NAME }}" >> $GITHUB_ENV
-          elif [[ "${{ inputs.repository_type }}" = "ACR" ]]; then
-            echo "GHA_DOCKER_PUSH_META_IMAGES=acrentur001.azurecr.io/${{ env.GHA_DOCKER_PUSH_IMAGE_ARTIFACT_NAME }}" >> $GITHUB_ENV
-          fi
+          echo "GHA_DOCKER_PUSH_IMAGE=${{ env.GHA_DOCKER_PUSH_DOCKER_REGISTRY}}/${{ env.GHA_DOCKER_PUSH_IMAGE_NAME }}" >> $GITHUB_ENV
       - uses: actions/checkout@v4.1.2
       - uses: docker/setup-buildx-action@v3.2.0
-      - id: auth
+      - id: login-gcp
         uses: google-github-actions/auth@v2.1.2
-        if: ${{ inputs.repository_type == 'GCR' }}
+        if: inputs.cloud_provider == 'GCP'
         with:
           workload_identity_provider: ${{ vars.WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ vars.SERVICE_ACCOUNT }}
-          token_format: 'access_token'
+          token_format: "access_token"
       - id: login-gcr
         uses: docker/login-action@v3.1.0
-        if: ${{ inputs.repository_type == 'GCR' }}
+        if: inputs.cloud_provider == 'GCP'
         with:
           registry: eu.gcr.io
           username: oauth2accesstoken
-          password: ${{ steps.auth.outputs.access_token }}
+          password: ${{ steps.login-gcp.outputs.access_token }}
       - id: login-azure
         uses: Azure/login@v2
-        if: ${{ inputs.repository_type == 'ACR' }}
+        if: inputs.cloud_provider == 'Azure'
         with:
           client-id: ${{ vars.AZURE_CLIENT_ID }}
           tenant-id: ${{ vars.AZURE_TENANT_ID }}
           subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
       - id: login-acr
-        if: ${{ inputs.repository_type == 'ACR' }}
+        if: inputs.cloud_provider == 'Azure'
         shell: bash
         run: |
           az acr login --name acrentur001
       - id: download-image-artifact
         uses: actions/download-artifact@v4
         with:
-          name: ${{ env.GHA_DOCKER_PUSH_IMAGE_ARTIFACT_NAME }}
+          name: ${{ env.GHA_DOCKER_PUSH_IMAGE_NAME }}
           path: /tmp
       - id: load-image
         run: |
-          docker load --input /tmp/${{ env.GHA_DOCKER_PUSH_IMAGE_ARTIFACT_NAME }}.tar
+          docker load --input /tmp/${{ env.GHA_DOCKER_PUSH_IMAGE_NAME }}.tar
       - id: meta
         uses: docker/metadata-action@v5.5.1
         with:
-          images: ${{ env.GHA_DOCKER_PUSH_META_IMAGES }}
+          images: ${{ env.GHA_DOCKER_PUSH_IMAGE }}
           tags: |
             type=schedule
             type=ref,event=branch
@@ -146,12 +144,12 @@ jobs:
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
             type=sha
-            type=raw,value=${{ env.GHA_DOCKER_PUSH_BRANCH_TAG }}
-            type=raw,value=${{ env.GHA_DOCKER_PUSH_DOCKER_TAG }}
+            type=raw,value=${{ env.GHA_DOCKER_PUSH_BRANCH_NAME }}
+            type=raw,value=${{ env.GHA_DOCKER_PUSH_IMAGE_TAG }}
       - id: push
         uses: docker/build-push-action@v5.3.0
         with:
-          file: ${{ env.GHA_DOCKER_PUSH_DOCKERFILE_NAME }}
+          file: ${{ env.GHA_DOCKER_PUSH_DOCKERFILE }}
           context: .
           push: true
           tags: ${{ steps.meta.outputs.tags }}
