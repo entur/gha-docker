@@ -11,6 +11,10 @@ on:
         type: string
         description: "GitHub environment to use"
         default: "prd"
+      dockerfile:
+        description: "Dockerfile to use for build"
+        type: string
+        default: "Dockerfile"
       image_tag:
         description: "Docker tag"
         type: string
@@ -42,6 +46,7 @@ jobs:
         shell: bash
         run: |
           echo "GHA_DOCKER_PUSH_IMAGE_NAME=${{ inputs.image_name }}" >> $GITHUB_ENV
+          echo "GHA_DOCKER_PUSH_DOCKERFILE=${{ inputs.dockerfile }}" >> $GITHUB_ENV
           echo "GHA_DOCKER_PUSH_IMAGE_TAG=${{ inputs.image_tag }}" >> $GITHUB_ENV
           echo "GHA_DOCKER_PUSH_DATE=$(date +'%Y%m%d')" >> $GITHUB_ENV
           echo "GHA_DOCKER_PUSH_CLOUD_PROVIDER=${{ inputs.cloud_provider }}" >> $GITHUB_ENV
@@ -151,5 +156,6 @@ jobs:
         with:
           context: .
           push: true
+          file: ${{ env.GHA_DOCKER_PUSH_DOCKERFILE }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
