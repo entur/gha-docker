@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/entur/gha-docker/compare/v1.1.0...v1.1.1) (2024-04-03)
+
+
+### Bug Fixes
+
+* use cache-from for push ([#33](https://github.com/entur/gha-docker/issues/33)) ([a40ad1d](https://github.com/entur/gha-docker/commit/a40ad1d5d425a1e40339c6d265f09316f6a89518))
+
 ## [1.1.0](https://github.com/entur/gha-docker/compare/v1.0.0...v1.1.0) (2024-03-27)
 
 
