@@ -61,6 +61,7 @@ jobs:
           file: ${{ env.GHA_DOCKER_BUILD_DOCKERFILE }}
           push: false
           outputs: type=docker,dest=/tmp/${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}.tar
+          cache-to: type=gha,mode=max
           tags: ${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}:latest
           context: .
       - id: save-image
