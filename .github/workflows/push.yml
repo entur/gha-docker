@@ -123,14 +123,14 @@ jobs:
         shell: bash
         run: |
           az acr login --name acrentur001
-      - id: download-image-artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: ${{ env.GHA_DOCKER_PUSH_IMAGE_NAME }}
-          path: /tmp
-      - id: load-image
-        run: |
-          docker load --input /tmp/${{ env.GHA_DOCKER_PUSH_IMAGE_NAME }}.tar
+#      - id: download-image-artifact
+#        uses: actions/download-artifact@v4
+#        with:
+#          name: ${{ env.GHA_DOCKER_PUSH_IMAGE_NAME }}
+#          path: /tmp
+#      - id: load-image
+#        run: |
+#          docker load --input /tmp/${{ env.GHA_DOCKER_PUSH_IMAGE_NAME }}.tar
       - id: meta
         uses: docker/metadata-action@v5.5.1
         with:
@@ -147,5 +147,11 @@ jobs:
             type=raw,value=${{ env.GHA_DOCKER_PUSH_BRANCH_NAME }}
             type=raw,value=${{ env.GHA_DOCKER_PUSH_IMAGE_TAG }}
       - id: push
-        run: |
-          docker push --all-tags ${{ env.GHA_DOCKER_PUSH_IMAGE }}
+        uses: docker/build-push-action@v5.3.0
+        with:
+          context: .
+          push: true
+          cache-from: type=gha
+          file: ${{ env.GHA_DOCKER_PUSH_DOCKERFILE }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
