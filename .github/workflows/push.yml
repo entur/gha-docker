@@ -148,4 +148,4 @@ jobs:
             type=raw,value=${{ env.GHA_DOCKER_PUSH_IMAGE_TAG }}
       - id: push
         run: |
-          docker push --all-tags ${{ env.GHA_DOCKER_PUSH_IMAGE_NAME }}
+          docker push --all-tags ${{ env.GHA_DOCKER_PUSH_IMAGE }}
