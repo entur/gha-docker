@@ -16,6 +16,12 @@ jobs:
       workflow_file: .github/workflows/build.yml
       readme_file: README-build.md
 
+  update-push-doc:
+    uses: entur/gha-meta/.github/workflows/auto-doc.yml@v1.0.0
+    with:
+      workflow_file: .github/workflows/push.yml
+      readme_file: README-push.md
+
   test-lint-ok:
     uses: ./.github/workflows/lint.yml
     with:
