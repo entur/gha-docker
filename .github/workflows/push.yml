@@ -147,3 +147,4 @@ jobs:
           file: ${{ env.GHA_DOCKER_PUSH_DOCKERFILE }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          provenance: false
