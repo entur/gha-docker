@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.2](https://github.com/entur/gha-docker/compare/v1.1.1...v1.1.2) (2024-04-04)
+
+
+### Bug Fixes
+
+* multiple artifacts being uploaded instead of only img ([be278da](https://github.com/entur/gha-docker/commit/be278da7db452647f6462eea2f4914482c12a151))
+
 ## [1.1.1](https://github.com/entur/gha-docker/compare/v1.1.0...v1.1.1) (2024-04-03)
 
 
