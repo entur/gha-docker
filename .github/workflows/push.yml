@@ -96,7 +96,7 @@ jobs:
         run: |
           echo "GHA_DOCKER_PUSH_IMAGE=${{ env.GHA_DOCKER_PUSH_DOCKER_REGISTRY}}/${{ env.GHA_DOCKER_PUSH_IMAGE_NAME }}" >> $GITHUB_ENV
       - uses: actions/checkout@v4.1.2
-      - uses: docker/setup-buildx-action@v3.2.0
+      - uses: docker/setup-buildx-action@v3.3.0
       - id: login-gcp
         uses: google-github-actions/auth@v2.1.2
         if: inputs.cloud_provider == 'GCP'

@@ -54,7 +54,7 @@ jobs:
         with:
           name: ${{ env.GHA_DOCKER_BUILD_ARTIFACT_NAME }}
           path: ${{ env.GHA_DOCKER_BUILD_ARTIFACT_PATH }}
-      - uses: docker/setup-buildx-action@v3.2.0
+      - uses: docker/setup-buildx-action@v3.3.0
       - id: build
         uses: docker/build-push-action@v5.3.0
         with:
