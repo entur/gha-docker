@@ -37,7 +37,7 @@ jobs:
       contents: read
       id-token: write
     outputs:
-      image_name: ${{ steps.push.outputs.metadata }}
+      image_name: ${{ env.GHA_DOCKER_PUSH_IMAGE_NAME }}
       image_tag: ${{ env.GHA_DOCKER_PUSH_IMAGE_TAG }}
 
     timeout-minutes: 10
