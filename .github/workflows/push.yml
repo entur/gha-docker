@@ -24,6 +24,8 @@ on:
         type: string
         default: "GCP"
     outputs:
+      meta:
+        value: ${{ jobs.push.outputs.meta }}
       image_name:
         value: ${{ jobs.push.outputs.image_name }}
       image_tag:
@@ -37,6 +39,7 @@ jobs:
       contents: read
       id-token: write
     outputs:
+      meta: ${{ steps.push.outputs.metadata }}
       image_name: ${{ env.GHA_DOCKER_PUSH_IMAGE_NAME }}
       image_tag: ${{ env.GHA_DOCKER_PUSH_IMAGE_TAG }}
 
