@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.3](https://github.com/entur/gha-docker/compare/v1.1.2...v1.1.3) (2024-04-18)
+
+
+### Bug Fixes
+
+* add meta output ([#42](https://github.com/entur/gha-docker/issues/42)) ([23a7d6f](https://github.com/entur/gha-docker/commit/23a7d6f81d5b065a8ab5890d4262c236d9553402))
+* pass along image name ([#40](https://github.com/entur/gha-docker/issues/40)) ([04498ca](https://github.com/entur/gha-docker/commit/04498cad2b4c126015a91d15b08835b9617d7cf8))
+
 ## [1.1.2](https://github.com/entur/gha-docker/compare/v1.1.1...v1.1.2) (2024-04-04)
 
 
