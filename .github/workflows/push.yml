@@ -94,24 +94,15 @@ jobs:
           echo "GHA_DOCKER_PUSH_IMAGE=${{ env.GHA_DOCKER_PUSH_DOCKER_REGISTRY}}/${{ env.GHA_DOCKER_PUSH_IMAGE_NAME }}" >> $GITHUB_ENV
       - uses: actions/checkout@v4.1.4
       - uses: docker/setup-buildx-action@v3.3.0
-      - uses: entur/gha-meta/.github/actions/cloud-auth@auth-actions
+      - uses: entur/gha-meta/.github/actions/docker-auth@auth-actions
         with:
           environment: ${{ inputs.environment }}
           cloud_provider: ${{ env.GHA_DOCKER_PUSH_CLOUD_PROVIDER }}
-          token_format: "access_token"
           workload_identity_provider: ${{ vars.WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ vars.SERVICE_ACCOUNT }}
-          gha_cloud_auth_token_format: ${{ vars.GHA_CLOUD_AUTH_TOKEN_FORMAT }}
           azure_client_id: ${{ vars.AZURE_CLIENT_ID }}
           azure_tenant_id: ${{ vars.AZURE_TENANT_ID }}
           azure_subscription_id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
-      - uses: entur/gha-meta/.github/actions/k8s-auth@auth-actions
-        with:
-          environment: ${{ inputs.environment }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          cloud_provider: ${{ env.GHA_DOCKER_PUSH_CLOUD_PROVIDER }}
-          azure_cluster_resource_group: ${{ vars.AZURE_CLUSTER_RESOURCE_GROUP }}
-          azure_cluster_name: ${{ vars.AZURE_CLUSTER_NAME }}
       - id: meta
         uses: docker/metadata-action@v5.5.1
         with:
