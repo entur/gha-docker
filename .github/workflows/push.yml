@@ -66,32 +66,26 @@ jobs:
           BRANCH_NAME=${BRANCH_NAME//./-}  # replace . with -
           BRANCH_NAME=${BRANCH_NAME//!/-}  # replace ! with -
           echo "GHA_DOCKER_PUSH_BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
-      - id: verify-cloud-provider
-        shell: bash
-        if: env.GHA_DOCKER_PUSH_CLOUD_PROVIDER != 'GCP' && env.GHA_DOCKER_PUSH_CLOUD_PROVIDER != 'Azure'
-        run: |
-          echo "cloud_provider can only be GCP or Azure"
-          exit 1
       - id: set-image-artifact-name
-        shell: bash
         if: env.GHA_DOCKER_PUSH_IMAGE_NAME == 'repo_name'
+        shell: bash
         run: |
           echo "GHA_DOCKER_PUSH_IMAGE_NAME=${GITHUB_REPOSITORY#*/}" >> $GITHUB_ENV
       - id: set-image-tag
-        shell: bash
         if: env.GHA_DOCKER_PUSH_IMAGE_TAG  == 'image_tag'
+        shell: bash
         run: |
           SHA=${{ github.sha }}
           SHORT_SHA=${SHA:0:7}
           echo "GHA_DOCKER_PUSH_IMAGE_TAG=${{ env.GHA_DOCKER_PUSH_BRANCH_NAME }}.${{ env.GHA_DOCKER_PUSH_DATE }}-SHA${SHORT_SHA}" >> $GITHUB_ENV
       - id: set-registry-azure
-        shell: bash
         if: env.GHA_DOCKER_PUSH_CLOUD_PROVIDER  == 'Azure'
+        shell: bash
         run: |
           echo "GHA_DOCKER_PUSH_DOCKER_REGISTRY=acrentur001.azurecr.io" >> $GITHUB_ENV
       - id: set-registry-gcp
-        shell: bash
         if: env.GHA_DOCKER_PUSH_CLOUD_PROVIDER  == 'GCP'
+        shell: bash
         run: |
           echo "GHA_DOCKER_PUSH_DOCKER_REGISTRY=eu.gcr.io/entur-system-1287" >> $GITHUB_ENV
       - id: set-image
@@ -100,32 +94,15 @@ jobs:
           echo "GHA_DOCKER_PUSH_IMAGE=${{ env.GHA_DOCKER_PUSH_DOCKER_REGISTRY}}/${{ env.GHA_DOCKER_PUSH_IMAGE_NAME }}" >> $GITHUB_ENV
       - uses: actions/checkout@v4.1.4
       - uses: docker/setup-buildx-action@v3.3.0
-      - id: login-gcp
-        uses: google-github-actions/auth@v2.1.2
-        if: inputs.cloud_provider == 'GCP'
+      - uses: entur/gha-meta/.github/actions/docker-auth@auth-actions
         with:
+          environment: ${{ inputs.environment }}
+          cloud_provider: ${{ env.GHA_DOCKER_PUSH_CLOUD_PROVIDER }}
           workload_identity_provider: ${{ vars.WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ vars.SERVICE_ACCOUNT }}
-          token_format: "access_token"
-      - id: login-gcr
-        uses: docker/login-action@v3.1.0
-        if: inputs.cloud_provider == 'GCP'
-        with:
-          registry: eu.gcr.io
-          username: oauth2accesstoken
-          password: ${{ steps.login-gcp.outputs.access_token }}
-      - id: login-azure
-        uses: Azure/login@v2
-        if: inputs.cloud_provider == 'Azure'
-        with:
-          client-id: ${{ vars.AZURE_CLIENT_ID }}
-          tenant-id: ${{ vars.AZURE_TENANT_ID }}
-          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
-      - id: login-acr
-        if: inputs.cloud_provider == 'Azure'
-        shell: bash
-        run: |
-          az acr login --name acrentur001
+          azure_client_id: ${{ vars.AZURE_CLIENT_ID }}
+          azure_tenant_id: ${{ vars.AZURE_TENANT_ID }}
+          azure_subscription_id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
       - id: meta
         uses: docker/metadata-action@v5.5.1
         with:
