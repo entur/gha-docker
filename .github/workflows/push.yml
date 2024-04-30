@@ -96,7 +96,7 @@ jobs:
       - uses: docker/setup-buildx-action@v3.3.0
       - uses: entur/gha-meta/.github/actions/cloud-auth@auth-actions
         with:
-          environment: ${{ env.GHA_DOCKER_PUSH_ENVIRONMENT }}
+          environment: ${{ inputs.environment }}
           cloud_provider: ${{ env.GHA_DOCKER_PUSH_CLOUD_PROVIDER }}
           token_format: "access_token"
           workload_identity_provider: ${{ vars.WORKLOAD_IDENTITY_PROVIDER }}
@@ -107,7 +107,7 @@ jobs:
           azure_subscription_id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
       - uses: entur/gha-meta/.github/actions/k8s-auth@auth-actions
         with:
-          environment: ${{ env.GHA_DOCKER_PUSH_ENVIRONMENT }}
+          environment: ${{ inputs.environment }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
           cloud_provider: ${{ env.GHA_DOCKER_PUSH_CLOUD_PROVIDER }}
           azure_cluster_resource_group: ${{ vars.AZURE_CLUSTER_RESOURCE_GROUP }}
