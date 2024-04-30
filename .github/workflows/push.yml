@@ -109,6 +109,7 @@ jobs:
       - uses: entur/gha-meta/.github/actions/k8s-auth@auth-actions
         with:
           environment: ${{ env.GHA_DOCKER_PUSH_ENVIRONMENT }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           cloud_provider: ${{ env.GHA_DOCKER_PUSH_CLOUD_PROVIDER }}
           azure_cluster_resource_group: ${{ vars.AZURE_CLUSTER_RESOURCE_GROUP }}
           azure_cluster_name: ${{ vars.AZURE_CLUSTER_NAME }}
