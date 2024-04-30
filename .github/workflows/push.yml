@@ -105,7 +105,6 @@ jobs:
           azure_client_id: ${{ vars.AZURE_CLIENT_ID }}
           azure_tenant_id: ${{ vars.AZURE_TENANT_ID }}
           azure_subscription_id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
-        secrets: inherit
       - uses: entur/gha-meta/.github/actions/k8s-auth@auth-actions
         with:
           environment: ${{ env.GHA_DOCKER_PUSH_ENVIRONMENT }}
@@ -113,7 +112,6 @@ jobs:
           cloud_provider: ${{ env.GHA_DOCKER_PUSH_CLOUD_PROVIDER }}
           azure_cluster_resource_group: ${{ vars.AZURE_CLUSTER_RESOURCE_GROUP }}
           azure_cluster_name: ${{ vars.AZURE_CLUSTER_NAME }}
-        secrets: inherit
       - id: meta
         uses: docker/metadata-action@v5.5.1
         with:
