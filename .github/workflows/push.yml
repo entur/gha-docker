@@ -105,7 +105,6 @@ jobs:
           azure_client_id: ${{ vars.AZURE_CLIENT_ID }}
           azure_tenant_id: ${{ vars.AZURE_TENANT_ID }}
           azure_subscription_id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
-          azure_subscription_id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
       - uses: entur/gha-meta/.github/actions/k8s-auth@auth-actions
         with:
           environment: ${{ env.GHA_DOCKER_PUSH_ENVIRONMENT }}
