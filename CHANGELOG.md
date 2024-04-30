@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/entur/gha-docker/compare/v1.1.3...v1.2.0) (2024-04-30)
+
+
+### Features
+
+* refactor common auth patterns ([#47](https://github.com/entur/gha-docker/issues/47)) ([fa9090a](https://github.com/entur/gha-docker/commit/fa9090af003986def8ebe36f930883a2a07cd121))
+
 ## [1.1.3](https://github.com/entur/gha-docker/compare/v1.1.2...v1.1.3) (2024-04-18)
 
 
