@@ -66,7 +66,7 @@ jobs:
           provenance: false
           context: .
       - id: save-image
-        uses: actions/upload-artifact@v4.3.1
+        uses: actions/upload-artifact@v4.3.3
         with:
           name: ${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}
           path: /tmp/${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}.tar
