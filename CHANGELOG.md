@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.1](https://github.com/entur/gha-docker/compare/v1.2.0...v1.2.1) (2024-05-01)
+
+
+### Bug Fixes
+
+* meta action should point to version ([#49](https://github.com/entur/gha-docker/issues/49)) ([b54400a](https://github.com/entur/gha-docker/commit/b54400ac933911c9ddc87bf2373c3f82b7801922))
+
 ## [1.2.0](https://github.com/entur/gha-docker/compare/v1.1.3...v1.2.0) (2024-04-30)
 
 
