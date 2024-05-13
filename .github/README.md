@@ -3,7 +3,7 @@
       <br>entur/gha-docker<br>
 </h1>
 
-[![Entur/Helm/CI](https://github.com/entur/gha-docker/actions/workflows/ci.yml/badge.svg?event=pull_request)](https://github.com/entur/gha-docker/actions/workflows/ci.yml)
+[![Entur/Docker/CI](https://github.com/entur/gha-docker/actions/workflows/ci.yml/badge.svg?event=pull_request)](https://github.com/entur/gha-docker/actions/workflows/ci.yml)
 
 GitHub Actions for working with Docker
 
