@@ -23,7 +23,7 @@ jobs:
         run: |
           echo "GHA_DOCKER_LINT_DOCKERFILE=${{ inputs.dockerfile }}" >> $GITHUB_ENV
           echo "GHA_DOCKER_LINT_IGNORE=${{ inputs.ignore }}" >> $GITHUB_ENV
-      - uses: actions/checkout@v4.1.4
+      - uses: actions/checkout@v4.1.5
       - uses: hadolint/hadolint-action@v3.1.0
         with:
           dockerfile: ${{ env.GHA_DOCKER_LINT_DOCKERFILE }}
