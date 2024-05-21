@@ -1,2 +1,4 @@
 FROM busybox:1.36
+# This Dockerfile is malformed on purpose
+# DL3000 error: Use absolute WORKDIR
 WORKDIR usr/src/app

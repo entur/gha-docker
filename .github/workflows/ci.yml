@@ -34,7 +34,7 @@ jobs:
       ignore: DL3000
 
   test-lint-fail-ok:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4.1.6
       - uses: hadolint/hadolint-action@v3.1.0
@@ -45,11 +45,11 @@ jobs:
           dockerfile: fixture/Dockerfile.bad
       - uses: nick-fields/assert-action@v2
         with:
-          expected: "fixture/Dockerfile.bad:2 DL3000 error: Use absolute WORKDIR"
+          expected: "fixture/Dockerfile.bad:4 DL3000 error: Use absolute WORKDIR"
           actual: ${{ env.HADOLINT_RESULTS }}
 
   test-build-prepare-artifact:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4.1.6
       - uses: actions/upload-artifact@v4.3.3
@@ -68,7 +68,7 @@ jobs:
       build_artifact_path: "data"
 
   test-build-ok-with-artifact-outputs:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: test-build-ok-with-artifact
     steps:
       - uses: nick-fields/assert-action@v2
@@ -87,7 +87,7 @@ jobs:
       image_name: "custom_image_name"
 
   test-build-ok-with-custom-image-name-outputs:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: test-build-ok-with-custom-image-name
     steps:
       - uses: nick-fields/assert-action@v2
@@ -115,7 +115,7 @@ jobs:
       image_tag: "ci-test-tag"
 
   test-tag-gcr-outputs-ok:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: test-push-gcr-ok-with-tag
     steps:
       - uses: nick-fields/assert-action@v2
@@ -133,7 +133,7 @@ jobs:
       image_tag: "ci-test-tag"
 
   test-tag-acr-outputs-ok:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: test-push-acr-ok-with-tag
     steps:
       - uses: nick-fields/assert-action@v2
