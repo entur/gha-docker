@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.2](https://github.com/entur/gha-docker/compare/v1.2.1...v1.2.2) (2024-05-22)
+
+
+### Bug Fixes
+
+* add latest tag ([#59](https://github.com/entur/gha-docker/issues/59)) ([42e27e5](https://github.com/entur/gha-docker/commit/42e27e5d12ec72f38e5af8b2f585b767b3ab59c1))
+
 ## [1.2.1](https://github.com/entur/gha-docker/compare/v1.2.0...v1.2.1) (2024-05-01)
 
 
