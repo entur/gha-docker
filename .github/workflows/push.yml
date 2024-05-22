@@ -118,6 +118,7 @@ jobs:
             type=sha
             type=raw,value=${{ env.GHA_DOCKER_PUSH_BRANCH_NAME }}
             type=raw,value=${{ env.GHA_DOCKER_PUSH_IMAGE_TAG }}
+            type=raw,value=latest
       - id: push
         uses: docker/build-push-action@v5.3.0
         with:
