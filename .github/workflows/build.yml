@@ -22,6 +22,10 @@ on:
         description: "Path to save artifact into"
         type: string
         default: "build/libs"
+      timeout_minutes:
+        description: "Timeout in minutes"
+        type: number
+        default: 40
     outputs:
       image_artifact:
         value: ${{ jobs.build.outputs.image_artifact }}
@@ -31,12 +35,12 @@ on:
 jobs:
   build:
     runs-on: ubuntu-24.04
+    timeout-minutes: ${{ inputs.timeout_minutes }}
     permissions:
       contents: read
     outputs:
       image_artifact: ${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}
       image_tag: ${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}:latest
-    timeout-minutes: 40
     steps:
       - id: set-env
         shell: bash
