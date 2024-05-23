@@ -26,6 +26,7 @@ jobs:
     uses: ./.github/workflows/lint.yml
     with:
       dockerfile: fixture/Dockerfile.good
+      timeout_minutes: 1
 
   test-lint-ignore-ok:
     uses: ./.github/workflows/lint.yml
