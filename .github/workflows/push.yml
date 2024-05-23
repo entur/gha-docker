@@ -27,6 +27,10 @@ on:
         description: "Which repository to use. GCP/Azure"
         type: string
         default: "GCP"
+      timeout_minutes:
+        description: "Timeout in minutes"
+        type: number
+        default: 10
     outputs:
       meta:
         value: ${{ jobs.push.outputs.meta }}
@@ -38,6 +42,7 @@ on:
 jobs:
   push:
     runs-on: ubuntu-24.04
+    timeout-minutes: ${{ inputs.timeout_minutes }}
     environment: ${{ inputs.environment }}
     permissions:
       contents: read
@@ -46,8 +51,6 @@ jobs:
       meta: ${{ steps.push.outputs.metadata }}
       image_name: ${{ env.GHA_DOCKER_PUSH_IMAGE_NAME }}
       image_tag: ${{ env.GHA_DOCKER_PUSH_IMAGE_TAG }}
-
-    timeout-minutes: 10
     steps:
       - id: set-env
         shell: bash

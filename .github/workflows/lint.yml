@@ -10,13 +10,17 @@ on:
       ignore:
         description: "A comma separated list of Hadolint Ignores"
         type: string
+      timeout_minutes:
+        description: "Timeout in minutes"
+        type: number
+        default: 2
 
 jobs:
   lint:
     runs-on: ubuntu-24.04
+    timeout-minutes: ${{ inputs.timeout_minutes }}
     permissions:
       contents: read
-    timeout-minutes: 5
     steps:
       - id: set-env
         shell: bash
