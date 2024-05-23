@@ -15,10 +15,11 @@ jobs:
 
 <!-- AUTO-DOC-INPUT:START - Do not remove or modify this section -->
 
-|                             INPUT                              |  TYPE  | REQUIRED |    DEFAULT     |                   DESCRIPTION                   |
-|----------------------------------------------------------------|--------|----------|----------------|-------------------------------------------------|
-| <a name="input_dockerfile"></a>[dockerfile](#input_dockerfile) | string |  false   | `"Dockerfile"` |             Which dockerfile to run             |
-|       <a name="input_ignore"></a>[ignore](#input_ignore)       | string |  false   |                | A comma separated list of <br>Hadolint Ignores  |
+|                                     INPUT                                     |  TYPE  | REQUIRED |    DEFAULT     |                   DESCRIPTION                   |
+|-------------------------------------------------------------------------------|--------|----------|----------------|-------------------------------------------------|
+|        <a name="input_dockerfile"></a>[dockerfile](#input_dockerfile)         | string |  false   | `"Dockerfile"` |             Which dockerfile to run             |
+|              <a name="input_ignore"></a>[ignore](#input_ignore)               | string |  false   |                | A comma separated list of <br>Hadolint Ignores  |
+| <a name="input_timeout_minutes"></a>[timeout_minutes](#input_timeout_minutes) | number |  false   |      `2`       |               Timeout in minutes                |
 
 <!-- AUTO-DOC-INPUT:END -->
 
