@@ -21,7 +21,6 @@ jobs:
     timeout-minutes: ${{ inputs.timeout_minutes }}
     permissions:
       contents: read
-    timeout-minutes: 5
     steps:
       - id: set-env
         shell: bash
