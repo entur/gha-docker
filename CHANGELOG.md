@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.3](https://github.com/entur/gha-docker/compare/v1.2.2...v1.2.3) (2024-05-23)
+
+
+### Bug Fixes
+
+* set context ([#61](https://github.com/entur/gha-docker/issues/61)) ([e821657](https://github.com/entur/gha-docker/commit/e82165707ff7a0b90bc4a9f3f3f85f54d3a2c635))
+
 ## [1.2.2](https://github.com/entur/gha-docker/compare/v1.2.1...v1.2.2) (2024-05-22)
 
 
