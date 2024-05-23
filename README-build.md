@@ -22,6 +22,7 @@ jobs:
 |                   <a name="input_context"></a>[context](#input_context)                   | string |  false   |     `"."`      | Build context, default root of <br>repository  |
 |              <a name="input_dockerfile"></a>[dockerfile](#input_dockerfile)               | string |  false   | `"Dockerfile"` |          Dockerfile to use for build           |
 |              <a name="input_image_name"></a>[image_name](#input_image_name)               | string |  false   | `"repo_name"`  |      Image name to use for <br>the build       |
+|       <a name="input_timeout_minutes"></a>[timeout_minutes](#input_timeout_minutes)       | number |  false   |      `40`      |               Timeout in minutes               |
 
 <!-- AUTO-DOC-INPUT:END -->
 
