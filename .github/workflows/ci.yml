@@ -106,7 +106,7 @@ jobs:
     with:
       environment: dev
       context: "fixture"
-      dockerfile: "fixture/Dockerfile.artifact"
+      dockerfile: "Dockerfile.artifact"
 
   test-push-gcr-ok-with-tag:
     needs: test-build-ok-with-artifact
@@ -114,7 +114,7 @@ jobs:
     with:
       environment: dev
       context: "fixture"
-      dockerfile: "fixture/Dockerfile.artifact"
+      dockerfile: "Dockerfile.artifact"
       image_tag: "ci-test-tag"
 
   test-tag-gcr-outputs-ok:
