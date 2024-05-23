@@ -3,6 +3,10 @@ name: Entur/Docker/Build
 on:
   workflow_call:
     inputs:
+      context:
+        description: "Build context, default root of repository"
+        type: string
+        default: "."
       dockerfile:
         description: "Dockerfile to use for build"
         type: string
@@ -37,6 +41,7 @@ jobs:
       - id: set-env
         shell: bash
         run: |
+          echo "GHA_DOCKER_BUILD_CONTEXT=${{ inputs.context }}" >> $GITHUB_ENV
           echo "GHA_DOCKER_BUILD_DOCKERFILE=${{ inputs.dockerfile }}" >> $GITHUB_ENV
           echo "GHA_DOCKER_BUILD_ARTIFACT_PATH=${{ inputs.build_artifact_path }}" >> $GITHUB_ENV
           echo "GHA_DOCKER_BUILD_ARTIFACT_NAME=${{ inputs.build_artifact_name }}" >> $GITHUB_ENV
@@ -64,7 +69,7 @@ jobs:
           cache-to: type=gha,mode=max
           tags: ${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}:latest
           provenance: false
-          context: .
+          context: "{{defaultContext}}:${{ env.GHA_DOCKER_BUILD_CONTEXT }}"
       - id: save-image
         uses: actions/upload-artifact@v4.3.3
         with:

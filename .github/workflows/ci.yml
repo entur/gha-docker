@@ -63,7 +63,8 @@ jobs:
     uses: ./.github/workflows/build.yml
     needs: test-build-prepare-artifact
     with:
-      dockerfile: "fixture/Dockerfile.artifact"
+      context: "fixture"
+      dockerfile: "Dockerfile.artifact"
       build_artifact_name: "some_build_artifact"
       build_artifact_path: "data"
 
@@ -104,14 +105,16 @@ jobs:
     uses: ./.github/workflows/push.yml
     with:
       environment: dev
-      dockerfile: "fixture/Dockerfile.artifact"
+      context: "fixture"
+      dockerfile: "Dockerfile.artifact"
 
   test-push-gcr-ok-with-tag:
     needs: test-build-ok-with-artifact
     uses: ./.github/workflows/push.yml
     with:
       environment: dev
-      dockerfile: "fixture/Dockerfile.artifact"
+      context: "fixture"
+      dockerfile: "Dockerfile.artifact"
       image_tag: "ci-test-tag"
 
   test-tag-gcr-outputs-ok:
@@ -129,7 +132,8 @@ jobs:
     with:
       environment: az-dev
       cloud_provider: Azure
-      dockerfile: "fixture/Dockerfile.artifact"
+      context: "fixture"
+      dockerfile: "Dockerfile.artifact"
       image_tag: "ci-test-tag"
 
   test-tag-acr-outputs-ok:

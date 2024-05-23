@@ -11,6 +11,10 @@ on:
         type: string
         description: "GitHub environment to use"
         default: "prd"
+      context:
+        description: "Build context, default root of repository"
+        type: string
+        default: "."
       dockerfile:
         description: "Dockerfile to use for build"
         type: string
@@ -49,6 +53,7 @@ jobs:
         shell: bash
         run: |
           echo "GHA_DOCKER_PUSH_IMAGE_NAME=${{ inputs.image_name }}" >> $GITHUB_ENV
+          echo "GHA_DOCKER_PUSH_CONTEXT=${{ inputs.context }}" >> $GITHUB_ENV
           echo "GHA_DOCKER_PUSH_DOCKERFILE=${{ inputs.dockerfile }}" >> $GITHUB_ENV
           echo "GHA_DOCKER_PUSH_IMAGE_TAG=${{ inputs.image_tag }}" >> $GITHUB_ENV
           echo "GHA_DOCKER_PUSH_DATE=$(date +'%Y%m%d')" >> $GITHUB_ENV
@@ -122,7 +127,7 @@ jobs:
       - id: push
         uses: docker/build-push-action@v5.3.0
         with:
-          context: .
+          context: "{{defaultContext}}:${{ env.GHA_DOCKER_PUSH_CONTEXT }}"
           push: true
           cache-from: type=gha
           file: ${{ env.GHA_DOCKER_PUSH_DOCKERFILE }}
