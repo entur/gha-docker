@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.4](https://github.com/entur/gha-docker/compare/v1.2.3...v1.2.4) (2024-05-23)
+
+
+### Bug Fixes
+
+* set timeout ([#63](https://github.com/entur/gha-docker/issues/63)) ([2a93a3f](https://github.com/entur/gha-docker/commit/2a93a3f21e5bb2a5fd787bf4d656f457b48bddf9))
+
 ## [1.2.3](https://github.com/entur/gha-docker/compare/v1.2.2...v1.2.3) (2024-05-23)
 
 
