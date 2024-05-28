@@ -9,7 +9,7 @@ jobs:
   docker-push:
     if: ${{ github.event_name != 'pull_request' }} # Don't push on PR
     name: Docker Push
-    uses: entur/gha-docker/.github/workflows/push.yml@main
+    uses: entur/gha-docker/.github/workflows/push.yml@v1
 ```
 
 ## Inputs

@@ -8,7 +8,7 @@ Add the following step to your workflow configuration:
 jobs:
   docker-build:
     name: Docker Build
-    uses: entur/gha-docker/.github/workflows/build.yml@main
+    uses: entur/gha-docker/.github/workflows/build.yml@v1
 ```
 
 ## Inputs
