@@ -41,13 +41,12 @@ on:
 
 jobs:
   docker-lint:
-    uses: entur/gha-docker/.github/workflows/lint.yml@main
+    uses: entur/gha-docker/.github/workflows/lint.yml@v1
 
   docker-build:
-    uses: entur/gha-docker/.github/workflows/build.yml@main
+    uses: entur/gha-docker/.github/workflows/build.yml@v1
 
   docker-push:
-    uses: entur/gha-docker/.github/workflows/push.yml@main
-    secrets: inherit
+    uses: entur/gha-docker/.github/workflows/push.yml@v1
 ```
 

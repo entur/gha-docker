@@ -5,19 +5,19 @@ on:
 
 jobs:
   update-lint-doc:
-    uses: entur/gha-meta/.github/workflows/auto-doc.yml@v1.1.6
+    uses: entur/gha-meta/.github/workflows/auto-doc.yml@v1
     with:
       workflow_file: .github/workflows/lint.yml
       readme_file: README-lint.md
 
   update-build-doc:
-    uses: entur/gha-meta/.github/workflows/auto-doc.yml@v1.1.6
+    uses: entur/gha-meta/.github/workflows/auto-doc.yml@v1
     with:
       workflow_file: .github/workflows/build.yml
       readme_file: README-build.md
 
   update-push-doc:
-    uses: entur/gha-meta/.github/workflows/auto-doc.yml@v1.1.6
+    uses: entur/gha-meta/.github/workflows/auto-doc.yml@v1
     with:
       workflow_file: .github/workflows/push.yml
       readme_file: README-push.md
