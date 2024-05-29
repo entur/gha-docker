@@ -49,18 +49,19 @@ jobs:
       id-token: write
     outputs:
       meta: ${{ steps.push.outputs.metadata }}
-      image_name: ${{ env.GHA_DOCKER_PUSH_IMAGE_NAME }}
-      image_tag: ${{ env.GHA_DOCKER_PUSH_IMAGE_TAG }}
+      image_name: "${GHA_DOCKER_PUSH_IMAGE_NAME}"
+      image_tag: "${GHA_DOCKER_PUSH_IMAGE_TAG}"
+    env:
+      GHA_DOCKER_PUSH_IMAGE_NAME: ${{ inputs.image_name }}
+      GHA_DOCKER_PUSH_CONTEXT: ${{ inputs.context }}
+      GHA_DOCKER_PUSH_DOCKERFILE: ${{ inputs.dockerfile }}
+      GHA_DOCKER_PUSH_IMAGE_TAG: ${{ inputs.image_tag }}
+      GHA_DOCKER_PUSH_DATE: "$(date +'%Y%m%d')"
+      GHA_DOCKER_PUSH_CLOUD_PROVIDER: ${{ inputs.cloud_provider }}
     steps:
-      - id: set-env
+      - id: set-branch-name
         shell: bash
         run: |
-          echo "GHA_DOCKER_PUSH_IMAGE_NAME=${{ inputs.image_name }}" >> $GITHUB_ENV
-          echo "GHA_DOCKER_PUSH_CONTEXT=${{ inputs.context }}" >> $GITHUB_ENV
-          echo "GHA_DOCKER_PUSH_DOCKERFILE=${{ inputs.dockerfile }}" >> $GITHUB_ENV
-          echo "GHA_DOCKER_PUSH_IMAGE_TAG=${{ inputs.image_tag }}" >> $GITHUB_ENV
-          echo "GHA_DOCKER_PUSH_DATE=$(date +'%Y%m%d')" >> $GITHUB_ENV
-          echo "GHA_DOCKER_PUSH_CLOUD_PROVIDER=${{ inputs.cloud_provider }}" >> $GITHUB_ENV
           # Convert ref name to a valid git & docker tag name
           if [[ "${{ github.event_name }}" = "pull_request" ]]; then
             BRANCH_NAME=${{ github.head_ref }}
@@ -85,7 +86,7 @@ jobs:
         run: |
           SHA=${{ github.sha }}
           SHORT_SHA=${SHA:0:7}
-          echo "GHA_DOCKER_PUSH_IMAGE_TAG=${{ env.GHA_DOCKER_PUSH_BRANCH_NAME }}.${{ env.GHA_DOCKER_PUSH_DATE }}-SHA${SHORT_SHA}" >> $GITHUB_ENV
+          echo "GHA_DOCKER_PUSH_IMAGE_TAG=${GHA_DOCKER_PUSH_BRANCH_NAME}.${GHA_DOCKER_PUSH_DATE}-SHA${SHORT_SHA}" >> $GITHUB_ENV
       - id: set-registry-azure
         if: env.GHA_DOCKER_PUSH_CLOUD_PROVIDER  == 'Azure'
         shell: bash
@@ -99,13 +100,13 @@ jobs:
       - id: set-image
         shell: bash
         run: |
-          echo "GHA_DOCKER_PUSH_IMAGE=${{ env.GHA_DOCKER_PUSH_DOCKER_REGISTRY}}/${{ env.GHA_DOCKER_PUSH_IMAGE_NAME }}" >> $GITHUB_ENV
+          echo "GHA_DOCKER_PUSH_IMAGE=${GHA_DOCKER_PUSH_DOCKER_REGISTRY}}/${GHA_DOCKER_PUSH_IMAGE_NAME}" >> $GITHUB_ENV
       - uses: actions/checkout@v4.1.6
       - uses: docker/setup-buildx-action@v3.3.0
       - uses: entur/gha-meta/.github/actions/docker-auth@v1.1.6
         with:
           environment: ${{ inputs.environment }}
-          cloud_provider: ${{ env.GHA_DOCKER_PUSH_CLOUD_PROVIDER }}
+          cloud_provider: "${GHA_DOCKER_PUSH_CLOUD_PROVIDER}"
           workload_identity_provider: ${{ vars.WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ vars.SERVICE_ACCOUNT }}
           azure_client_id: ${{ vars.AZURE_CLIENT_ID }}
@@ -114,7 +115,7 @@ jobs:
       - id: meta
         uses: docker/metadata-action@v5.5.1
         with:
-          images: ${{ env.GHA_DOCKER_PUSH_IMAGE }}
+          images: "${GHA_DOCKER_PUSH_IMAGE}"
           tags: |
             type=schedule
             type=ref,event=branch
@@ -124,16 +125,16 @@ jobs:
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
             type=sha
-            type=raw,value=${{ env.GHA_DOCKER_PUSH_BRANCH_NAME }}
-            type=raw,value=${{ env.GHA_DOCKER_PUSH_IMAGE_TAG }}
+            type=raw,value=${GHA_DOCKER_PUSH_BRANCH_NAME}
+            type=raw,value=${GHA_DOCKER_PUSH_IMAGE_TAG}
             type=raw,value=latest
       - id: push
         uses: docker/build-push-action@v5.3.0
         with:
-          context: "{{defaultContext}}:${{ env.GHA_DOCKER_PUSH_CONTEXT }}"
+          context: "{{defaultContext}}:${GHA_DOCKER_PUSH_CONTEXT}"
           push: true
           cache-from: type=gha
-          file: ${{ env.GHA_DOCKER_PUSH_DOCKERFILE }}
+          file: ${GHA_DOCKER_PUSH_DOCKERFILE}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           provenance: false
