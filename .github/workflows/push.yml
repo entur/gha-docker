@@ -9,14 +9,14 @@ on:
         default: "repo_name"
       environment:
         type: string
-        description: "GitHub environment to use"
+        description: "GitHub environment to use Google Cloud: (dev, tst, prd) or Azure: (az-dev, az-test, az-prod)"
         default: "prd"
       context:
         description: "Build context, default root of repository"
         type: string
         default: "."
       dockerfile:
-        description: "Dockerfile to use for build"
+        description: "Dockerfile name to use for build"
         type: string
         default: "Dockerfile"
       image_tag:
@@ -24,9 +24,9 @@ on:
         type: string
         default: "image_tag"
       cloud_provider:
-        description: "Which repository to use. GCP/Azure"
+        description: "Which cloud service provider to use - Google Cloud: 'gcp' or Azure: 'az'"
         type: string
-        default: "GCP"
+        default: "gcp"
       timeout_minutes:
         description: "Timeout in minutes"
         type: number
@@ -38,7 +38,19 @@ on:
         value: ${{ jobs.push.outputs.image_name }}
       image_tag:
         value: ${{ jobs.push.outputs.image_tag }}
-
+      image_and_tag:
+        value: "${{ jobs.push.outputs.image_name }}:${{ jobs.push.outputs.image_tag }}"
+env:
+  GHA_DOCKER_PUSH_IMAGE_NAME: ${{ inputs.image_name }}
+  GHA_DOCKER_PUSH_CONTEXT: ${{ inputs.context }}
+  GHA_DOCKER_PUSH_DOCKERFILE: ${{ inputs.dockerfile }}
+  GHA_DOCKER_PUSH_IMAGE_TAG: ${{ inputs.image_tag }}
+  GHA_DOCKER_PUSH_CLOUD_PROVIDER: ${{ inputs.cloud_provider }}
+  GHA_DOCKER_PUSH_ENVIRONMENT: ${{ inputs.environment }}
+  GHA_DOCKER_PUSH_DATE: ""
+  GHA_DOCKER_PUSH_BRANCH_NAME: ""
+  GHA_DOCKER_PUSH_DOCKER_REGISTRY: ""
+  GHA_DOCKER_PUSH_IMAGE: ""
 jobs:
   push:
     runs-on: ubuntu-24.04
@@ -55,12 +67,7 @@ jobs:
       - id: set-env
         shell: bash
         run: |
-          echo "GHA_DOCKER_PUSH_IMAGE_NAME=${{ inputs.image_name }}" >> $GITHUB_ENV
-          echo "GHA_DOCKER_PUSH_CONTEXT=${{ inputs.context }}" >> $GITHUB_ENV
-          echo "GHA_DOCKER_PUSH_DOCKERFILE=${{ inputs.dockerfile }}" >> $GITHUB_ENV
-          echo "GHA_DOCKER_PUSH_IMAGE_TAG=${{ inputs.image_tag }}" >> $GITHUB_ENV
           echo "GHA_DOCKER_PUSH_DATE=$(date +'%Y%m%d')" >> $GITHUB_ENV
-          echo "GHA_DOCKER_PUSH_CLOUD_PROVIDER=${{ inputs.cloud_provider }}" >> $GITHUB_ENV
           # Convert ref name to a valid git & docker tag name
           if [[ "${{ github.event_name }}" = "pull_request" ]]; then
             BRANCH_NAME=${{ github.head_ref }}
@@ -85,26 +92,26 @@ jobs:
         run: |
           SHA=${{ github.sha }}
           SHORT_SHA=${SHA:0:7}
-          echo "GHA_DOCKER_PUSH_IMAGE_TAG=${{ env.GHA_DOCKER_PUSH_BRANCH_NAME }}.${{ env.GHA_DOCKER_PUSH_DATE }}-SHA${SHORT_SHA}" >> $GITHUB_ENV
+          echo "GHA_DOCKER_PUSH_IMAGE_TAG=${GHA_DOCKER_PUSH_BRANCH_NAME}.${GHA_DOCKER_PUSH_DATE}-SHA${SHORT_SHA}" >> $GITHUB_ENV
       - id: set-registry-azure
-        if: env.GHA_DOCKER_PUSH_CLOUD_PROVIDER  == 'Azure'
+        if: env.GHA_DOCKER_PUSH_CLOUD_PROVIDER  == 'az'
         shell: bash
         run: |
           echo "GHA_DOCKER_PUSH_DOCKER_REGISTRY=acrentur001.azurecr.io" >> $GITHUB_ENV
       - id: set-registry-gcp
-        if: env.GHA_DOCKER_PUSH_CLOUD_PROVIDER  == 'GCP'
+        if: env.GHA_DOCKER_PUSH_CLOUD_PROVIDER  == 'gcp'
         shell: bash
         run: |
           echo "GHA_DOCKER_PUSH_DOCKER_REGISTRY=eu.gcr.io/entur-system-1287" >> $GITHUB_ENV
       - id: set-image
         shell: bash
         run: |
-          echo "GHA_DOCKER_PUSH_IMAGE=${{ env.GHA_DOCKER_PUSH_DOCKER_REGISTRY}}/${{ env.GHA_DOCKER_PUSH_IMAGE_NAME }}" >> $GITHUB_ENV
+          echo "GHA_DOCKER_PUSH_IMAGE=${GHA_DOCKER_PUSH_DOCKER_REGISTRY}/${GHA_DOCKER_PUSH_IMAGE_NAME}" >> $GITHUB_ENV
       - uses: actions/checkout@v4.1.6
       - uses: docker/setup-buildx-action@v3.3.0
-      - uses: entur/gha-meta/.github/actions/docker-auth@v1.1.6
+      - uses: entur/gha-meta/.github/actions/docker-auth@v1.1.7
         with:
-          environment: ${{ inputs.environment }}
+          environment: ${{ env.GHA_DOCKER_PUSH_ENVIRONMENT }}
           cloud_provider: ${{ env.GHA_DOCKER_PUSH_CLOUD_PROVIDER }}
           workload_identity_provider: ${{ vars.WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ vars.SERVICE_ACCOUNT }}

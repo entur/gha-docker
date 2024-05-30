@@ -18,7 +18,7 @@ jobs:
 |                                           INPUT                                           |  TYPE  | REQUIRED |    DEFAULT     |                  DESCRIPTION                   |
 |-------------------------------------------------------------------------------------------|--------|----------|----------------|------------------------------------------------|
 | <a name="input_build_artifact_name"></a>[build_artifact_name](#input_build_artifact_name) | string |  false   |                |  Name of GitHub artifact to <br>add to build   |
-| <a name="input_build_artifact_path"></a>[build_artifact_path](#input_build_artifact_path) | string |  false   | `"build/libs"` |           Path to save artifact into           |
+| <a name="input_build_artifact_path"></a>[build_artifact_path](#input_build_artifact_path) | string |  false   | `"build/libs"` |              Path to the artifact              |
 |                   <a name="input_context"></a>[context](#input_context)                   | string |  false   |     `"."`      | Build context, default root of <br>repository  |
 |              <a name="input_dockerfile"></a>[dockerfile](#input_dockerfile)               | string |  false   | `"Dockerfile"` |          Dockerfile to use for build           |
 |              <a name="input_image_name"></a>[image_name](#input_image_name)               | string |  false   | `"repo_name"`  |      Image name to use for <br>the build       |
