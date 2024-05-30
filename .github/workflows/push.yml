@@ -88,6 +88,9 @@ jobs:
       - id: set-image-tag
         if: env.GHA_DOCKER_PUSH_IMAGE_TAG  == 'image_tag'
         shell: bash
+        env:
+          GHA_DOCKER_PUSH_BRANCH_NAME: ${{ env.GHA_DOCKER_PUSH_BRANCH_NAME }}
+          GHA_DOCKER_PUSH_DATE: ${{ env.GHA_DOCKER_PUSH_DATE }}
         run: |
           SHA=${{ github.sha }}
           SHORT_SHA=${SHA:0:7}
@@ -104,6 +107,9 @@ jobs:
           echo "GHA_DOCKER_PUSH_DOCKER_REGISTRY=eu.gcr.io/entur-system-1287" >> $GITHUB_ENV
       - id: set-image
         shell: bash
+        env:
+          GHA_DOCKER_PUSH_IMAGE_NAME: ${{ env.GHA_DOCKER_PUSH_IMAGE_NAME }}
+          GHA_DOCKER_PUSH_DOCKER_REGISTRY: ${{ env.GHA_DOCKER_PUSH_DOCKER_REGISTRY }}
         run: |
           echo "GHA_DOCKER_PUSH_IMAGE=${GHA_DOCKER_PUSH_DOCKER_REGISTRY}/${GHA_DOCKER_PUSH_IMAGE_NAME}" >> $GITHUB_ENV
       - uses: actions/checkout@v4.1.6
