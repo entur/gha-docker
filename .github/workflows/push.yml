@@ -15,7 +15,7 @@ on:
         description: "Build context, default root of repository"
         type: string
         default: "."
-      dockerfile:
+      # dockerfile:
         description: "Dockerfile name to use for build"
         type: string
         default: "Dockerfile"
@@ -46,6 +46,7 @@ env:
   GHA_DOCKER_PUSH_DOCKERFILE: ${{ inputs.dockerfile }}
   GHA_DOCKER_PUSH_IMAGE_TAG: ${{ inputs.image_tag }}
   GHA_DOCKER_PUSH_CLOUD_PROVIDER: ${{ inputs.cloud_provider }}
+  GHA_DOCKER_PUSH_ENVIRONMENT: ${{ inputs.environment }}
   GHA_DOCKER_PUSH_DATE: ""
   GHA_DOCKER_PUSH_BRANCH_NAME: ""
   GHA_DOCKER_PUSH_DOCKER_REGISTRY: ""
@@ -64,9 +65,7 @@ jobs:
       image_tag: ${{ env.GHA_DOCKER_PUSH_IMAGE_TAG }}
     steps:
       - id: check-cloud-provider
-        if: ${{ env.GHA_DOCKER_PUSH_CLOUD_PROVIDER != 'gcp' && env.GHA_DOCKER_PUSH_CLOUD_PROVIDER != 'az' }}
-        env:
-          GHA_DOCKER_PUSH_CLOUD_PROVIDER: ${{ env.GHA_DOCKER_PUSH_CLOUD_PROVIDER }}
+        if: env.GHA_DOCKER_PUSH_CLOUD_PROVIDER != 'gcp' && env.GHA_DOCKER_PUSH_CLOUD_PROVIDER != 'az'
         run: |
           echo "Invalid cloud provider input: ${GHA_DOCKER_PUSH_CLOUD_PROVIDER}"
           echo "Valid options are: 'gcp' or 'az'"
@@ -96,9 +95,6 @@ jobs:
       - id: set-image-tag
         if: env.GHA_DOCKER_PUSH_IMAGE_TAG  == 'image_tag'
         shell: bash
-        env:
-          GHA_DOCKER_PUSH_BRANCH_NAME: ${{ env.GHA_DOCKER_PUSH_BRANCH_NAME }}
-          GHA_DOCKER_PUSH_DATE: ${{ env.GHA_DOCKER_PUSH_DATE }}
         run: |
           SHA=${{ github.sha }}
           SHORT_SHA=${SHA:0:7}
@@ -115,17 +111,14 @@ jobs:
           echo "GHA_DOCKER_PUSH_DOCKER_REGISTRY=eu.gcr.io/entur-system-1287" >> $GITHUB_ENV
       - id: set-image
         shell: bash
-        env:
-          GHA_DOCKER_PUSH_IMAGE_NAME: ${{ env.GHA_DOCKER_PUSH_IMAGE_NAME }}
-          GHA_DOCKER_PUSH_DOCKER_REGISTRY: ${{ env.GHA_DOCKER_PUSH_DOCKER_REGISTRY }}
         run: |
           echo "GHA_DOCKER_PUSH_IMAGE=${GHA_DOCKER_PUSH_DOCKER_REGISTRY}/${GHA_DOCKER_PUSH_IMAGE_NAME}" >> $GITHUB_ENV
       - uses: actions/checkout@v4.1.6
       - uses: docker/setup-buildx-action@v3.3.0
       - uses: entur/gha-meta/.github/actions/docker-auth@v1.1.6
         with:
-          environment: ${{ inputs.environment }}
-          cloud_provider: ${{ env.GHA_DOCKER_PUSH_CLOUD_PROVIDER }}
+          environment: "${GHA_DOCKER_PUSH_ENVIRONMENT}"
+          cloud_provider: "${GHA_DOCKER_PUSH_CLOUD_PROVIDER}"
           workload_identity_provider: ${{ vars.WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ vars.SERVICE_ACCOUNT }}
           azure_client_id: ${{ vars.AZURE_CLIENT_ID }}
@@ -134,7 +127,7 @@ jobs:
       - id: meta
         uses: docker/metadata-action@v5.5.1
         with:
-          images: ${{ env.GHA_DOCKER_PUSH_IMAGE }}
+          images: "${GHA_DOCKER_PUSH_IMAGE}"
           tags: |
             type=schedule
             type=ref,event=branch
@@ -150,10 +143,10 @@ jobs:
       - id: push
         uses: docker/build-push-action@v5.3.0
         with:
-          context: "{{defaultContext}}:${{ env.GHA_DOCKER_PUSH_CONTEXT }}"
+          context: "{{defaultContext}}:${GHA_DOCKER_PUSH_CONTEXT}"
           push: true
           cache-from: type=gha
-          file: ${{ env.GHA_DOCKER_PUSH_DOCKERFILE }}
+          file: "${GHA_DOCKER_PUSH_DOCKERFILE}"
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           provenance: false
