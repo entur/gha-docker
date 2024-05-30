@@ -63,6 +63,14 @@ jobs:
       image_name: ${{ env.GHA_DOCKER_PUSH_IMAGE_NAME }}
       image_tag: ${{ env.GHA_DOCKER_PUSH_IMAGE_TAG }}
     steps:
+      - id: check-cloud-provider
+        if: ${{ env.GHA_DOCKER_PUSH_CLOUD_PROVIDER != 'gcp' && env.GHA_DOCKER_PUSH_CLOUD_PROVIDER != 'az' }}
+        env:
+          GHA_DOCKER_PUSH_CLOUD_PROVIDER: ${{ env.GHA_DOCKER_PUSH_CLOUD_PROVIDER }}
+        run: |
+          echo "Invalid cloud provider input: ${GHA_DOCKER_PUSH_CLOUD_PROVIDER}"
+          echo "Valid options are: 'gcp' or 'az'"
+          exit 1
       - id: set-env
         shell: bash
         run: |

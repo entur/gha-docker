@@ -132,7 +132,7 @@ jobs:
     uses: ./.github/workflows/push.yml
     with:
       environment: az-dev
-      cloud_provider: Azure
+      cloud_provider: az
       context: "fixture"
       dockerfile: "Dockerfile.artifact"
       image_tag: "ci-test-tag"
