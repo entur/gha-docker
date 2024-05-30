@@ -67,7 +67,7 @@ jobs:
         with:
           file: ${{ env.GHA_DOCKER_BUILD_DOCKERFILE }}
           push: false
-          outputs: "type=docker,dest=/tmp/${GHA_DOCKER_BUILD_IMAGE_NAME}.tar"
+          outputs: "type=docker,dest=/tmp/${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}.tar"
           cache-to: type=gha,mode=max
           tags: ${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}:latest
           provenance: false
@@ -76,5 +76,5 @@ jobs:
         uses: actions/upload-artifact@v4.3.3
         with:
           name: ${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}
-          path: /tmp/${{ GHA_DOCKER_BUILD_IMAGE_NAME }}.tar
+          path: /tmp/${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}.tar
           retention-days: 1
