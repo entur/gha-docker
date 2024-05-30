@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/entur/gha-docker/compare/v1.2.4...v1.3.0) (2024-05-30)
+
+
+### Features
+
+* input vars and prevent injections ([#68](https://github.com/entur/gha-docker/issues/68)) ([f05ff4b](https://github.com/entur/gha-docker/commit/f05ff4b4dc06a5ba236fb354968e4030679a644e))
+
 ## [1.2.4](https://github.com/entur/gha-docker/compare/v1.2.3...v1.2.4) (2024-05-23)
 
 
