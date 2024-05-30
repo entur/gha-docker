@@ -21,14 +21,12 @@ jobs:
     timeout-minutes: ${{ inputs.timeout_minutes }}
     permissions:
       contents: read
+    env:
+      GHA_DOCKER_LINT_DOCKERFILE: ${{ inputs.dockerfile }}
+      GHA_DOCKER_LINT_IGNORE: ${{ inputs.ignore }}
     steps:
-      - id: set-env
-        shell: bash
-        run: |
-          echo "GHA_DOCKER_LINT_DOCKERFILE=${{ inputs.dockerfile }}" >> $GITHUB_ENV
-          echo "GHA_DOCKER_LINT_IGNORE=${{ inputs.ignore }}" >> $GITHUB_ENV
       - uses: actions/checkout@v4.1.6
       - uses: hadolint/hadolint-action@v3.1.0
         with:
-          dockerfile: ${{ env.GHA_DOCKER_LINT_DOCKERFILE }}
-          ignore: ${{ env.GHA_DOCKER_LINT_IGNORE }}
+          dockerfile: "$GHA_DOCKER_LINT_DOCKERFILE"
+          ignore: "$GHA_DOCKER_LINT_IGNORE"

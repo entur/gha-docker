@@ -15,7 +15,7 @@ on:
         description: "Build context, default root of repository"
         type: string
         default: "."
-      # dockerfile:
+      dockerfile:
         description: "Dockerfile name to use for build"
         type: string
         default: "Dockerfile"
