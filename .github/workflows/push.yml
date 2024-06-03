@@ -57,8 +57,9 @@ jobs:
     timeout-minutes: ${{ inputs.timeout_minutes }}
     environment: ${{ inputs.environment }}
     permissions:
-      contents: read
+      contents: write
       id-token: write
+      pull-requests: write
     outputs:
       meta: ${{ steps.push.outputs.metadata }}
       image_name: ${{ env.GHA_DOCKER_PUSH_IMAGE_NAME }}
@@ -144,3 +145,11 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           provenance: false
+      - id: tag-version
+        env:
+          GHA_DOCKER_PUSH_GIT_TAG: ${{ env.GHA_DOCKER_PUSH_IMAGE_NAME }}.${{ env.GHA_DOCKER_PUSH_IMAGE_TAG }}
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git tag -a "$GHA_DOCKER_PUSH_GIT_TAG" -m "chore(tag): $GHA_DOCKER_PUSH_GIT_TAG [ckip ci]"
+          git push origin "$GHA_DOCKER_PUSH_GIT_TAG" --force
