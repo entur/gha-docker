@@ -71,6 +71,7 @@ jobs:
       context: "."
       dockerfile: "fixture/Dockerfile.artifact"
       build_artifact_name: "some_build_artifact"
+      build_artifact_path: "."
 
   test-build-ok-with-artifact-outputs:
     runs-on: ubuntu-24.04
