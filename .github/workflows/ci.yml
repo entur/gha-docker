@@ -65,7 +65,7 @@ jobs:
           overwrite: true
 
   test-build-ok-with-artifact:
-    uses: ./.github/workflows/build.yml
+    uses: ./.github/workflows/build.yml@fix-artifact-download
     needs: test-build-prepare-artifact
     with:
       context: "."
