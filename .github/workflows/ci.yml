@@ -77,60 +77,60 @@ jobs:
           expected: "ci-test-tag"
           actual: ${{ needs.test-push-gcr-ok-with-tag.outputs.image_tag }}
 
-  # test-build-ok-with-custom-image-name:
-  #   uses: ./.github/workflows/build.yml
-  #   with:
-  #     dockerfile: fixture/Dockerfile.good
-  #     image_name: custom_image_name
+  test-build-ok-with-custom-image-name:
+    uses: ./.github/workflows/build.yml
+    with:
+      dockerfile: fixture/Dockerfile.good
+      image_name: custom_image_name
 
-  # assert-build-ok-with-custom-image-name-outputs:
-  #   runs-on: ubuntu-24.04
-  #   needs: test-build-ok-with-custom-image-name
-  #   steps:
-  #     - uses: nick-fields/assert-action@v2
-  #       with:
-  #         expected: "custom_image_name:latest"
-  #         actual: ${{ needs.test-build-ok-with-custom-image-name.outputs.image_tag }}
-  #     - uses: nick-fields/assert-action@v2
-  #       with:
-  #         expected: "custom_image_name"
-  #         actual: ${{ needs.test-build-ok-with-custom-image-name.outputs.image_artifact }}
+  assert-build-ok-with-custom-image-name-outputs:
+    runs-on: ubuntu-24.04
+    needs: test-build-ok-with-custom-image-name
+    steps:
+      - uses: nick-fields/assert-action@v2
+        with:
+          expected: "custom_image_name:latest"
+          actual: ${{ needs.test-build-ok-with-custom-image-name.outputs.image_tag }}
+      - uses: nick-fields/assert-action@v2
+        with:
+          expected: "custom_image_name"
+          actual: ${{ needs.test-build-ok-with-custom-image-name.outputs.image_artifact }}
 
-  # test-push-acr-ok-with-tag:
-  #   needs: test-build-ok-with-artifact
-  #   uses: ./.github/workflows/push.yml
-  #   with:
-  #     environment: az-dev
-  #     cloud_provider: az
-  #     context: .
-  #     dockerfile: fixture/Dockerfile.artifact
-  #     image_tag: ci-test-az-tag
+  test-push-acr-ok-with-tag:
+    needs: test-build-ok-with-artifact
+    uses: ./.github/workflows/push.yml
+    with:
+      environment: az-dev
+      cloud_provider: az
+      context: .
+      dockerfile: fixture/Dockerfile.artifact
+      image_tag: ci-test-az-tag
 
-  # assert-tag-acr-outputs-ok:
-  #   runs-on: ubuntu-24.04
-  #   needs: test-push-acr-ok-with-tag
-  #   steps:
-  #     - uses: nick-fields/assert-action@v2
-  #       with:
-  #         expected: "ci-test-tag"
-  #         actual: ${{ needs.test-push-acr-ok-with-tag.outputs.image_tag }}
-  # update-lint-doc:
-  #   needs: [test-push-acr-ok-with-tag, test-lint-ok]
-  #   uses: entur/gha-meta/.github/workflows/auto-doc.yml@v1
-  #   with:
-  #     workflow_file: .github/workflows/lint.yml
-  #     readme_file: README-lint.md
+  assert-tag-acr-outputs-ok:
+    runs-on: ubuntu-24.04
+    needs: test-push-acr-ok-with-tag
+    steps:
+      - uses: nick-fields/assert-action@v2
+        with:
+          expected: "ci-test-tag"
+          actual: ${{ needs.test-push-acr-ok-with-tag.outputs.image_tag }}
+  update-lint-doc:
+    needs: [test-push-acr-ok-with-tag, test-lint-ok]
+    uses: entur/gha-meta/.github/workflows/auto-doc.yml@v1
+    with:
+      workflow_file: .github/workflows/lint.yml
+      readme_file: README-lint.md
 
-  # update-build-doc:
-  #   needs: [test-push-acr-ok-with-tag, test-lint-ok]
-  #   uses: entur/gha-meta/.github/workflows/auto-doc.yml@v1
-  #   with:
-  #     workflow_file: .github/workflows/build.yml
-  #     readme_file: README-build.md
+  update-build-doc:
+    needs: [test-push-acr-ok-with-tag, test-lint-ok]
+    uses: entur/gha-meta/.github/workflows/auto-doc.yml@v1
+    with:
+      workflow_file: .github/workflows/build.yml
+      readme_file: README-build.md
 
-  # update-push-doc:
-  #   needs: [test-push-acr-ok-with-tag, test-lint-ok]
-  #   uses: entur/gha-meta/.github/workflows/auto-doc.yml@v1
-  #   with:
-  #     workflow_file: .github/workflows/push.yml
-  #     readme_file: README-push.md
+  update-push-doc:
+    needs: [test-push-acr-ok-with-tag, test-lint-ok]
+    uses: entur/gha-meta/.github/workflows/auto-doc.yml@v1
+    with:
+      workflow_file: .github/workflows/push.yml
+      readme_file: README-push.md

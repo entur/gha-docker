@@ -64,7 +64,7 @@ jobs:
       - id: setup-buildx
         uses: docker/setup-buildx-action@v3.3.0
       - id: build
-        uses: docker/build-push-action@v3.3.1
+        uses: docker/build-push-action@v5.3.0
         with:
           context: .
           file: ${{ env.GHA_DOCKER_BUILD_DOCKERFILE }}

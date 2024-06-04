@@ -31,6 +31,10 @@ on:
         description: "Timeout in minutes"
         type: number
         default: 10
+      harness_cd:
+        description: "Harness CD only supports one container tag, set to false if not using Harness CD"
+        type: boolean
+        default: true
     outputs:
       meta:
         value: ${{ jobs.push.outputs.meta }}
@@ -147,6 +151,7 @@ jobs:
           azure_subscription_id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
       - id: docker-tag
         name: docker tag
+        if: inputs.harness_cd == false
         shell: bash
         run: |
           for tag in $DOCKER_METADATA_OUTPUT_TAGS; do
@@ -155,10 +160,18 @@ jobs:
           done
           docker tag ${{ env.GHA_DOCKER_PUSH_IMAGE_NAME }}:${{ github.sha }} ${{ env.GHA_DOCKER_PUSH_IMAGE }}:${{ env.GHA_DOCKER_PUSH_IMAGE_TAG }}
       - id: docker-push
+        if: inputs.harness_cd == false
         name: docker push
         shell: bash
         run: |
           docker push --all-tags ${{ env.GHA_DOCKER_PUSH_IMAGE }}
+      - id: docker-push-harness # only one tag supported by Harness
+        if: inputs.harness_cd == true
+        name: docker push
+        shell: bash
+        run: |
+          docker tag ${{ env.GHA_DOCKER_PUSH_IMAGE_NAME }}:${{ github.sha }} ${{ env.GHA_DOCKER_PUSH_IMAGE }}:${{ env.GHA_DOCKER_PUSH_IMAGE_TAG }}
+          docker push ${{ env.GHA_DOCKER_PUSH_IMAGE }}:${{ env.GHA_DOCKER_PUSH_IMAGE_TAG }}
 
       # is it really needed? requires setting on source repo
       # Error: remote rejected] agreements-backend.create-workflows.20240604-SHA0d1fd44 -> agreements-backend.create-workflows.20240604-SHA0d1fd44 (refusing to allow a GitHub App to create or update workflow `.github/workflows/push.yml` without `workflows` permission)
