@@ -142,6 +142,7 @@ jobs:
       [
         test-push-acr-ok-with-tag,
         assert-build-ok-with-custom-image-name-outputs,
+        update-lint-doc,
       ]
     uses: entur/gha-meta/.github/workflows/auto-doc.yml@v1
     with:
@@ -153,6 +154,7 @@ jobs:
       [
         test-push-acr-ok-with-tag,
         assert-build-ok-with-custom-image-name-outputs,
+        update-build-doc,
       ]
     uses: entur/gha-meta/.github/workflows/auto-doc.yml@v1
     with:
