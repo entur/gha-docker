@@ -66,11 +66,12 @@ jobs:
       - id: build
         uses: docker/build-push-action@v5.3.0
         with:
-          context: .
+          context: ${{ env.GHA_DOCKER_BUILD_CONTEXT }}
           file: ${{ env.GHA_DOCKER_BUILD_DOCKERFILE }}
           push: false
           outputs: "type=docker,dest=/tmp/${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}.tar"
-          #cache-to: type=gha,mode=max
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
           tags: ${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}:${{ github.sha }}
           provenance: false
       - id: save-image

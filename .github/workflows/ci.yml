@@ -60,6 +60,15 @@ jobs:
       context: .
       dockerfile: fixture/Dockerfile.artifact
 
+  test-push-gcr-non-harness:
+    needs: test-build-ok-with-artifact
+    uses: ./.github/workflows/push.yml
+    with:
+      harness_cd: false
+      environment: dev
+      context: .
+      dockerfile: fixture/Dockerfile.artifact
+
   test-push-gcr-ok-with-tag:
     needs: test-push-gcr-ok
     uses: ./.github/workflows/push.yml

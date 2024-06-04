@@ -173,6 +173,18 @@ jobs:
           docker tag ${{ env.GHA_DOCKER_PUSH_IMAGE_NAME }}:${{ github.sha }} ${{ env.GHA_DOCKER_PUSH_IMAGE }}:${{ env.GHA_DOCKER_PUSH_IMAGE_TAG }}
           docker push ${{ env.GHA_DOCKER_PUSH_IMAGE }}:${{ env.GHA_DOCKER_PUSH_IMAGE_TAG }}
 
+      - id: cache-push
+        if: inputs.harness_cd == false
+        name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: ${{ env.GHA_DOCKER_PUSH_CONTEXT }}
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
       # is it really needed? requires setting on source repo
       # Error: remote rejected] agreements-backend.create-workflows.20240604-SHA0d1fd44 -> agreements-backend.create-workflows.20240604-SHA0d1fd44 (refusing to allow a GitHub App to create or update workflow `.github/workflows/push.yml` without `workflows` permission)
       # - id: tag-version
