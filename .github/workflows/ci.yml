@@ -32,6 +32,7 @@ jobs:
           actual: ${{ env.HADOLINT_RESULTS }}
 
   test-build-prepare-artifact:
+    needs: test-lint-ok
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4.1.6
@@ -114,22 +115,35 @@ jobs:
         with:
           expected: "ci-test-az-tag"
           actual: ${{ needs.test-push-acr-ok-with-tag.outputs.image_tag }}
+
   update-lint-doc:
-    needs: [test-push-acr-ok-with-tag, test-lint-ok]
+    needs:
+      [
+        test-push-acr-ok-with-tag,
+        assert-build-ok-with-custom-image-name-outputs,
+      ]
     uses: entur/gha-meta/.github/workflows/auto-doc.yml@v1
     with:
       workflow_file: .github/workflows/lint.yml
       readme_file: README-lint.md
 
   update-build-doc:
-    needs: [test-push-acr-ok-with-tag, test-lint-ok]
+    needs:
+      [
+        test-push-acr-ok-with-tag,
+        assert-build-ok-with-custom-image-name-outputs,
+      ]
     uses: entur/gha-meta/.github/workflows/auto-doc.yml@v1
     with:
       workflow_file: .github/workflows/build.yml
       readme_file: README-build.md
 
   update-push-doc:
-    needs: [test-push-acr-ok-with-tag, test-lint-ok]
+    needs:
+      [
+        test-push-acr-ok-with-tag,
+        assert-build-ok-with-custom-image-name-outputs,
+      ]
     uses: entur/gha-meta/.github/workflows/auto-doc.yml@v1
     with:
       workflow_file: .github/workflows/push.yml
