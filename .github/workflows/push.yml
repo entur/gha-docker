@@ -158,21 +158,22 @@ jobs:
       #     #provenance: false
       - id: docker-tag
         name: docker tag
+        shell: bash
         run: |
-          echo "# Tags"
-          echo "tags: ${{ steps.meta.outputs.tags }}"
           echo "# Labels"
           echo "labels: ${{ steps.meta.outputs.labels }}"
-          for tag in ${{ steps.meta.outputs.tags }}; do
+          for tag in $DOCKER_METADATA_OUTPUT_TAGS; do
+            echo "Setting: $tag"
             docker tag ${{ env.GHA_DOCKER_PUSH_IMAGE_NAME }}:${{ github.sha }} $tag
           done
           docker tag ${{ env.GHA_DOCKER_PUSH_IMAGE_NAME }}:${{ github.sha }} ${{ env.GHA_DOCKER_PUSH_IMAGE }}:${{ env.GHA_DOCKER_PUSH_IMAGE_TAG }}
       - id: docker-push
         name: docker push
+        shell: bash
         run: |
           docker push --all-tags ${{ env.GHA_DOCKER_PUSH_IMAGE }}
 
-      # is it really needed?
+      # is it really needed? requires setting on source repo
       # Error: remote rejected] agreements-backend.create-workflows.20240604-SHA0d1fd44 -> agreements-backend.create-workflows.20240604-SHA0d1fd44 (refusing to allow a GitHub App to create or update workflow `.github/workflows/push.yml` without `workflows` permission)
       # - id: tag-version
       #   env:
