@@ -78,4 +78,4 @@ jobs:
         with:
           name: ${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}
           path: /tmp/${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}.tar
-          retention-days: 1
+          retention-days: 3 # TODO discuss this or make it a parameter

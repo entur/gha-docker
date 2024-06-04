@@ -145,23 +145,10 @@ jobs:
           azure_client_id: ${{ vars.AZURE_CLIENT_ID }}
           azure_tenant_id: ${{ vars.AZURE_TENANT_ID }}
           azure_subscription_id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
-      # - id: push
-      #   uses: docker/build-push-action@v3.3.1
-      #   with:
-      #     context: .
-      #     push: true
-      #     #cache-from: type=gha
-      #     file: ${{ env.GHA_DOCKER_PUSH_DOCKERFILE }}
-      #     #tags: ${{ steps.meta.outputs.tags }},
-      #     tags: ${{ env.GHA_DOCKER_PUSH_IMAGE }}:${{ env.GHA_DOCKER_PUSH_IMAGE_TAG }}
-      #     labels: ${{ steps.meta.outputs.labels }}
-      #     #provenance: false
       - id: docker-tag
         name: docker tag
         shell: bash
         run: |
-          echo "# Labels"
-          echo "labels: ${{ steps.meta.outputs.labels }}"
           for tag in $DOCKER_METADATA_OUTPUT_TAGS; do
             echo "Setting: $tag"
             docker tag ${{ env.GHA_DOCKER_PUSH_IMAGE_NAME }}:${{ github.sha }} $tag
