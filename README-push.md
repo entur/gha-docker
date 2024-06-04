@@ -18,6 +18,7 @@ jobs:
 
 |                                     INPUT                                     |  TYPE   | REQUIRED |    DEFAULT     |                                            DESCRIPTION                                            |
 |-------------------------------------------------------------------------------|---------|----------|----------------|---------------------------------------------------------------------------------------------------|
+|        <a name="input_cache_type"></a>[cache_type](#input_cache_type)         | string  |  false   |    `"gha"`     |          Cache type to use, if <br>not set to gha, artifacts <br>will be used as cache            |
 |  <a name="input_cloud_provider"></a>[cloud_provider](#input_cloud_provider)   | string  |  false   |    `"gcp"`     |         Which cloud service provider to <br>use - Google Cloud: 'gcp' <br>or Azure: 'az'          |
 |             <a name="input_context"></a>[context](#input_context)             | string  |  false   |     `"."`      |                          Build context, default root of <br>repository                            |
 |        <a name="input_dockerfile"></a>[dockerfile](#input_dockerfile)         | string  |  false   | `"Dockerfile"` |                               Dockerfile name to use for <br>build                                |
