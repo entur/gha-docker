@@ -1,5 +1,27 @@
 # Changelog
 
+## [1.3.2](https://github.com/entur/gha-docker/compare/v1.3.1...v1.3.2) (2024-06-05)
+
+
+### Bug Fixes
+
+* add force to overwrite tag ([c28ece7](https://github.com/entur/gha-docker/commit/c28ece72862da94ca8069a287827526940f0aabd))
+* checkout ([dab9960](https://github.com/entur/gha-docker/commit/dab996010f1349a2691983438fe054d160730a87))
+* fetch depth 0 ([56dbbab](https://github.com/entur/gha-docker/commit/56dbbab01d6e44a48c92ab65eccf4a7703787dda))
+* new cache method ([556e1a1](https://github.com/entur/gha-docker/commit/556e1a1f6e6b76d92413be09f5eedef49df1bbc6))
+* new cache method ([#74](https://github.com/entur/gha-docker/issues/74)) ([e41eae1](https://github.com/entur/gha-docker/commit/e41eae16f2601ffff5be8f7c1ef2782009d1befb))
+* push origin ([59c59b1](https://github.com/entur/gha-docker/commit/59c59b154776ec57e9af173d2fbb808c4107e495))
+* remove buildx ([0561cc2](https://github.com/entur/gha-docker/commit/0561cc2c21a876c9270c076a174c96e5e78fc602))
+* remove gha cache build ([c096cac](https://github.com/entur/gha-docker/commit/c096cacc8af9e92a21a89a354e4fbf9177eb62f2))
+* remove harness build ([58adf90](https://github.com/entur/gha-docker/commit/58adf9010b535569c04cb2e826a4033579dd0b8d))
+* remove image name from git tag ([7f0a00c](https://github.com/entur/gha-docker/commit/7f0a00c0bd7ca2848e9643b3508b980a29dad82c))
+* rolling tag ([6b45114](https://github.com/entur/gha-docker/commit/6b45114280729eac0dd9ba102109d06823c1deee))
+* switch to git push --follow-tags ([632d332](https://github.com/entur/gha-docker/commit/632d33216d3f1fde247360944486b3c3f35547d1))
+* switch to git push --follow-tags ([511eb24](https://github.com/entur/gha-docker/commit/511eb24a51c8b08140085493c383ce5eb8409bb4))
+* try switch ([92109e0](https://github.com/entur/gha-docker/commit/92109e007998976bef48c141f2201347f3de5ba0))
+* typo ([169a117](https://github.com/entur/gha-docker/commit/169a1177b2512c11be0c276cf359e3423aadba64))
+* upload artifact always, and tag git with image version ([5cba7cd](https://github.com/entur/gha-docker/commit/5cba7cd49b6ee9007ea5e487239bad8c30e8ea5b))
+
 ## [1.3.1](https://github.com/entur/gha-docker/compare/v1.3.0...v1.3.1) (2024-06-03)
 
 
