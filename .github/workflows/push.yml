@@ -204,3 +204,12 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+      # Tag the git commit with the image tag (used by Harness CD to deploy)
+      - id: tag-version
+        env:
+          GHA_DOCKER_PUSH_GIT_TAG: ${{ env.GHA_DOCKER_PUSH_IMAGE_NAME }}.${{ env.GHA_DOCKER_PUSH_IMAGE_TAG }}
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git tag -a "$GHA_DOCKER_PUSH_GIT_TAG" -m "chore(tag): $GHA_DOCKER_PUSH_GIT_TAG [ckip ci]"
+          git push origin "$GHA_DOCKER_PUSH_GIT_TAG" --force

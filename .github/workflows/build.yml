@@ -26,10 +26,6 @@ on:
         description: "Timeout in minutes"
         type: number
         default: 40
-      cache_type:
-        description: "Cache type to use, if not set to gha, artifacts will be used as cache"
-        type: string
-        default: "gha"
     outputs:
       image_artifact:
         value: ${{ jobs.build.outputs.image_artifact }}
@@ -78,10 +74,10 @@ jobs:
           cache-to: type=gha,mode=max
           tags: ${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}:${{ github.sha }}
           provenance: false
+      # Save the image artifact for scanning and alternative deployment
       - id: save-image
         uses: actions/upload-artifact@v4.3.3
-        if: inputs.cache_type != 'gha'
         with:
           name: ${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}
           path: /tmp/${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}.tar
-          retention-days: 3 # TODO discuss this or make it a parameter
+          retention-days: 4 # TODO discuss this or make it a parameter
