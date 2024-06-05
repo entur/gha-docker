@@ -67,6 +67,8 @@ jobs:
     steps:
       - id: set-env
         shell: bash
+        env:
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
         run: |
           echo "GHA_DOCKER_PUSH_DATE=$(date +'%Y%m%d')" >> $GITHUB_ENV
           # Convert ref name to a valid git & docker tag name
@@ -74,6 +76,9 @@ jobs:
             BRANCH_NAME=${GITHUB_HEAD_REF}
           else
             BRANCH_NAME=${GITHUB_HEAD_REF}
+          fi
+          if [[ -z "${BRANCH_NAME}" ]]; then
+            BRANCH_NAME=${DEFAULT_BRANCH}
           fi
           BRANCH_NAME=${BRANCH_NAME:0:43} # truncate to max_len - len(.YYYYMMDD-SHA1234567)
           BRANCH_NAME=$(echo "$BRANCH_NAME" | sed s'/[-]$//') # remove trailing -
