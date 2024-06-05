@@ -212,4 +212,4 @@ jobs:
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git tag -a "$GHA_DOCKER_PUSH_GIT_TAG" -m "chore(tag): $GHA_DOCKER_PUSH_GIT_TAG [ckip ci]"
-          git push origin tag "$GHA_DOCKER_PUSH_GIT_TAG" --force
+          git push --follow-tags
