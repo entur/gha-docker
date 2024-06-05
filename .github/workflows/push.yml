@@ -117,6 +117,8 @@ jobs:
         run: |
           echo "GHA_DOCKER_PUSH_IMAGE=${GHA_DOCKER_PUSH_DOCKER_REGISTRY}/${GHA_DOCKER_PUSH_IMAGE_NAME}" >> $GITHUB_ENV
       - uses: actions/checkout@v4.1.6
+        with:
+          fetch-depth: 0
       - uses: docker/setup-buildx-action@v3.3.0
       # Artifact cache
       - name: Download artifact
@@ -209,7 +211,6 @@ jobs:
         env:
           GHA_DOCKER_PUSH_GIT_TAG: ${{ env.GHA_DOCKER_PUSH_IMAGE_NAME }}.${{ env.GHA_DOCKER_PUSH_IMAGE_TAG }}
         run: |
-          git switch "${GITHUB_HEAD_REF}"
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git tag -a "$GHA_DOCKER_PUSH_GIT_TAG" -m "chore(tag): $GHA_DOCKER_PUSH_GIT_TAG [ckip ci]"
