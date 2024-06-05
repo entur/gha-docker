@@ -31,14 +31,6 @@ on:
         description: "Timeout in minutes"
         type: number
         default: 10
-      harness_cd:
-        description: "Harness CD only supports one container tag, set to false if not using Harness CD"
-        type: boolean
-        default: true
-      cache_type:
-        description: "Cache type to use, if not set to gha, artifacts will be used as cache"
-        type: string
-        default: "gha"
     outputs:
       meta:
         value: ${{ jobs.push.outputs.meta }}
@@ -122,15 +114,13 @@ jobs:
       - uses: docker/setup-buildx-action@v3.3.0
       # Artifact cache
       - name: Download artifact
-        if: inputs.cache_type != 'gha'
         uses: actions/download-artifact@v4
         with:
           name: ${{ env.GHA_DOCKER_PUSH_IMAGE_NAME }}
           path: /tmp
       - name: Load image
-        if: inputs.cache_type != 'gha'
         run: |
-          docker load --input /tmp/${{ env.GHA_DOCKER_PUSH_IMAGE_NAME }}.tar
+          docker load --input /tmp/${GHA_DOCKER_PUSH_IMAGE_NAME}.tar
           docker image ls -a
       # Generate metadata for push (ps: does not do anything with the image, just generates output for later steps)
       - id: meta
@@ -163,49 +153,11 @@ jobs:
           azure_subscription_id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
       # Push image with single tag with ´docker push´
       - id: docker-push-single-tag
-        if: inputs.harness_cd == true && inputs.cache_type != 'gha'
         name: docker push
         shell: bash
         run: |
           docker tag ${GHA_DOCKER_PUSH_IMAGE_NAME}:${GITHUB_SHA} ${GHA_DOCKER_PUSH_IMAGE}:${GHA_DOCKER_PUSH_IMAGE_TAG}
           docker push ${GHA_DOCKER_PUSH_IMAGE}:${GHA_DOCKER_PUSH_IMAGE_TAG}
-      # Push image with all tags with ´docker push --all-tags´
-      - id: docker-push-all-tags
-        if: inputs.harness_cd == false && inputs.cache_type != 'gha'
-        name: docker push
-        shell: bash
-        run: |
-          for tag in ${DOCKER_METADATA_OUTPUT_TAGS}; do
-            docker tag ${GHA_DOCKER_PUSH_IMAGE_NAME}:${GITHUB_SHA} ${tag}
-          done
-          docker tag ${GHA_DOCKER_PUSH_IMAGE_NAME}:${GITHUB_SHA} ${GHA_DOCKER_PUSH_IMAGE}:${GHA_DOCKER_PUSH_IMAGE_TAG}
-          docker push --all-tags ${GHA_DOCKER_PUSH_IMAGE}
-      # Push image with all tags
-      - id: cache-push
-        if: inputs.harness_cd == false  && inputs.cache_type == 'gha'
-        name: Build and push
-        uses: docker/build-push-action@v5
-        with:
-          context: ${{ env.GHA_DOCKER_PUSH_CONTEXT }}
-          file: ${{ env.GHA_DOCKER_PUSH_DOCKERFILE }}
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-      # Push image with single tag
-      - id: cache-push-harness
-        if: inputs.harness_cd == true && inputs.cache_type == 'gha'
-        name: Build and push
-        uses: docker/build-push-action@v5
-        with:
-          context: ${{ env.GHA_DOCKER_PUSH_CONTEXT }}
-          file: ${{ env.GHA_DOCKER_PUSH_DOCKERFILE }}
-          push: true
-          tags: ${{ env.GHA_DOCKER_PUSH_IMAGE }}:${{ env.GHA_DOCKER_PUSH_IMAGE_TAG }}
-          labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
       # Tag the git commit with the image tag (used by Harness CD to deploy)
       - id: tag-version
         run: |
