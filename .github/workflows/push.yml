@@ -209,6 +209,7 @@ jobs:
         env:
           GHA_DOCKER_PUSH_GIT_TAG: ${{ env.GHA_DOCKER_PUSH_IMAGE_NAME }}.${{ env.GHA_DOCKER_PUSH_IMAGE_TAG }}
         run: |
+          git checkout ${GITHUB_HEAD_REF}
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git tag -a "$GHA_DOCKER_PUSH_GIT_TAG" -m "chore(tag): $GHA_DOCKER_PUSH_GIT_TAG [ckip ci]"
