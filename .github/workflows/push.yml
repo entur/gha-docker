@@ -216,4 +216,4 @@ jobs:
           git tag -d "$GHA_DOCKER_PUSH_GIT_TAG" || true
           git push origin :"$GHA_DOCKER_PUSH_GIT_TAG" || true
           git tag -a "$GHA_DOCKER_PUSH_GIT_TAG" -m "chore(tag): $GHA_DOCKER_PUSH_GIT_TAG [skip ci]"
-          git push --follow-tags --force
+          git push origin "$GHA_DOCKER_PUSH_GIT_TAG" --force
