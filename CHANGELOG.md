@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.3.3](https://github.com/entur/gha-docker/compare/v1.3.2...v1.3.3) (2024-06-05)
+
+
+### Bug Fixes
+
+* GITHUB_REF_NAME if merge ([68dbfe6](https://github.com/entur/gha-docker/commit/68dbfe6b40852cbb684e09803bb7bb221987ac79))
+* set default branch name if head ref is not set ([7d6ad92](https://github.com/entur/gha-docker/commit/7d6ad926c33100513b48911ba053c2398438eb3b))
+* set default branch name if head ref is not set ([#76](https://github.com/entur/gha-docker/issues/76)) ([2d1b01b](https://github.com/entur/gha-docker/commit/2d1b01b6fe87c53e0f1b60e3af1c6b19619cade1))
+
 ## [1.3.2](https://github.com/entur/gha-docker/compare/v1.3.1...v1.3.2) (2024-06-05)
 
 
