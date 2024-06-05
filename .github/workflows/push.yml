@@ -111,7 +111,6 @@ jobs:
       - uses: actions/checkout@v4.1.6
         with:
           fetch-depth: 0
-      - uses: docker/setup-buildx-action@v3.3.0
       # Artifact cache
       - name: Download artifact
         uses: actions/download-artifact@v4
