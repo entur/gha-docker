@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.4](https://github.com/entur/gha-docker/compare/v1.3.3...v1.3.4) (2024-06-17)
+
+
+### Bug Fixes
+
+* add fetch-depth 0 (old pr's) and if pr, ref to pr ([#86](https://github.com/entur/gha-docker/issues/86)) ([baa214e](https://github.com/entur/gha-docker/commit/baa214e40bac0d5b624a58f1e6822a6c27ebebab))
+
 ## [1.3.3](https://github.com/entur/gha-docker/compare/v1.3.2...v1.3.3) (2024-06-05)
 
 
