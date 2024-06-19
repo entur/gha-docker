@@ -60,7 +60,7 @@ jobs:
              GHA_REF=${GITHUB_REF_NAME}
           fi
           echo "GHA_REF=${GHA_REF}" >> $GITHUB_ENV
-      - uses: actions/checkout@v4.1.6
+      - uses: actions/checkout@v4.1.7
         with:
           ref: ${{ env.GHA_REF }}
           fetch-depth: 0

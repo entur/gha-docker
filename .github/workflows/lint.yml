@@ -25,7 +25,7 @@ jobs:
       GHA_DOCKER_LINT_DOCKERFILE: ${{ inputs.dockerfile }}
       GHA_DOCKER_LINT_IGNORE: ${{ inputs.ignore }}
     steps:
-      - uses: actions/checkout@v4.1.6
+      - uses: actions/checkout@v4.1.7
       - uses: hadolint/hadolint-action@v3.1.0
         with:
           dockerfile: ${{ env.GHA_DOCKER_LINT_DOCKERFILE }}

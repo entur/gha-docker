@@ -19,7 +19,7 @@ jobs:
   assert-lint-fail-ok:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4.1.6
+      - uses: actions/checkout@v4.1.7
       - uses: hadolint/hadolint-action@v3.1.0
         id: hadolint
         continue-on-error: true
@@ -35,7 +35,7 @@ jobs:
     needs: test-lint-ok
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4.1.6
+      - uses: actions/checkout@v4.1.7
       - uses: actions/upload-artifact@v4.3.3
         with:
           name: some_build_artifact
