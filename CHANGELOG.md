@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.5](https://github.com/entur/gha-docker/compare/v1.3.4...v1.3.5) (2024-06-28)
+
+
+### Bug Fixes
+
+* enable skip of git tagging ([#96](https://github.com/entur/gha-docker/issues/96)) ([ffbe913](https://github.com/entur/gha-docker/commit/ffbe913ed18b6c270ca698d2f7d0277b16157cf5))
+
 ## [1.3.4](https://github.com/entur/gha-docker/compare/v1.3.3...v1.3.4) (2024-06-17)
 
 
