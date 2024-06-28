@@ -31,6 +31,10 @@ on:
         description: "Timeout in minutes"
         type: number
         default: 10
+      git_tag:
+        description: "Tag git with image_tag?"
+        type: boolean
+        default: true
     outputs:
       meta:
         value: ${{ jobs.push.outputs.meta }}
@@ -166,6 +170,7 @@ jobs:
           docker push ${GHA_DOCKER_PUSH_IMAGE}:${GHA_DOCKER_PUSH_IMAGE_TAG}
       # Tag the git commit with the image tag (used by Harness CD to deploy)
       - id: tag-version
+        if: inputs.git_tag
         run: |
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
