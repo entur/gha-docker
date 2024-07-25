@@ -59,7 +59,6 @@ jobs:
   push:
     runs-on: ubuntu-24.04
     timeout-minutes: ${{ inputs.timeout_minutes }}
-    environment: ${{ inputs.environment }}
     permissions:
       contents: write
       id-token: write
@@ -156,11 +155,11 @@ jobs:
         with:
           environment: ${{ env.GHA_DOCKER_PUSH_ENVIRONMENT }}
           cloud_provider: ${{ env.GHA_DOCKER_PUSH_CLOUD_PROVIDER }}
-          workload_identity_provider: ${{ vars.WORKLOAD_IDENTITY_PROVIDER }}
-          service_account: ${{ vars.SERVICE_ACCOUNT }}
-          azure_client_id: ${{ vars.AZURE_CLIENT_ID }}
-          azure_tenant_id: ${{ vars.AZURE_TENANT_ID }}
-          azure_subscription_id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+          workload_identity_provider: ${{ vars.CI_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ vars.CI_SERVICE_ACCOUNT }}
+          azure_client_id: ${{ vars.CI_AZURE_CLIENT_ID }}
+          azure_tenant_id: ${{ vars.CI_AZURE_TENANT_ID }}
+          azure_subscription_id: ${{ vars.CI_AZURE_SUBSCRIPTION_ID }}
       # Push image with single tag with ´docker push´
       - id: docker-push-single-tag
         name: docker push
