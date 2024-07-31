@@ -85,7 +85,7 @@ jobs:
           provenance: false
       # Save the image artifact for scanning and alternative deployment
       - id: save-image
-        uses: actions/upload-artifact@v4.3.3
+        uses: actions/upload-artifact@v4.3.4
         with:
           name: ${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}
           path: /tmp/${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}.tar
