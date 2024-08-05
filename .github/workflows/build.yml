@@ -71,7 +71,7 @@ jobs:
           name: ${{ env.GHA_DOCKER_BUILD_ARTIFACT_NAME }}
           path: ${{ env.GHA_DOCKER_BUILD_ARTIFACT_PATH }}
       - id: setup-buildx
-        uses: docker/setup-buildx-action@v3.6.0
+        uses: docker/setup-buildx-action@v3.6.1
       - id: build
         uses: docker/build-push-action@v6.5.0
         with:
