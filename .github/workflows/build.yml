@@ -43,6 +43,7 @@ jobs:
     timeout-minutes: ${{ inputs.timeout_minutes }}
     permissions:
       contents: read
+      id-token: write
     outputs:
       image_artifact: ${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}
       image_tag: ${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}:latest
