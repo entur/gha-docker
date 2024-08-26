@@ -7,7 +7,7 @@ on:
         description: "GitHub artifact with Docker image"
         type: string
         default: "repo_name"
-      environment:
+      environment: # TBD
         type: string
         description: "GitHub environment to use Google Cloud: (dev, tst, prd) or Azure: (az-dev, az-test, az-prod)"
         default: "prd"
@@ -50,7 +50,7 @@ env:
   GHA_DOCKER_PUSH_DOCKERFILE: ${{ inputs.dockerfile }}
   GHA_DOCKER_PUSH_IMAGE_TAG: ${{ inputs.image_tag }}
   GHA_DOCKER_PUSH_CLOUD_PROVIDER: ${{ inputs.cloud_provider }}
-  GHA_DOCKER_PUSH_ENVIRONMENT: ${{ inputs.environment }}
+  GHA_DOCKER_PUSH_ENVIRONMENT: ${{ inputs.environment }} # TBD
   GHA_DOCKER_PUSH_DATE: ""
   GHA_DOCKER_PUSH_BRANCH_NAME: ""
   GHA_DOCKER_PUSH_DOCKER_REGISTRY: ""
@@ -153,7 +153,6 @@ jobs:
       # Authenticate with cloud provider
       - uses: entur/gha-meta/.github/actions/docker-auth@v1.1.7
         with:
-          environment: ${{ env.GHA_DOCKER_PUSH_ENVIRONMENT }}
           cloud_provider: ${{ env.GHA_DOCKER_PUSH_CLOUD_PROVIDER }}
           workload_identity_provider: ${{ vars.CI_WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ vars.CI_SERVICE_ACCOUNT }}
