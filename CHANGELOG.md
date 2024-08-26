@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.3.7](https://github.com/entur/gha-docker/compare/v1.3.6...v1.3.7) (2024-08-26)
+
+
+### Bug Fixes
+
+* add docker auth to build, environment property tbd ([8c0c95a](https://github.com/entur/gha-docker/commit/8c0c95a86cd6ae338e1795954e2cc20543d42407))
+* add id-token generation ([#113](https://github.com/entur/gha-docker/issues/113)) ([5bd54a8](https://github.com/entur/gha-docker/commit/5bd54a8a8c08a8c63b35b3cfcb70abfdccc1f195))
+
 ## [1.3.6](https://github.com/entur/gha-docker/compare/v1.3.5...v1.3.6) (2024-07-25)
 
 
