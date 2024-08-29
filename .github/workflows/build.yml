@@ -54,8 +54,10 @@ jobs:
       GHA_DOCKER_BUILD_ARTIFACT_NAME: ${{ inputs.build_artifact_name }}
       GHA_DOCKER_BUILD_IMAGE_NAME: ${{ inputs.image_name }}
       GHA_DOCKER_PUSH_CLOUD_PROVIDER: ${{ inputs.cloud_provider }}
+      GHA_REF: ""
     steps:
-      - id: set-image-name
+      - name: Set variables
+        id: set-vars
         shell: bash
         run: |
           if [[ "${GHA_DOCKER_BUILD_IMAGE_NAME}" = "repo_name" ]]; then
@@ -67,20 +69,35 @@ jobs:
              GHA_REF=${GITHUB_REF_NAME}
           fi
           echo "GHA_REF=${GHA_REF}" >> $GITHUB_ENV
-      - uses: actions/checkout@v4.1.7
+
+      - name: Checkout code
+        id: checkout-code
+        uses: actions/checkout@v4.1.7
         with:
           ref: ${{ env.GHA_REF }}
           fetch-depth: 0
-      - id: download-artifact
+
+      - if: env.GHA_DOCKER_BUILD_ARTIFACT_NAME != ''
+        name: Download artifact ${{ env.GHA_DOCKER_BUILD_ARTIFACT_NAME }}
+        id: download-artifact
         uses: actions/download-artifact@v4
-        if: env.GHA_DOCKER_BUILD_ARTIFACT_NAME != ''
         with:
           name: ${{ env.GHA_DOCKER_BUILD_ARTIFACT_NAME }}
           path: ${{ env.GHA_DOCKER_BUILD_ARTIFACT_PATH }}
-      - id: setup-buildx
+
+      - if: env.GHA_DOCKER_BUILD_ARTIFACT_NAME != ''
+        name: List artifacts in ${{ env.GHA_DOCKER_BUILD_ARTIFACT_PATH }}
+        id: list-artifacts
+        shell: bash
+        run: ls -l ${{ env.GHA_DOCKER_BUILD_ARTIFACT_PATH }}
+
+      - name: Setup buildx
+        id: setup-buildx
         uses: docker/setup-buildx-action@v3.6.0
-      # Authenticate with cloud provider to be able to download source images from our own docker repository
-      - uses: entur/gha-meta/.github/actions/docker-auth@v1.1.7
+
+      - name: Authenticate with the cloud provider
+        id: auth
+        uses: entur/gha-meta/.github/actions/docker-auth@v1.1.7
         with:
           cloud_provider: ${{ env.GHA_DOCKER_PUSH_CLOUD_PROVIDER }}
           workload_identity_provider: ${{ vars.CI_WORKLOAD_IDENTITY_PROVIDER }}
@@ -88,7 +105,9 @@ jobs:
           azure_client_id: ${{ vars.CI_AZURE_CLIENT_ID }}
           azure_tenant_id: ${{ vars.CI_AZURE_TENANT_ID }}
           azure_subscription_id: ${{ vars.CI_AZURE_SUBSCRIPTION_ID }}
-      - id: build
+
+      - name: Build image
+        id: build
         uses: docker/build-push-action@v6.5.0
         with:
           context: ${{ env.GHA_DOCKER_BUILD_CONTEXT }}
@@ -99,8 +118,9 @@ jobs:
           cache-to: type=gha,mode=max
           tags: ${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}:${{ github.sha }}
           provenance: false
-      # Save the image artifact for scanning and alternative deployment
-      - id: save-image
+
+      - name: Save docker image to the artifact storage
+        id: save-image
         uses: actions/upload-artifact@v4.3.3
         with:
           name: ${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}

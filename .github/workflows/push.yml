@@ -9,7 +9,7 @@ on:
         default: "repo_name"
       environment: # TBD
         type: string
-        description: "GitHub environment to use Google Cloud: (dev, tst, prd) or Azure: (az-dev, az-test, az-prod)"
+        description: "[ Deprecated - do not use ] - GitHub environment to use Google Cloud: (dev, tst, prd) or Azure: (az-dev, az-test, az-prod)"
         default: "prd"
       context:
         description: "Build context, default root of repository"
@@ -20,7 +20,7 @@ on:
         type: string
         default: "Dockerfile"
       image_tag:
-        description: "Docker tag"
+        description: "Docker tag. If not set, it will be set to 'branch_name.date-SHA'"
         type: string
         default: "image_tag"
       cloud_provider:
@@ -32,12 +32,10 @@ on:
         type: number
         default: 10
       git_tag:
-        description: "Tag git with image_tag?"
+        description: "Tag the repository default branch with the image_tag? Used by Harness CD to deploy the exact same helm/terraform code"
         type: boolean
         default: true
     outputs:
-      meta:
-        value: ${{ jobs.push.outputs.meta }}
       image_name:
         value: ${{ jobs.push.outputs.image_name }}
       image_tag:
@@ -55,6 +53,7 @@ env:
   GHA_DOCKER_PUSH_BRANCH_NAME: ""
   GHA_DOCKER_PUSH_DOCKER_REGISTRY: ""
   GHA_DOCKER_PUSH_IMAGE: ""
+  GHA_REF: ""
 jobs:
   push:
     runs-on: ubuntu-24.04
@@ -64,11 +63,11 @@ jobs:
       id-token: write
       pull-requests: write
     outputs:
-      meta: ${{ steps.push.outputs.metadata }}
       image_name: ${{ env.GHA_DOCKER_PUSH_IMAGE_NAME }}
       image_tag: ${{ env.GHA_DOCKER_PUSH_IMAGE_TAG }}
     steps:
-      - id: set-env
+      - name: Set variables
+        id: set-env
         shell: bash
         run: |
           echo "GHA_DOCKER_PUSH_DATE=$(date +'%Y%m%d')" >> $GITHUB_ENV
@@ -85,29 +84,39 @@ jobs:
           BRANCH_NAME=${BRANCH_NAME//./-}  # replace . with -
           BRANCH_NAME=${BRANCH_NAME//!/-}  # replace ! with -
           echo "GHA_DOCKER_PUSH_BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
-      - id: set-image-artifact-name
-        if: env.GHA_DOCKER_PUSH_IMAGE_NAME == 'repo_name'
+
+      - if: env.GHA_DOCKER_PUSH_IMAGE_NAME == 'repo_name'
+        name: Set image artifact name
+        id: set-image-artifact-name
         shell: bash
         run: |
           echo "GHA_DOCKER_PUSH_IMAGE_NAME=${GITHUB_REPOSITORY#*/}" >> $GITHUB_ENV
-      - id: set-image-tag
-        if: env.GHA_DOCKER_PUSH_IMAGE_TAG  == 'image_tag'
+
+      - if: env.GHA_DOCKER_PUSH_IMAGE_TAG  == 'image_tag'
+        name: Set image tag variable
+        id: set-image-tag
         shell: bash
         run: |
           SHA=${GITHUB_SHA}
           SHORT_SHA=${SHA:0:7}
           echo "GHA_DOCKER_PUSH_IMAGE_TAG=${GHA_DOCKER_PUSH_BRANCH_NAME}.${GHA_DOCKER_PUSH_DATE}-SHA${SHORT_SHA}" >> $GITHUB_ENV
-      - id: set-registry-azure
-        if: env.GHA_DOCKER_PUSH_CLOUD_PROVIDER  == 'az'
+
+      - if: env.GHA_DOCKER_PUSH_CLOUD_PROVIDER  == 'az'
+        name: Set Azure registry
+        id: set-registry-azure
         shell: bash
         run: |
           echo "GHA_DOCKER_PUSH_DOCKER_REGISTRY=acrentur001.azurecr.io" >> $GITHUB_ENV
-      - id: set-registry-gcp
-        if: env.GHA_DOCKER_PUSH_CLOUD_PROVIDER  == 'gcp'
+
+      - if: env.GHA_DOCKER_PUSH_CLOUD_PROVIDER  == 'gcp'
+        name: Set GCP registry
+        id: set-registry-gcp
         shell: bash
         run: |
           echo "GHA_DOCKER_PUSH_DOCKER_REGISTRY=eu.gcr.io/entur-system-1287" >> $GITHUB_ENV
-      - id: set-image
+
+      - name: Set full registry url and image name
+        id: set-image
         shell: bash
         run: |
           echo "GHA_DOCKER_PUSH_IMAGE=${GHA_DOCKER_PUSH_DOCKER_REGISTRY}/${GHA_DOCKER_PUSH_IMAGE_NAME}" >> $GITHUB_ENV
@@ -117,41 +126,27 @@ jobs:
              GHA_REF=${GITHUB_REF_NAME}
           fi
           echo "GHA_REF=${GHA_REF}" >> $GITHUB_ENV
-      - uses: actions/checkout@v4.1.7
+
+      - name: Checkout code
+        uses: actions/checkout@v4.1.7
         with:
           ref: ${{ env.GHA_REF }}
           fetch-depth: 0
-      # Artifact cache
-      - name: Download artifact
+
+      - name: Download docker image from the artifact storage
         uses: actions/download-artifact@v4
         with:
           name: ${{ env.GHA_DOCKER_PUSH_IMAGE_NAME }}
           path: /tmp
-      - name: Load image
+
+      - name: Load docker image
         run: |
           docker load --input /tmp/${GHA_DOCKER_PUSH_IMAGE_NAME}.tar
           docker image ls -a
-      # Generate metadata for push (ps: does not do anything with the image, just generates output for later steps)
-      - id: meta
-        name: Generate Metadata for push
-        uses: docker/metadata-action@v5.5.1
-        with:
-          context: workflow
-          images: ${{ env.GHA_DOCKER_PUSH_IMAGE }}
-          tags: |
-            type=schedule
-            type=ref,event=branch
-            type=ref,event=pr
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}.{{patch}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
-            type=sha
-            type=raw,value=${{ env.GHA_DOCKER_PUSH_BRANCH_NAME }}
-            type=raw,value=${{ env.GHA_DOCKER_PUSH_IMAGE_TAG }}
-            type=raw,value=latest
-      # Authenticate with cloud provider
-      - uses: entur/gha-meta/.github/actions/docker-auth@v1.1.7
+
+      - name: Authenticate with the cloud provider
+        id: auth
+        uses: entur/gha-meta/.github/actions/docker-auth@v1.1.7
         with:
           cloud_provider: ${{ env.GHA_DOCKER_PUSH_CLOUD_PROVIDER }}
           workload_identity_provider: ${{ vars.CI_WORKLOAD_IDENTITY_PROVIDER }}
@@ -159,16 +154,18 @@ jobs:
           azure_client_id: ${{ vars.CI_AZURE_CLIENT_ID }}
           azure_tenant_id: ${{ vars.CI_AZURE_TENANT_ID }}
           azure_subscription_id: ${{ vars.CI_AZURE_SUBSCRIPTION_ID }}
-      # Push image with single tag with ´docker push´
-      - id: docker-push-single-tag
-        name: docker push
+
+      - name: Docker push to registry
+        id: docker-push-single-tag
         shell: bash
         run: |
           docker tag ${GHA_DOCKER_PUSH_IMAGE_NAME}:${GITHUB_SHA} ${GHA_DOCKER_PUSH_IMAGE}:${GHA_DOCKER_PUSH_IMAGE_TAG}
           docker push ${GHA_DOCKER_PUSH_IMAGE}:${GHA_DOCKER_PUSH_IMAGE_TAG}
+
       # Tag the git commit with the image tag (used by Harness CD to deploy)
-      - id: tag-version
-        if: inputs.git_tag
+      - if: inputs.git_tag
+        name: Tag default branch with the container image tag ${{ env.GHA_DOCKER_PUSH_IMAGE_TAG }}
+        id: tag-version
         run: |
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
