@@ -38,6 +38,5 @@ jobs:
 | <a name="output_image_and_tag"></a>[image_and_tag](#output_image_and_tag) | `"${{ jobs.push.outputs.image_name }}:${{ jobs.push.outputs.image_tag }}"` |             |
 |     <a name="output_image_name"></a>[image_name](#output_image_name)      |                  `"${{ jobs.push.outputs.image_name }}"`                   |             |
 |       <a name="output_image_tag"></a>[image_tag](#output_image_tag)       |                   `"${{ jobs.push.outputs.image_tag }}"`                   |             |
-|              <a name="output_meta"></a>[meta](#output_meta)               |                     `"${{ jobs.push.outputs.meta }}"`                      |             |
 
 <!-- AUTO-DOC-OUTPUT:END -->
