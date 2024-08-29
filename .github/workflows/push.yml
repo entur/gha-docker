@@ -9,7 +9,7 @@ on:
         default: "repo_name"
       environment: # TBD
         type: string
-        description: "GitHub environment to use Google Cloud: (dev, tst, prd) or Azure: (az-dev, az-test, az-prod)"
+        description: "[ Deprecated - do not use ] - GitHub environment to use Google Cloud: (dev, tst, prd) or Azure: (az-dev, az-test, az-prod)"
         default: "prd"
       context:
         description: "Build context, default root of repository"
@@ -20,7 +20,7 @@ on:
         type: string
         default: "Dockerfile"
       image_tag:
-        description: "Docker tag"
+        description: "Docker tag. If not set, it will be set to 'branch_name.date-SHA'"
         type: string
         default: "image_tag"
       cloud_provider:
@@ -32,7 +32,7 @@ on:
         type: number
         default: 10
       git_tag:
-        description: "Tag git with image_tag?"
+        description: "Tag the repository default branch with the image_tag? Used by Harness CD to deploy the exact same helm/terraform code"
         type: boolean
         default: true
     outputs:
