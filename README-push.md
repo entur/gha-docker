@@ -27,6 +27,7 @@ jobs:
 |          <a name="input_image_tag"></a>[image_tag](#input_image_tag)          | string  |  false   | `"image_tag"`  |                                Docker tag. If not set, <br>it will be set to <br>'branch_name.date-SHA'                                 |
 | <a name="input_timeout_minutes"></a>[timeout_minutes](#input_timeout_minutes) | number  |  false   |      `10`      |                                                           Timeout in minutes                                                            |
 
+
 <!-- AUTO-DOC-INPUT:END -->
 
 ## Outputs

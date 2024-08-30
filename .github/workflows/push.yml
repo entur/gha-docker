@@ -54,6 +54,7 @@ env:
   GHA_DOCKER_PUSH_DOCKER_REGISTRY: ""
   GHA_DOCKER_PUSH_IMAGE: ""
   GHA_REF: ""
+
 jobs:
   push:
     runs-on: ubuntu-24.04
