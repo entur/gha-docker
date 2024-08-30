@@ -56,7 +56,6 @@ jobs:
     needs: test-build-ok-with-artifact
     uses: ./.github/workflows/push.yml
     with:
-      environment: dev
       context: .
       dockerfile: fixture/Dockerfile.artifact
 
@@ -64,7 +63,6 @@ jobs:
     needs: test-push-gcr-ok
     uses: ./.github/workflows/push.yml
     with:
-      environment: dev
       context: .
       dockerfile: fixture/Dockerfile.artifact
       image_tag: ci-test-tag
@@ -102,7 +100,6 @@ jobs:
     needs: test-build-ok-with-artifact
     uses: ./.github/workflows/push.yml
     with:
-      environment: az-dev
       cloud_provider: az
       context: .
       dockerfile: fixture/Dockerfile.artifact

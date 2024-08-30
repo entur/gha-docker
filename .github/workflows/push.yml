@@ -7,10 +7,6 @@ on:
         description: "GitHub artifact with Docker image"
         type: string
         default: "repo_name"
-      environment: # TBD
-        type: string
-        description: "[ Deprecated - do not use ] - GitHub environment to use Google Cloud: (dev, tst, prd) or Azure: (az-dev, az-test, az-prod)"
-        default: "prd"
       context:
         description: "Build context, default root of repository"
         type: string
@@ -48,7 +44,6 @@ env:
   GHA_DOCKER_PUSH_DOCKERFILE: ${{ inputs.dockerfile }}
   GHA_DOCKER_PUSH_IMAGE_TAG: ${{ inputs.image_tag }}
   GHA_DOCKER_PUSH_CLOUD_PROVIDER: ${{ inputs.cloud_provider }}
-  GHA_DOCKER_PUSH_ENVIRONMENT: ${{ inputs.environment }} # TBD
   GHA_DOCKER_PUSH_DATE: ""
   GHA_DOCKER_PUSH_BRANCH_NAME: ""
   GHA_DOCKER_PUSH_DOCKER_REGISTRY: ""
