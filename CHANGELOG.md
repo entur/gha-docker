@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.8](https://github.com/entur/gha-docker/compare/v1.3.7...v1.3.8) (2024-08-30)
+
+
+### Bug Fixes
+
+* remove environment property ([#119](https://github.com/entur/gha-docker/issues/119)) ([7273c56](https://github.com/entur/gha-docker/commit/7273c569907fce05339c5f57c29fbd6c69a0e93b))
+
 ## [1.3.7](https://github.com/entur/gha-docker/compare/v1.3.6...v1.3.7) (2024-08-26)
 
 
