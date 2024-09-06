@@ -33,6 +33,7 @@ jobs:
 
 |                                           INPUT                                           |  TYPE  | REQUIRED |    DEFAULT     |                                    DESCRIPTION                                    |
 |-------------------------------------------------------------------------------------------|--------|----------|----------------|-----------------------------------------------------------------------------------|
+|              <a name="input_build_args"></a>[build_args](#input_build_args)               | string |  false   |                |                     Build arguments to pass to <br>the build                      |
 | <a name="input_build_artifact_name"></a>[build_artifact_name](#input_build_artifact_name) | string |  false   |                |                   Name of GitHub artifact to <br>add to build                     |
 | <a name="input_build_artifact_path"></a>[build_artifact_path](#input_build_artifact_path) | string |  false   | `"build/libs"` |                               Path to the artifact                                |
 |        <a name="input_cloud_provider"></a>[cloud_provider](#input_cloud_provider)         | string |  false   |    `"gcp"`     | Which cloud service provider to <br>use - Google Cloud: 'gcp' <br>or Azure: 'az'  |
