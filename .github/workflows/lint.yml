@@ -17,6 +17,7 @@ on:
 
 jobs:
   lint:
+    name: Docker Lint
     runs-on: ubuntu-24.04
     timeout-minutes: ${{ inputs.timeout_minutes }}
     permissions:

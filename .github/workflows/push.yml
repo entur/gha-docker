@@ -51,6 +51,7 @@ env:
   GHA_REF: ""
 jobs:
   push:
+    name: Docker Push
     runs-on: ubuntu-24.04
     timeout-minutes: ${{ inputs.timeout_minutes }}
     permissions:
