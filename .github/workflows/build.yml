@@ -15,6 +15,10 @@ on:
         description: "Image name to use for the build"
         type: string
         default: "repo_name"
+      build_args:
+        description: "Build arguments to pass to the build"
+        type: string
+        default: ""
       build_artifact_name:
         description: "Name of GitHub artifact to add to build"
         type: string
@@ -50,6 +54,7 @@ jobs:
     env:
       GHA_DOCKER_BUILD_CONTEXT: ${{ inputs.context }}
       GHA_DOCKER_BUILD_DOCKERFILE: ${{ inputs.dockerfile }}
+      GHA_DOCKER_BUILD_ARGS: ${{ inputs.build_args }}
       GHA_DOCKER_BUILD_ARTIFACT_PATH: ${{ inputs.build_artifact_path }}
       GHA_DOCKER_BUILD_ARTIFACT_NAME: ${{ inputs.build_artifact_name }}
       GHA_DOCKER_BUILD_IMAGE_NAME: ${{ inputs.image_name }}
@@ -110,14 +115,15 @@ jobs:
         id: build
         uses: docker/build-push-action@v6.5.0
         with:
-          context: ${{ env.GHA_DOCKER_BUILD_CONTEXT }}
-          file: ${{ env.GHA_DOCKER_BUILD_DOCKERFILE }}
-          push: false
-          outputs: "type=docker,dest=/tmp/${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}.tar"
+          build-args: ${{ env.GHA_DOCKER_BUILD_ARGS }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          tags: ${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}:${{ github.sha }}
+          context: ${{ env.GHA_DOCKER_BUILD_CONTEXT }}
+          file: ${{ env.GHA_DOCKER_BUILD_DOCKERFILE }}
+          outputs: "type=docker,dest=/tmp/${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}.tar"
+          push: false
           provenance: false
+          tags: ${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}:${{ github.sha }}
 
       - name: Save docker image to the artifact storage
         id: save-image

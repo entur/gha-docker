@@ -11,6 +11,22 @@ jobs:
     uses: entur/gha-docker/.github/workflows/build.yml@v1
 ```
 
+### Using build-args
+
+```yml
+jobs:
+  docker-build:
+    env:  # Set the environment variables from GitHub Actions secrets
+      REGISTRY_USER: ${{ secrets.REGISTRY_USER }}
+      REGISTRY_APIKEY: ${{ secrets.REGISTRY_APIKEY }}
+    name: Docker Build
+    uses: entur/gha-docker/.github/workflows/build.yml@v1
+    with:
+      build_args: |
+        REGISTRY_USER
+        REGISTRY_APIKEY
+```
+
 ## Inputs
 
 <!-- AUTO-DOC-INPUT:START - Do not remove or modify this section -->
