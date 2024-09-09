@@ -51,7 +51,7 @@ jobs:
     uses: ./.github/workflows/build.yml
     with:
       dockerfile: fixture/Dockerfile.buildargs
-      image_name: custom_image_name
+      image_name: custom_image_name_with_build_args
       build_args: |
         FOO=build
         BAR=args
@@ -59,13 +59,22 @@ jobs:
     runs-on: ubuntu-24.04
     needs: test-build-ok-with-build-args
     env:
-      build-output: ${{join(needs.test-build-ok-with-build-args.outputs.*, '\n')}}
+      GHA_BUILD_ARGS: ""
     steps:
+      - name: Download docker image from the artifact storage
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.test-build-ok-with-build-args.outputs.image_artifact }}
+          path: /tmp
+      - name: Load docker image
+        run: |
+          docker load --input /tmp/${GHA_DOCKER_PUSH_IMAGE_NAME}.tar
+          docker image ls -a
+          echo "GHA_BUILD_ARGS=$(docker run --rm custom_image_name_with_build_args:latest)" >> $GITHUB_ENV
       - name: Check build args
         shell: bash
         run: |
-          echo "${{ env.build-output }}"
-          echo "${{ env.build-output }}" | grep  "build args"
+          echo "${{ env.GHA_BUILD_ARGS }}" | grep  "build args"
 
   test-build-prepare-artifact:
     needs: test-lint-ok
