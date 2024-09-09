@@ -55,7 +55,7 @@ jobs:
       build_args: |
         FOO=build
         BAR=args
-  check-build-ok-with-build-args:
+  assert-build-ok-with-build-args:
     runs-on: ubuntu-24.04
     needs: test-build-ok-with-build-args
     env:
@@ -68,10 +68,11 @@ jobs:
           path: /tmp
       - name: Load docker image
         run: |
-          docker load --input /tmp/${GHA_DOCKER_PUSH_IMAGE_NAME}.tar
+          ls -lah /tmp
+          docker load --input /tmp/${GHA_DOCKER_PUSH_IMAGE_NAME}
           docker image ls -a
           echo "GHA_BUILD_ARGS=$(docker run --rm custom_image_name_with_build_args:latest)" >> $GITHUB_ENV
-      - name: Check build args
+      - name: Verify build args
         shell: bash
         run: |
           echo "${{ env.GHA_BUILD_ARGS }}" | grep  "build args"
