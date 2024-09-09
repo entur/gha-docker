@@ -55,6 +55,17 @@ jobs:
       build_args: |
         FOO=build
         BAR=args
+  check-build-ok-with-build-args:
+    runs-on: ubuntu-24.04
+    needs: test-build-ok-with-build-args
+    env:
+      build-output: ${{join(needs.test-build-ok-with-build-args.outputs.*, '\n')}}
+    steps:
+      - name: Check build args
+        shell: bash
+        run: |
+          echo "${{ env.build-output }}"
+          echo "${{ env.build-output }}" | grep  "build args"
 
   test-build-prepare-artifact:
     needs: test-lint-ok
