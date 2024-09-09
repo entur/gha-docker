@@ -4,5 +4,5 @@ FROM busybox:1.36
 WORKDIR /usr/src/app
 ARG FOO
 ARG BAR
-RUN echo "${FOO} ${BAR}" > testfile.txt
-CMD cat testfile.txt
+RUN echo "${FOO} ${BAR}" > buildargs.txt
+CMD cat buildargs.txt

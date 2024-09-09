@@ -69,15 +69,15 @@ jobs:
       - name: Load and run docker image
         env:
           DOCKER_IMAGE: ${{ needs.test-build-ok-with-build-args.outputs.image_artifact }}
+        shell: bash
         run: |
           docker load --input /tmp/${DOCKER_IMAGE}.tar
-          docker image ls -a
-          docker run --rm ${DOCKER_IMAGE}:${GITHUB_SHA}
           echo "GHA_BUILD_ARGS=$(docker run --rm ${DOCKER_IMAGE}:${GITHUB_SHA})" >> $GITHUB_ENV
       - name: Verify build args
         shell: bash
         run: |
-          echo "${{ env.GHA_BUILD_ARGS }}" | grep  "build args"
+          set -o pipefail
+          echo "${{ env.GHA_BUILD_ARGS }}" | grep -q "build args2"
 
   test-build-prepare-artifact:
     needs: test-lint-ok
