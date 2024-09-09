@@ -2,12 +2,13 @@
 FROM busybox:1.36
 WORKDIR /usr/src/app
 RUN --mount=type=secret,id=foo,required=true \
-  --mount=type=secret,id=bar,required=true \
-  FOO="$(cat /run/secrets/foo)" \
-  BAR="$(cat /run/secrets/bar)" \
-  echo "${FOO} ${BAR}" > buildargs.txt \
-  && echo "Build args: ${FOO} ${BAR}" \
-  && export FOO BAR
+  cat /run/secrets/foo
+#   --mount=type=secret,id=bar,required=true \
+#   FOO="$(cat /run/secrets/foo)" \
+#   BAR="$(cat /run/secrets/bar)" \
+#   echo "${FOO} ${BAR}" > buildargs.txt \
+#   && echo "Build args: ${FOO} ${BAR}" \
+#   && export FOO BAR
 RUN cat buildargs.txt
-RUN echo "Build args as env : ${FOO} ${BAR}"
+# RUN echo "Build args as env : ${FOO} ${BAR}"
 CMD ["cat", "buildargs.txt"]
