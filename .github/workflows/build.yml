@@ -15,10 +15,6 @@ on:
         description: "Image name to use for the build"
         type: string
         default: "repo_name"
-      build_args:
-        description: "Build arguments to pass to the build"
-        type: string
-        default: ""
       build_artifact_name:
         description: "Name of GitHub artifact to add to build"
         type: string
@@ -34,7 +30,10 @@ on:
         description: "Timeout in minutes"
         type: number
         default: 40
-
+    secrets:
+      build-args:
+        description: "Build arguments to pass to the build"
+        required: false
     outputs:
       image_artifact:
         value: ${{ jobs.build.outputs.image_artifact }}
@@ -55,7 +54,7 @@ jobs:
     env:
       GHA_DOCKER_BUILD_CONTEXT: ${{ inputs.context }}
       GHA_DOCKER_BUILD_DOCKERFILE: ${{ inputs.dockerfile }}
-      GHA_DOCKER_BUILD_ARGS: ${{ inputs.build_args }}
+      GHA_DOCKER_BUILD_ARGS: ${{ secrets.build_args }}
       GHA_DOCKER_BUILD_ARTIFACT_PATH: ${{ inputs.build_artifact_path }}
       GHA_DOCKER_BUILD_ARTIFACT_NAME: ${{ inputs.build_artifact_name }}
       GHA_DOCKER_BUILD_IMAGE_NAME: ${{ inputs.image_name }}
