@@ -72,9 +72,8 @@ jobs:
         run: |
           docker load --input /tmp/${DOCKER_IMAGE}.tar
           docker image ls -a
-          docker tag ${DOCKER_IMAGE} ${DOCKER_IMAGE}:latest
-          docker run --rm ${DOCKER_IMAGE}
-          echo "GHA_BUILD_ARGS=$(docker run --rm ${DOCKER_IMAGE})" >> $GITHUB_ENV
+          docker run --rm ${DOCKER_IMAGE}:${GITHUB_SHA}
+          echo "GHA_BUILD_ARGS=$(docker run --rm ${DOCKER_IMAGE}:${GITHUB_SHA})" >> $GITHUB_ENV
       - name: Verify build args
         shell: bash
         run: |
