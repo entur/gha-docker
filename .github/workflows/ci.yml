@@ -47,7 +47,9 @@ jobs:
         with:
           expected: "fixture/Dockerfile.bad:4 DL3000 error: Use absolute WORKDIR"
           actual: ${{ env.HADOLINT_RESULTS }}
+
   test-build-ok-with-build-args:
+    name: Docker Build with build args
     uses: ./.github/workflows/build.yml
     with:
       dockerfile: fixture/Dockerfile.buildargs
@@ -55,7 +57,9 @@ jobs:
       build_args: |
         FOO=build
         BAR=args
+
   assert-build-ok-with-build-args:
+    name: Assert build with build args
     runs-on: ubuntu-24.04
     needs: test-build-ok-with-build-args
     env:
@@ -77,7 +81,7 @@ jobs:
         shell: bash
         run: |
           set -o pipefail
-          echo "${{ env.GHA_BUILD_ARGS }}" | grep -q "build args2"
+          echo "${GHA_BUILD_ARGS}" | grep -q "build args"
 
   test-build-prepare-artifact:
     needs: test-lint-ok
