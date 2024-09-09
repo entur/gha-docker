@@ -66,12 +66,14 @@ jobs:
         with:
           name: ${{ needs.test-build-ok-with-build-args.outputs.image_artifact }}
           path: /tmp
-      - name: Load docker image
+      - name: Load and run docker image
+        env:
+          DOCKER_IMAGE: ${{ needs.test-build-ok-with-build-args.outputs.image_artifact }}
         run: |
-          ls -lah /tmp
-          docker load --input /tmp/${GHA_DOCKER_PUSH_IMAGE_NAME}
+          docker load --input /tmp/${DOCKER_IMAGE}.tar
           docker image ls -a
-          echo "GHA_BUILD_ARGS=$(docker run --rm custom_image_name_with_build_args:latest)" >> $GITHUB_ENV
+          docker run --rm ${DOCKER_IMAGE}:latest
+          echo "GHA_BUILD_ARGS=$(docker run --rm ${DOCKER_IMAGE}:latest)" >> $GITHUB_ENV
       - name: Verify build args
         shell: bash
         run: |
