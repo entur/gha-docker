@@ -116,8 +116,6 @@ jobs:
         uses: docker/build-push-action@v6.7.0
         env:
           DOCKER_BUILDKIT: 1
-          foo: "build"
-          bar: "args"
         with:
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -127,9 +125,8 @@ jobs:
           push: false
           provenance: false
           tags: ${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}:${{ github.sha }}
-          # secrets: |
-          #   foo="build"
-          #   bar="args"
+          secret-envs: |
+            ${{ secrets.build-args}}
       - name: Save docker image to the artifact storage
         id: save-image
         uses: actions/upload-artifact@v4

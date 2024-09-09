@@ -59,8 +59,8 @@ jobs:
       image_name: custom_image_name_with_build_args
     secrets:
       build-args: |
-        ${{ secrets.MY_SECRET }}
-        ${{ secrets.MY_SECRET2 }}
+        FOO=${{ secrets.MY_SECRET }}
+        BAR=${{ secrets.MY_SECRET2 }}
 
   assert-build-ok-with-build-args:
     name: Assert build with build args
