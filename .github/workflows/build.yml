@@ -123,7 +123,7 @@ jobs:
           push: false
           provenance: false
           tags: ${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}:${{ github.sha }}
-          secrets: FOO="build",BAR="args"
+          secrets: foo="build",bar="args"
       - name: Save docker image to the artifact storage
         id: save-image
         uses: actions/upload-artifact@v4
