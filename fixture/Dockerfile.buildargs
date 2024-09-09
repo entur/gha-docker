@@ -1,0 +1,6 @@
+ARG FOO
+ARG BAR
+FROM busybox:1.36
+ENV FOO=$FOO
+ENV BAR=$BAR
+RUN echo "$FOO $BAR"

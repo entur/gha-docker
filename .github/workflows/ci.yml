@@ -32,6 +32,7 @@ jobs:
              GHA_REF=${GITHUB_REF_NAME}
           fi
           echo "GHA_REF=${GHA_REF}" >> $GITHUB_ENV
+
       - uses: actions/checkout@v4
         with:
           ref: ${{ env.GHA_REF }}
@@ -46,6 +47,14 @@ jobs:
         with:
           expected: "fixture/Dockerfile.bad:4 DL3000 error: Use absolute WORKDIR"
           actual: ${{ env.HADOLINT_RESULTS }}
+  test-build-ok-with-build-args:
+    uses: ./.github/workflows/build.yml
+    with:
+      dockerfile: fixture/Dockerfile.buildargs
+      image_name: custom_image_name
+      build_args: |
+        FOO=build
+        BAR=args
 
   test-build-prepare-artifact:
     needs: test-lint-ok
