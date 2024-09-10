@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 FROM busybox:1.36
 WORKDIR /usr/src/app
-RUN --mount=type=secret,id=build-secrets,required=true export BUILD_SECRETS=$(cat /run/secrets/build-secrets) echo "${BUILD_SECRETS}" > buildargs.txt
+RUN --mount=type=secret,id=build_secrets,required=true BUILD_SECRETS=$(cat /run/secrets/build_secrets) echo "${BUILD_SECRETS}" > buildargs.txt
 RUN cat buildargs.txt
 # RUN echo "Build args as env : ${FOO} ${BAR}"
 CMD ["cat", "buildargs.txt"]

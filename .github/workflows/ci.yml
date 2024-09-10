@@ -58,7 +58,7 @@ jobs:
       dockerfile: fixture/Dockerfile.buildargs
       image_name: custom_image_name_with_build_args
     secrets:
-      build-secrets: |
+      build_secrets: |
         ${{ secrets.MY_SECRET }}
         ${{ secrets.MY_SECRET2 }}
 

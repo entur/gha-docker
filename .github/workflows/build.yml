@@ -31,7 +31,7 @@ on:
         type: number
         default: 40
     secrets:
-      build-secrets:
+      build_secrets:
         description: "Build secrets to pass to the dockerfile"
         required: false
     outputs:
@@ -126,7 +126,7 @@ jobs:
           provenance: false
           tags: ${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}:${{ github.sha }}
           secrets: |
-            build-secrets=${{ secrets.build-secrets }}
+            build_secrets=${{ secrets.build_secrets }}
       - name: Save docker image to the artifact storage
         id: save-image
         uses: actions/upload-artifact@v4
