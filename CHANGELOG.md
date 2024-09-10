@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.9](https://github.com/entur/gha-docker/compare/v1.3.8...v1.3.9) (2024-09-10)
+
+
+### Bug Fixes
+
+* release ([#126](https://github.com/entur/gha-docker/issues/126)) ([5845473](https://github.com/entur/gha-docker/commit/58454730d74d64ec2c87fb2fe405f8451c0266c3))
+
 ## [1.3.8](https://github.com/entur/gha-docker/compare/v1.3.7...v1.3.8) (2024-08-30)
 
 
