@@ -110,7 +110,9 @@ jobs:
           azure_client_id: ${{ vars.CI_AZURE_CLIENT_ID }}
           azure_tenant_id: ${{ vars.CI_AZURE_TENANT_ID }}
           azure_subscription_id: ${{ vars.CI_AZURE_SUBSCRIPTION_ID }}
-
+      - name: Save Secret to file
+        id: save-secret
+        run: echo "${{ secrets.build_secrets }}" > build_secrets
       - name: Build image
         id: build
         uses: docker/build-push-action@v6.7.0
@@ -125,8 +127,8 @@ jobs:
           push: false
           provenance: false
           tags: ${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}:${{ github.sha }}
-          secrets: |
-            build_secrets=${{ secrets.build_secrets }}
+          secret-files: |
+            "build_secrets=build_secrets"
       - name: Save docker image to the artifact storage
         id: save-image
         uses: actions/upload-artifact@v4
