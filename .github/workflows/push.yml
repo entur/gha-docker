@@ -51,6 +51,7 @@ env:
   GHA_REF: ""
 jobs:
   push:
+    name: Docker Push
     runs-on: ubuntu-24.04
     timeout-minutes: ${{ inputs.timeout_minutes }}
     permissions:
@@ -123,7 +124,7 @@ jobs:
           echo "GHA_REF=${GHA_REF}" >> $GITHUB_ENV
 
       - name: Checkout code
-        uses: actions/checkout@v4.1.7
+        uses: actions/checkout@v4
         with:
           ref: ${{ env.GHA_REF }}
           fetch-depth: 0
@@ -141,11 +142,11 @@ jobs:
 
       - name: Authenticate with the cloud provider
         id: auth
-        uses: entur/gha-meta/.github/actions/docker-auth@v1.1.7
+        uses: entur/gha-meta/.github/actions/docker-auth@v1
         with:
           cloud_provider: ${{ env.GHA_DOCKER_PUSH_CLOUD_PROVIDER }}
-          workload_identity_provider: ${{ vars.CI_WORKLOAD_IDENTITY_PROVIDER }}
-          service_account: ${{ vars.CI_SERVICE_ACCOUNT }}
+          gcp_workload_identity_provider: ${{ vars.CI_WORKLOAD_IDENTITY_PROVIDER }}
+          gcp_service_account: ${{ vars.CI_SERVICE_ACCOUNT }}
           azure_client_id: ${{ vars.CI_AZURE_CLIENT_ID }}
           azure_tenant_id: ${{ vars.CI_AZURE_TENANT_ID }}
           azure_subscription_id: ${{ vars.CI_AZURE_SUBSCRIPTION_ID }}

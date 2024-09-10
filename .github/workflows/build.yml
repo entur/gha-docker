@@ -30,7 +30,6 @@ on:
         description: "Timeout in minutes"
         type: number
         default: 40
-
     outputs:
       image_artifact:
         value: ${{ jobs.build.outputs.image_artifact }}
@@ -39,6 +38,7 @@ on:
 
 jobs:
   build:
+    name: Docker Build
     runs-on: ubuntu-24.04
     timeout-minutes: ${{ inputs.timeout_minutes }}
     permissions:
@@ -50,6 +50,7 @@ jobs:
     env:
       GHA_DOCKER_BUILD_CONTEXT: ${{ inputs.context }}
       GHA_DOCKER_BUILD_DOCKERFILE: ${{ inputs.dockerfile }}
+      GHA_DOCKER_BUILD_ARGS: ${{ secrets.build_args }}
       GHA_DOCKER_BUILD_ARTIFACT_PATH: ${{ inputs.build_artifact_path }}
       GHA_DOCKER_BUILD_ARTIFACT_NAME: ${{ inputs.build_artifact_name }}
       GHA_DOCKER_BUILD_IMAGE_NAME: ${{ inputs.image_name }}
@@ -72,7 +73,7 @@ jobs:
 
       - name: Checkout code
         id: checkout-code
-        uses: actions/checkout@v4.1.7
+        uses: actions/checkout@v4
         with:
           ref: ${{ env.GHA_REF }}
           fetch-depth: 0
@@ -93,35 +94,35 @@ jobs:
 
       - name: Setup buildx
         id: setup-buildx
-        uses: docker/setup-buildx-action@v3.6.0
+        uses: docker/setup-buildx-action@v3.6.1
 
       - name: Authenticate with the cloud provider
         id: auth
-        uses: entur/gha-meta/.github/actions/docker-auth@v1.1.7
+        uses: entur/gha-meta/.github/actions/docker-auth@v1
         with:
           cloud_provider: ${{ env.GHA_DOCKER_PUSH_CLOUD_PROVIDER }}
-          workload_identity_provider: ${{ vars.CI_WORKLOAD_IDENTITY_PROVIDER }}
-          service_account: ${{ vars.CI_SERVICE_ACCOUNT }}
+          gcp_workload_identity_provider: ${{ vars.CI_WORKLOAD_IDENTITY_PROVIDER }}
+          gcp_service_account: ${{ vars.CI_SERVICE_ACCOUNT }}
           azure_client_id: ${{ vars.CI_AZURE_CLIENT_ID }}
           azure_tenant_id: ${{ vars.CI_AZURE_TENANT_ID }}
           azure_subscription_id: ${{ vars.CI_AZURE_SUBSCRIPTION_ID }}
 
       - name: Build image
         id: build
-        uses: docker/build-push-action@v6.5.0
+        uses: docker/build-push-action@v6.7.0
         with:
-          context: ${{ env.GHA_DOCKER_BUILD_CONTEXT }}
-          file: ${{ env.GHA_DOCKER_BUILD_DOCKERFILE }}
-          push: false
-          outputs: "type=docker,dest=/tmp/${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}.tar"
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          tags: ${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}:${{ github.sha }}
+          context: ${{ env.GHA_DOCKER_BUILD_CONTEXT }}
+          file: ${{ env.GHA_DOCKER_BUILD_DOCKERFILE }}
+          outputs: "type=docker,dest=/tmp/${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}.tar"
+          push: false
           provenance: false
+          tags: ${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}:${{ github.sha }}
 
       - name: Save docker image to the artifact storage
         id: save-image
-        uses: actions/upload-artifact@v4.3.3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}
           path: /tmp/${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}.tar
