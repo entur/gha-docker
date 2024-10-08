@@ -33,10 +33,11 @@ jobs:
 
 <!-- AUTO-DOC-OUTPUT:START - Do not remove or modify this section -->
 
-|                                  OUTPUT                                   |                                   VALUE                                    | DESCRIPTION |
-|---------------------------------------------------------------------------|----------------------------------------------------------------------------|-------------|
-| <a name="output_image_and_tag"></a>[image_and_tag](#output_image_and_tag) | `"${{ jobs.push.outputs.image_name }}:${{ jobs.push.outputs.image_tag }}"` |             |
-|     <a name="output_image_name"></a>[image_name](#output_image_name)      |                  `"${{ jobs.push.outputs.image_name }}"`                   |             |
-|       <a name="output_image_tag"></a>[image_tag](#output_image_tag)       |                   `"${{ jobs.push.outputs.image_tag }}"`                   |             |
+|                                    OUTPUT                                    |                                   VALUE                                    | DESCRIPTION |
+|------------------------------------------------------------------------------|----------------------------------------------------------------------------|-------------|
+| <a name="output_all_image_tags"></a>[all_image_tags](#output_all_image_tags) |                `"${{ jobs.push.outputs.all_image_tags }}"`                 |             |
+|  <a name="output_image_and_tag"></a>[image_and_tag](#output_image_and_tag)   | `"${{ jobs.push.outputs.image_name }}:${{ jobs.push.outputs.image_tag }}"` |             |
+|       <a name="output_image_name"></a>[image_name](#output_image_name)       |                  `"${{ jobs.push.outputs.image_name }}"`                   |             |
+|        <a name="output_image_tag"></a>[image_tag](#output_image_tag)         |                   `"${{ jobs.push.outputs.image_tag }}"`                   |             |
 
 <!-- AUTO-DOC-OUTPUT:END -->
