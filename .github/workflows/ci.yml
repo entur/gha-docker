@@ -109,6 +109,25 @@ jobs:
           expected: "ci-test-tag"
           actual: ${{ needs.test-push-gcr-ok-with-tag.outputs.image_tag }}
 
+  test-push-gcr-ok-with-multiple-tags:
+    needs: test-push-gcr-ok
+    uses: ./.github/workflows/push.yml
+    with:
+      context: .
+      dockerfile: fixture/Dockerfile.artifact
+      image_tag: ci-test-tag
+      extra_image_tags: ci-test-tag-2,ci-test-tag-3
+      git_tag: false
+
+  assert-multiple-tags-gcr-outputs-ok:
+    needs: test-push-gcr-ok-with-multiple-tags
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: nick-fields/assert-action@v2
+        with:
+          expected: "ci-test-tag,ci-test-tag-2,ci-test-tag-3"
+          actual: ${{ needs.test-push-gcr-ok-with-multiple-tags.outputs.all_image_tags }}
+
   test-build-ok-with-custom-image-name:
     uses: ./.github/workflows/build.yml
     with:
@@ -147,10 +166,33 @@ jobs:
           expected: "ci-test-az-tag"
           actual: ${{ needs.test-push-acr-ok-with-tag.outputs.image_tag }}
 
+  test-push-acr-ok-with-multiple-tags:
+    needs: test-build-ok-with-artifact
+    uses: ./.github/workflows/push.yml
+    with:
+      cloud_provider: az
+      context: .
+      dockerfile: fixture/Dockerfile.artifact
+      image_tag: ci-test-az-tag
+      extra_image_tags: ci-test-az-tag-2,ci-test-az-tag-3
+      git_tag: false
+
+  assert-multiple-tags-acr-outputs-ok:
+    runs-on: ubuntu-24.04
+    needs: test-push-acr-ok-with-multiple-tags
+    steps:
+      - uses: nick-fields/assert-action@v2
+        with:
+          expected: "ci-test-az-tag,ci-test-az-tag-2,ci-test-az-tag-3"
+          actual: ${{ needs.test-push-acr-ok-with-multiple-tags.outputs.all_image_tags }}
+
   update-lint-doc:
     needs:
       [
-        test-push-acr-ok-with-tag,
+        assert-tag-gcr-outputs-ok,
+        assert-multiple-tags-gcr-outputs-ok,
+        assert-tag-acr-outputs-ok,
+        assert-multiple-tags-acr-outputs-ok,
         assert-build-ok-with-custom-image-name-outputs,
       ]
     uses: entur/gha-meta/.github/workflows/auto-doc.yml@v1
@@ -161,7 +203,10 @@ jobs:
   update-build-doc:
     needs:
       [
-        test-push-acr-ok-with-tag,
+        assert-tag-gcr-outputs-ok,
+        assert-multiple-tags-gcr-outputs-ok,
+        assert-tag-acr-outputs-ok,
+        assert-multiple-tags-acr-outputs-ok,
         assert-build-ok-with-custom-image-name-outputs,
         update-lint-doc,
       ]
@@ -173,7 +218,10 @@ jobs:
   update-push-doc:
     needs:
       [
-        test-push-acr-ok-with-tag,
+        assert-tag-gcr-outputs-ok,
+        assert-multiple-tags-gcr-outputs-ok,
+        assert-tag-acr-outputs-ok,
+        assert-multiple-tags-acr-outputs-ok,
         assert-build-ok-with-custom-image-name-outputs,
         update-build-doc,
       ]

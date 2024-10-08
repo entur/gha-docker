@@ -41,6 +41,8 @@ on:
         value: ${{ jobs.push.outputs.image_tag }}
       image_and_tag:
         value: "${{ jobs.push.outputs.image_name }}:${{ jobs.push.outputs.image_tag }}"
+      all_image_tags:
+        value: ${{ jobs.push.outputs.all_image_tags }}
 env:
   GHA_DOCKER_PUSH_IMAGE_NAME: ${{ inputs.image_name }}
   GHA_DOCKER_PUSH_CONTEXT: ${{ inputs.context }}
@@ -65,6 +67,7 @@ jobs:
     outputs:
       image_name: ${{ env.GHA_DOCKER_PUSH_IMAGE_NAME }}
       image_tag: ${{ env.GHA_DOCKER_PUSH_IMAGE_TAG }}
+      all_image_tags: ${{ env.GHA_ALL_IMAGE_TAGS }}
     steps:
       - name: Set variables
         id: set-env
@@ -161,6 +164,7 @@ jobs:
         run: |
           local_tag="${GHA_DOCKER_PUSH_IMAGE_NAME}:${GITHUB_SHA}"
           tags="${GHA_DOCKER_PUSH_IMAGE_TAG},${GHA_DOCKER_PUSH_EXTRA_IMAGE_TAGS}"
+          echo "GHA_ALL_IMAGE_TAGS=${tags}" >> $GITHUB_ENV
 
           echo "$tags" | while read -d ',' -r tag || [[ -n $tag ]]; do
             remote_tag="${GHA_DOCKER_PUSH_IMAGE}:${tag}"
@@ -180,4 +184,3 @@ jobs:
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git tag --annotate "$GHA_DOCKER_PUSH_IMAGE_TAG" -m "chore(tag): $GHA_DOCKER_PUSH_IMAGE_TAG [skip ci]" --force
           git push origin "$GHA_DOCKER_PUSH_IMAGE_TAG" --force
-
