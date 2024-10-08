@@ -48,7 +48,6 @@ env:
   GHA_DOCKER_PUSH_BRANCH_NAME: ""
   GHA_DOCKER_PUSH_DOCKER_REGISTRY: ""
   GHA_DOCKER_PUSH_IMAGE: ""
-  GHA_REF: ""
 jobs:
   push:
     name: Docker Push
@@ -116,17 +115,10 @@ jobs:
         shell: bash
         run: |
           echo "GHA_DOCKER_PUSH_IMAGE=${GHA_DOCKER_PUSH_DOCKER_REGISTRY}/${GHA_DOCKER_PUSH_IMAGE_NAME}" >> $GITHUB_ENV
-          if [[ "${GITHUB_EVENT_NAME}" = "pull_request" ]]; then
-             GHA_REF=${GITHUB_HEAD_REF}
-          else
-             GHA_REF=${GITHUB_REF_NAME}
-          fi
-          echo "GHA_REF=${GHA_REF}" >> $GITHUB_ENV
 
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          ref: ${{ env.GHA_REF }}
           fetch-depth: 0
 
       - name: Download docker image from the artifact storage

@@ -54,7 +54,6 @@ jobs:
       GHA_DOCKER_BUILD_ARTIFACT_NAME: ${{ inputs.build_artifact_name }}
       GHA_DOCKER_BUILD_IMAGE_NAME: ${{ inputs.image_name }}
       GHA_DOCKER_PUSH_CLOUD_PROVIDER: ${{ inputs.cloud_provider }}
-      GHA_REF: ""
     steps:
       - name: Set variables
         id: set-vars
@@ -63,18 +62,11 @@ jobs:
           if [[ "${GHA_DOCKER_BUILD_IMAGE_NAME}" = "repo_name" ]]; then
             echo "GHA_DOCKER_BUILD_IMAGE_NAME=${GITHUB_REPOSITORY#*/}" >> $GITHUB_ENV
           fi
-          if [[ "${GITHUB_EVENT_NAME}" = "pull_request" ]]; then
-             GHA_REF=${GITHUB_HEAD_REF}
-          else
-             GHA_REF=${GITHUB_REF_NAME}
-          fi
-          echo "GHA_REF=${GHA_REF}" >> $GITHUB_ENV
 
       - name: Checkout code
         id: checkout-code
         uses: actions/checkout@v4
         with:
-          ref: ${{ env.GHA_REF }}
           fetch-depth: 0
 
       - if: env.GHA_DOCKER_BUILD_ARTIFACT_NAME != ''

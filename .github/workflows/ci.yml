@@ -19,23 +19,10 @@ jobs:
   assert-lint-fail-ok:
     runs-on: ubuntu-24.04
     env:
-      GHA_REF: ""
       HADOLINT_RESULTS: ""
     steps:
-      - name: Set variables
-        id: set-vars
-        shell: bash
-        run: |
-          if [[ "${GITHUB_EVENT_NAME}" = "pull_request" ]]; then
-             GHA_REF=${GITHUB_HEAD_REF}
-          else
-             GHA_REF=${GITHUB_REF_NAME}
-          fi
-          echo "GHA_REF=${GHA_REF}" >> $GITHUB_ENV
-
       - uses: actions/checkout@v4
         with:
-          ref: ${{ env.GHA_REF }}
           fetch-depth: 0
       - uses: hadolint/hadolint-action@v3.1.0
         id: hadolint
@@ -51,22 +38,9 @@ jobs:
   test-build-prepare-artifact:
     needs: test-lint-ok
     runs-on: ubuntu-24.04
-    env:
-      GHA_REF: ""
     steps:
-      - name: Set variables
-        id: set-vars
-        shell: bash
-        run: |
-          if [[ "${GITHUB_EVENT_NAME}" = "pull_request" ]]; then
-             GHA_REF=${GITHUB_HEAD_REF}
-          else
-             GHA_REF=${GITHUB_REF_NAME}
-          fi
-          echo "GHA_REF=${GHA_REF}" >> $GITHUB_ENV
       - uses: actions/checkout@v4
         with:
-          ref: ${{ env.GHA_REF }}
           fetch-depth: 0
       - uses: actions/upload-artifact@v4
         with:
