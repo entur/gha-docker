@@ -30,6 +30,10 @@ on:
         description: "Timeout in minutes"
         type: number
         default: 40
+      runner:
+        description: "Runner to use for the build"
+        type: string
+        default: "['ubuntu-24.04']"
     outputs:
       image_artifact:
         value: ${{ jobs.build.outputs.image_artifact }}
@@ -39,7 +43,7 @@ on:
 jobs:
   build:
     name: Docker Build
-    runs-on: ubuntu-24.04
+    runs-on: ${{ fromJSON(inputs.runner) }}
     timeout-minutes: ${{ inputs.timeout_minutes }}
     permissions:
       contents: read
