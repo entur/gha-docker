@@ -33,6 +33,12 @@ jobs:
           expected: "fixture/Dockerfile.bad:4 DL3000 error: Use absolute WORKDIR"
           actual: ${{ env.HADOLINT_RESULTS }}
 
+  test-build-ok-with-large-runner:
+    uses: ./.github/workflows/build.yml
+    with:
+      dockerfile: fixture/Dockerfile.good
+      runner: "{'group': 'grp-ubuntu-22.04-4core'}"
+
   test-build-prepare-artifact:
     needs: test-lint-ok
     runs-on: ubuntu-24.04
