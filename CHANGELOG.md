@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.0](https://github.com/entur/gha-docker/compare/v1.4.0...v1.5.0) (2024-10-16)
+
+
+### Features
+
+* use sha and not head for checkout and add support to select runner ([#140](https://github.com/entur/gha-docker/issues/140)) ([15e949e](https://github.com/entur/gha-docker/commit/15e949e9a09762431d7688fcd8f51dc990c90e44))
+
 ## [1.4.0](https://github.com/entur/gha-docker/compare/v1.3.9...v1.4.0) (2024-10-08)
 
 
