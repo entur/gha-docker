@@ -35,9 +35,6 @@ jobs:
 
   test-build-ok-with-large-runner:
     uses: ./.github/workflows/build.yml
-    permissions:
-      contents: read
-      id-token: write
     with:
       dockerfile: fixture/Dockerfile.good
       runner: "{'group': 'grp-test-gha-docker'}"
