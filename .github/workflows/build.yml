@@ -31,7 +31,7 @@ on:
         type: number
         default: 40
       secrets:
-        descriptions: "Secrets to pass to docker build"
+        description: "Secrets to pass to docker build"
         type: string
         default: ""
       runner:
