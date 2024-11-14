@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.0](https://github.com/entur/gha-docker/compare/v1.5.0...v1.6.0) (2024-11-14)
+
+
+### Features
+
+* pass secrets to build ([#143](https://github.com/entur/gha-docker/issues/143)) ([9368c9f](https://github.com/entur/gha-docker/commit/9368c9f3ce062fdb1fb23e58db06ab504e393137))
+
 ## [1.5.0](https://github.com/entur/gha-docker/compare/v1.4.0...v1.5.0) (2024-10-16)
 
 
