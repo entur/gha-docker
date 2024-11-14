@@ -30,14 +30,13 @@ on:
         description: "Timeout in minutes"
         type: number
         default: 40
-      secrets:
-        description: "Secrets to pass to docker build"
-        type: string
-        default: ""
       runner:
         description: 'Runner to use for the build. To use a runner group, use the format "{''group'': ''group_name''}". See https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on for more information.'
         type: string
         default: "['ubuntu-24.04']"
+    secrets:
+      BUILD_SECRETS:
+        required: false
     outputs:
       image_artifact:
         value: ${{ jobs.build.outputs.image_artifact }}
@@ -117,7 +116,7 @@ jobs:
           provenance: false
           tags: ${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}:${{ github.sha }}
           secrets: |
-            ${{ inputs.secrets }}
+            ${{ secrets.BUILD_SECRETS }}
 
       - name: Save docker image to the artifact storage
         id: save-image
