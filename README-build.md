@@ -11,6 +11,25 @@ jobs:
     uses: entur/gha-docker/.github/workflows/build.yml@v1
 ```
 
+If you need to pass secrets to your Dockerfile, you can use this recipe:
+
+```yml
+jobs:
+  docker-build:
+    uses: entur/gha-docker/.github/workflows/build.yml@v1
+    secrets:
+      BUILD_SECRETS: |
+        "ARTIFACTORY_AUTH_USER=${{ secrets.ARTIFACTORY_AUTH_USER }}"
+        "ARTIFACTORY_AUTH_TOKEN=${{ secrets.ARTIFACTORY_AUTH_TOKEN }}"
+```
+
+You can now mount and use these secrets in your Dockerfile:
+
+```Dockerfile
+RUN --mount=type=secret,id=ARTIFACTORY_AUTH_USER,env=ARTIFACTORY_AUTH_USER  \
+    --mount=type=secret,id=ARTIFACTORY_AUTH_TOKEN,env=ARTIFACTORY_AUTH_TOKEN  ./gradlew build
+```
+
 ## Inputs
 
 <!-- AUTO-DOC-INPUT:START - Do not remove or modify this section -->

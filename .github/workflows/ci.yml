@@ -45,6 +45,15 @@ jobs:
       runner: "{'group': 'grp-test-gha-docker'}"
       image_name: ci-test-large-runner
 
+  test-build-ok-with-secret:
+    uses: ./.github/workflows/build.yml
+    with:
+      dockerfile: fixture/Dockerfile.secret
+      image_name: ci-test-secret
+    secrets:
+      BUILD_SECRETS: |
+        "MY_SECRET=${{ secrets.MY_SECRET }}"
+
   test-build-prepare-artifact:
     needs: test-lint-ok
     runs-on: ubuntu-24.04
