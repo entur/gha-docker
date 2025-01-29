@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.0](https://github.com/entur/gha-docker/compare/v1.6.0...v1.7.0) (2025-01-29)
+
+
+### Features
+
+* accept build args to docker build ([#149](https://github.com/entur/gha-docker/issues/149)) ([d3cbe9d](https://github.com/entur/gha-docker/commit/d3cbe9da5f180e39cb95681e12ac0487c37a81a8))
+
 ## [1.6.0](https://github.com/entur/gha-docker/compare/v1.5.0...v1.6.0) (2024-11-14)
 
 
