@@ -35,7 +35,7 @@ on:
         type: string
         default: "['ubuntu-24.04']"
       build_args:
-        description: 'List of build args to pass to docker build'
+        description: 'List of build args to pass to docker build. Warning! Do not pass secrets into docker args.'
         type: string
         required: false
     secrets:
