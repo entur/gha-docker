@@ -95,7 +95,7 @@ jobs:
 
       - name: Setup buildx
         id: setup-buildx
-        uses: docker/setup-buildx-action@v3.7.1
+        uses: docker/setup-buildx-action@v3.9.0
 
       - name: Authenticate with the cloud provider
         id: auth
