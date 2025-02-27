@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.1](https://github.com/entur/gha-docker/compare/v1.7.0...v1.7.1) (2025-02-27)
+
+
+### Bug Fixes
+
+* new common standard dependabot config [skip ci] ([#156](https://github.com/entur/gha-docker/issues/156)) ([8adc965](https://github.com/entur/gha-docker/commit/8adc965141c9bf37f65f58bd471bc8122bbda354))
+
 ## [1.7.0](https://github.com/entur/gha-docker/compare/v1.6.0...v1.7.0) (2025-01-29)
 
 
