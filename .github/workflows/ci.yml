@@ -42,7 +42,7 @@ jobs:
     uses: ./.github/workflows/build.yml
     with:
       dockerfile: fixture/Dockerfile.good
-      runner: "{'group': 'grp-test-gha-docker'}"
+      runner: "{'group': 'grp-ubuntu-24.04-4core-x64'}"
       image_name: ci-test-large-runner
 
   test-build-ok-with-secret:
