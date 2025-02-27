@@ -38,13 +38,6 @@ jobs:
           expected: "fixture/Dockerfile.bad:4 DL3000 error: Use absolute WORKDIR"
           actual: ${{ env.HADOLINT_RESULTS }}
 
-  test-build-ok-with-large-runner:
-    uses: ./.github/workflows/build.yml
-    with:
-      dockerfile: fixture/Dockerfile.good
-      runner: "{'group': 'grp-test-gha-docker'}"
-      image_name: ci-test-large-runner
-
   test-build-ok-with-secret:
     uses: ./.github/workflows/build.yml
     with:
