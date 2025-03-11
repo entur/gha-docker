@@ -78,6 +78,8 @@ jobs:
       - name: Checkout code
         id: checkout-code
         uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
       - if: env.GHA_DOCKER_BUILD_ARTIFACT_NAME != ''
         name: Download artifact ${{ env.GHA_DOCKER_BUILD_ARTIFACT_NAME }}
