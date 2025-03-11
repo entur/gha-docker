@@ -27,6 +27,8 @@ jobs:
       GHA_DOCKER_LINT_IGNORE: ${{ inputs.ignore }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: recursive
       - uses: hadolint/hadolint-action@v3.1.0
         with:
           dockerfile: ${{ env.GHA_DOCKER_LINT_DOCKERFILE }}
