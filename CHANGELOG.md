@@ -6,7 +6,6 @@
 ### Bug Fixes
 
 * checkout recursive ([#161](https://github.com/entur/gha-docker/issues/161)) ([c49b212](https://github.com/entur/gha-docker/commit/c49b2121317bc19b993778d3ef4e1c5551ba6a07))
-* new common standard dependabot config [skip ci] ([#156](https://github.com/entur/gha-docker/issues/156)) ([8adc965](https://github.com/entur/gha-docker/commit/8adc965141c9bf37f65f58bd471bc8122bbda354))
 
 ## [1.7.0](https://github.com/entur/gha-docker/compare/v1.6.0...v1.7.0) (2025-01-29)
 
