@@ -7,6 +7,10 @@ on:
         description: "Build context, default root of repository"
         type: string
         default: "."
+      git_ref:
+        description: "Git reference to check out before deployment, can override default value"
+        type: string
+        required: false
       dockerfile:
         description: "Dockerfile to use for build"
         type: string
@@ -47,6 +51,7 @@ jobs:
       GHA_DOCKER_BUILD_ARTIFACT_PATH: ${{ inputs.build_artifact_path }}
       GHA_DOCKER_BUILD_ARTIFACT_NAME: ${{ inputs.build_artifact_name }}
       GHA_DOCKER_BUILD_IMAGE_NAME: ${{ inputs.image_name }}
+      GHA_DOCKER_BUILD_GIT_REF: ${{ inputs.git_ref }}
     steps:
       - id: set-image-name
         shell: bash
@@ -64,6 +69,12 @@ jobs:
         with:
           ref: ${{ env.GHA_REF }}
           fetch-depth: 0
+        if: env.GHA_GIT_REF == ''
+      - uses: actions/checkout@v4.1.7
+        with:
+          ref: ${{ env.GHA_GIT_REF }}
+          fetch-depth: 0
+        if: env.GHA_GIT_REF != ''
       - id: download-artifact
         uses: actions/download-artifact@v4
         if: env.GHA_DOCKER_BUILD_ARTIFACT_NAME != ''
