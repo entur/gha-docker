@@ -61,7 +61,7 @@ jobs:
       id-token: write
       pull-requests: write
     outputs:
-      meta: ${{ steps.push.outputs.metadata }}
+      meta: ${{ steps.meta.outputs.metadata }}
       image_name: ${{ env.GHA_DOCKER_PUSH_IMAGE_NAME }}
       image_tag: ${{ env.GHA_DOCKER_PUSH_IMAGE_TAG }}
     steps:

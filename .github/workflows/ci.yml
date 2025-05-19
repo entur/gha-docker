@@ -52,7 +52,7 @@ jobs:
       build_artifact_name: some_build_artifact
       build_artifact_path: data
 
-  test-build-ok-with-artifact:
+  test-build-ok-with-git-ref:
     uses: ./.github/workflows/build.yml
     needs: test-build-prepare-artifact
     with:
