@@ -168,7 +168,7 @@ jobs:
           done
 
       # Tag the git commit with the image tag (used by Harness CD to deploy)
-      - if: inputs.git_tag
+      - if: inputs.git_tag && github.event_name == 'pull_request'
         name: Tag default branch with the container image tag ${{ env.GHA_DOCKER_PUSH_IMAGE_TAG }}
         id: tag-version
         run: |
