@@ -88,8 +88,8 @@ jobs:
         with:
           submodules: recursive
           
-      - name: Checkout code
-        id: checkout-code
+      - name: Checkout code with reference
+        id: checkout-code-ref
         uses: actions/checkout@v4
         if: env.GHA_GIT_REF != ''
         with:
