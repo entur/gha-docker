@@ -53,7 +53,7 @@ jobs:
     with:
       dockerfile: fixture/Dockerfile.artifact
       git_ref: ${{github.base_ref}}
-      image_tag: ci-test-tag
+      image_name: git-ref-test
 
   assert-tag-build-with-gitref-outputs-ok:
     needs: test-build-ok-with-git-ref
@@ -61,8 +61,8 @@ jobs:
     steps:
       - uses: nick-fields/assert-action@v2
         with:
-          expected: "ci-test-tag:${{github.base_ref}}"
-          actual: ${{ needs.test-push-gcr-ok-with-tag.outputs.image_tag }}
+          expected: "git-ref-test:${{github.base_ref}}"
+          actual: ${{ needs.test-build-ok-with-git-ref.outputs.image_tag }}
 
   test-build-prepare-artifact:
     needs: test-lint-ok
