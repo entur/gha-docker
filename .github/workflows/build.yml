@@ -137,7 +137,7 @@ jobs:
           outputs: "type=docker,dest=/tmp/${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}.tar"
           push: false
           provenance: false
-          tags: ${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}:${{ github.sha }}
+          tags: ${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}:${{ env.GHA_GIT_REF != '' && env.GHA_GIT_REF || github.sha }}
           secrets: |
             ${{ secrets.BUILD_SECRETS }}
 
