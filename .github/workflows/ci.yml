@@ -51,8 +51,18 @@ jobs:
     if: ${{ github.event_name == 'pull_request' }}
     uses: ./.github/workflows/build.yml
     with:
-      dockerfile: fixture/Dockerfile.good
+      dockerfile: fixture/Dockerfile.artifact
       git_ref: ${{github.base_ref}}
+      image_tag: ci-test-tag
+
+  assert-tag-build-with-gitref-outputs-ok:
+    needs: test-build-ok-with-git-ref
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: nick-fields/assert-action@v2
+        with:
+          expected: "ci-test-tag:${{github.base_ref}}"
+          actual: ${{ needs.test-push-gcr-ok-with-tag.outputs.image_tag }}
 
   test-build-prepare-artifact:
     needs: test-lint-ok
