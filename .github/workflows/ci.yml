@@ -51,6 +51,7 @@ jobs:
     if: ${{ github.event_name == 'pull_request' }}
     uses: ./.github/workflows/build.yml
     with:
+      dockerfile: fixture/Dockerfile.good
       git_ref: ${{github.base_ref}}
 
   test-build-prepare-artifact:
