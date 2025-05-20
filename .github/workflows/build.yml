@@ -38,6 +38,11 @@ on:
         description: 'List of build args to pass to docker build. Warning! Do not pass secrets into docker args.'
         type: string
         required: false
+      git_ref:
+        description: 'Option to override git reference to checkout before build'
+        type: string
+        required: false
+        
     secrets:
       BUILD_SECRETS:
         required: false
@@ -66,6 +71,7 @@ jobs:
       GHA_DOCKER_BUILD_IMAGE_NAME: ${{ inputs.image_name }}
       GHA_DOCKER_PUSH_CLOUD_PROVIDER: ${{ inputs.cloud_provider }}
       GHA_DOCKER_BUILD_ARGS: ${{ inputs.build_args }}
+      GHA_GIT_REF: ${{inputs.git_ref}}
     steps:
       - name: Set variables
         id: set-vars
@@ -78,8 +84,17 @@ jobs:
       - name: Checkout code
         id: checkout-code
         uses: actions/checkout@v4
+        if: env.GHA_GIT_REF == ''
         with:
           submodules: recursive
+          
+      - name: Checkout code with reference
+        id: checkout-code-ref
+        uses: actions/checkout@v4
+        if: env.GHA_GIT_REF != ''
+        with:
+          submodules: recursive
+          ref: ${{ env.GHA_GIT_REF }}
 
       - if: env.GHA_DOCKER_BUILD_ARTIFACT_NAME != ''
         name: Download artifact ${{ env.GHA_DOCKER_BUILD_ARTIFACT_NAME }}
