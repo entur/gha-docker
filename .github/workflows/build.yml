@@ -42,15 +42,15 @@ on:
         description: 'Option to override git reference to checkout before build'
         type: string
         required: false
-        
+              
     secrets:
       BUILD_SECRETS:
         required: false
     outputs:
       image_artifact:
-        value: ${{ jobs.build.outputs.image_artifact }}
-      image_tag:
-        value: ${{ jobs.build.outputs.image_tag }}
+        value: ${{ jobs.build.outputs.image_artifact }} 
+      git_ref:
+        value: ${{ jobs.build.outputs.git_ref }} 
 
 jobs:
   build:
@@ -62,7 +62,7 @@ jobs:
       id-token: write
     outputs:
       image_artifact: ${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}
-      image_tag: ${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}:latest
+      git_ref: ${{ env.git_ref }} 
     env:
       GHA_DOCKER_BUILD_CONTEXT: ${{ inputs.context }}
       GHA_DOCKER_BUILD_DOCKERFILE: ${{ inputs.dockerfile }}
@@ -72,6 +72,7 @@ jobs:
       GHA_DOCKER_PUSH_CLOUD_PROVIDER: ${{ inputs.cloud_provider }}
       GHA_DOCKER_BUILD_ARGS: ${{ inputs.build_args }}
       GHA_GIT_REF: ${{inputs.git_ref}}
+      
     steps:
       - name: Set variables
         id: set-vars
@@ -136,8 +137,7 @@ jobs:
           file: ${{ env.GHA_DOCKER_BUILD_DOCKERFILE }}
           outputs: "type=docker,dest=/tmp/${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}.tar"
           push: false
-          provenance: false
-          tags: ${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}:${{ env.GHA_GIT_REF != '' && env.GHA_GIT_REF || github.sha }}
+          provenance: false 
           secrets: |
             ${{ secrets.BUILD_SECRETS }}
 
