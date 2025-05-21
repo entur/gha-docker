@@ -52,7 +52,7 @@ jobs:
     uses: ./.github/workflows/build.yml
     with:
       dockerfile: fixture/Dockerfile.artifact
-      git_ref: github.ref
+      git_ref: ${{ github.ref }}
 
   assert-tag-build-with-gitref-outputs-ok:
     needs: test-build-ok-with-git-ref
@@ -60,7 +60,7 @@ jobs:
     steps:
       - uses: nick-fields/assert-action@v2
         with:
-          expected: github.ref
+          expected: ${{ github.ref }}
           actual: ${{ needs.test-build-ok-with-git-ref.outputs.git_ref }}
 
   test-build-prepare-artifact:
