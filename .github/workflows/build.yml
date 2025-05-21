@@ -48,9 +48,7 @@ on:
         required: false
     outputs:
       image_artifact:
-        value: ${{ jobs.build.outputs.image_artifact }} 
-      git_ref:
-        value: ${{ jobs.build.outputs.git_ref }} 
+        value: ${{ jobs.build.outputs.image_artifact }}  
 
 jobs:
   build:
@@ -61,8 +59,7 @@ jobs:
       contents: read
       id-token: write
     outputs:
-      image_artifact: ${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}
-      git_ref: ${{ env.git_ref }} 
+      image_artifact: ${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }} 
     env:
       GHA_DOCKER_BUILD_CONTEXT: ${{ inputs.context }}
       GHA_DOCKER_BUILD_DOCKERFILE: ${{ inputs.dockerfile }}
