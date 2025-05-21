@@ -171,7 +171,7 @@ jobs:
         id: docker-push-tags
         shell: bash
         run: |
-          local_tag="${GHA_DOCKER_PUSH_IMAGE_NAME}"
+          local_tag="${GHA_DOCKER_PUSH_IMAGE_NAME}":${GITHUB_SHA}
           tags="${GHA_DOCKER_PUSH_IMAGE_TAG},${GHA_DOCKER_PUSH_EXTRA_IMAGE_TAGS}"
           echo "GHA_ALL_IMAGE_TAGS=${tags}" >> $GITHUB_ENV
 
