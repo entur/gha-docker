@@ -56,6 +56,5 @@ RUN --mount=type=secret,id=ARTIFACTORY_AUTH_USER,env=ARTIFACTORY_AUTH_USER  \
 |                                    OUTPUT                                    |                    VALUE                     | DESCRIPTION |
 |------------------------------------------------------------------------------|----------------------------------------------|-------------|
 | <a name="output_image_artifact"></a>[image_artifact](#output_image_artifact) | `"${{ jobs.build.outputs.image_artifact }}"` |             |
-|        <a name="output_image_tag"></a>[image_tag](#output_image_tag)         |   `"${{ jobs.build.outputs.image_tag }}"`    |             |
 
 <!-- AUTO-DOC-OUTPUT:END -->
