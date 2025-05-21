@@ -133,6 +133,7 @@ jobs:
           build-args: ${{ env.GHA_DOCKER_BUILD_ARGS }}
           file: ${{ env.GHA_DOCKER_BUILD_DOCKERFILE }}
           outputs: "type=docker,dest=/tmp/${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}.tar" 
+          tags: ${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }} # Need tag to find artifact in push job
           push: false
           provenance: false 
           secrets: |
