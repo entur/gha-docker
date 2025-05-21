@@ -47,12 +47,12 @@ jobs:
       BUILD_SECRETS: |
         "MY_SECRET=${{ secrets.MY_SECRET }}"
 
-#  test-build-ok-with-git-ref:
-#    if: ${{ github.event_name == 'pull_request' }}
-#    uses: ./.github/workflows/build.yml
-#    with:
-#      dockerfile: fixture/Dockerfile.good
-#      git_ref: ${{ github.ref }} 
+  test-build-ok-with-git-ref:
+    if: ${{ github.event_name == 'pull_request' }}
+    uses: ./.github/workflows/build.yml
+    with:
+      dockerfile: fixture/Dockerfile.gitref
+      git_ref: ${{ github.ref }} 
 
   test-build-prepare-artifact:
     needs: test-lint-ok
