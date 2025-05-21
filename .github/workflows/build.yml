@@ -132,8 +132,7 @@ jobs:
           context: ${{ env.GHA_DOCKER_BUILD_CONTEXT }}
           build-args: ${{ env.GHA_DOCKER_BUILD_ARGS }}
           file: ${{ env.GHA_DOCKER_BUILD_DOCKERFILE }}
-          outputs: "type=docker,dest=/tmp/${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}.tar"
-          tags: ${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}
+          outputs: "type=docker,dest=/tmp/${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}.tar" 
           push: false
           provenance: false 
           secrets: |

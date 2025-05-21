@@ -52,6 +52,7 @@ jobs:
     uses: ./.github/workflows/build.yml
     with:
       dockerfile: fixture/Dockerfile.gitref
+      image_name: ci-test-gitref
       git_ref: ${{ github.ref }} 
 
   test-build-prepare-artifact:
