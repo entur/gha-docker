@@ -107,8 +107,8 @@ jobs:
         shell: bash
         run: |
           SHA_SHORT="${GITHUB_SHA:0:7}"
-          if [ -n "${GHA_GIT_REF}" ]; then 
-            TAG="${GHA_DOCKER_PUSH_BRANCH_NAME}.${GHA_DOCKER_PUSH_DATE}-${GHA_GIT_REF}"
+          if [ -n "${GHA_DOCKER_PUSH_GIT_REF}" ]; then 
+            TAG="${GHA_DOCKER_PUSH_BRANCH_NAME}.${GHA_DOCKER_PUSH_DATE}-${GHA_DOCKER_PUSH_GIT_REF}"
           else
             TAG="${GHA_DOCKER_PUSH_BRANCH_NAME}.${GHA_DOCKER_PUSH_DATE}-SHA${SHA_SHORT}"
           fi
@@ -137,17 +137,17 @@ jobs:
       - name: Checkout code
         id: checkout-code
         uses: actions/checkout@v4
-        if: env.GHA_GIT_REF == ''
+        if: env.GHA_DOCKER_PUSH_GIT_REF== ''
         with:
           submodules: recursive
 
       - name: Checkout code with reference
         id: checkout-code-ref
         uses: actions/checkout@v4
-        if: env.GHA_GIT_REF != ''
+        if: env.GHA_DOCKER_PUSH_GIT_REF!= ''
         with:
           submodules: recursive
-          ref: ${{ env.GHA_GIT_REF }}
+          ref: ${{ env.GHA_DOCKER_PUSH_GIT_REF}}
 
       - name: Download docker image from the artifact storage
         uses: actions/download-artifact@v4
