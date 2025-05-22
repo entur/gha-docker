@@ -133,12 +133,14 @@ jobs:
     needs: test-push-gcr-ok-with-git-ref
     runs-on: ubuntu-24.04
     steps:
-      - name: Set date
-        id: date
-        run: echo "date=$(date +'%Y%m%d')" >> $GITHUB_OUTPUT
+      - name: Set vars
+        id: setvars
+        run: |
+          echo "date=$(date +'%Y%m%d')" >> $GITHUB_OUTPUT
+          echo "branch=${GITHUB_HEAD_REF@L}" >> $GITHUB_OUTPUT
       - uses: nick-fields/assert-action@v2
         with:
-          expected: lower(${{ github.head_ref}}).${{steps.date.outputs.date}}-main
+          expected: ${{ steps.setvars.outputs.branch}}.${{steps.setvars.outputs.date}}-main
           actual: ${{ needs.test-push-gcr-ok-with-git-ref.outputs.image_tag }}
 
   test-build-ok-with-custom-image-name:
