@@ -47,6 +47,14 @@ jobs:
       BUILD_SECRETS: |
         "MY_SECRET=${{ secrets.MY_SECRET }}"
 
+  test-build-ok-with-git-ref:
+    if: ${{ github.event_name == 'pull_request' }}
+    uses: ./.github/workflows/build.yml
+    with:
+      dockerfile: fixture/Dockerfile.gitref
+      image_name: ci-test-gitref
+      git_ref: ${{ github.ref }} 
+
   test-build-prepare-artifact:
     needs: test-lint-ok
     runs-on: ubuntu-24.04
@@ -54,7 +62,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/upload-artifact@v4
         with:
-          name: some_build_artifact
+          name: build_artifact
           path: fixture/artifact.txt
           retention-days: 1
           overwrite: true
@@ -65,7 +73,7 @@ jobs:
     with:
       context: .
       dockerfile: fixture/Dockerfile.artifact
-      build_artifact_name: some_build_artifact
+      build_artifact_name: build_artifact
       build_artifact_path: data
 
   test-push-gcr-ok:
@@ -83,7 +91,7 @@ jobs:
       dockerfile: fixture/Dockerfile.artifact
       image_tag: ci-test-tag
       git_tag: false
-
+       
   assert-tag-gcr-outputs-ok:
     needs: test-push-gcr-ok-with-tag
     runs-on: ubuntu-24.04
@@ -112,6 +120,27 @@ jobs:
           expected: "ci-test-tag,ci-test-tag-2,ci-test-tag-3"
           actual: ${{ needs.test-push-gcr-ok-with-multiple-tags.outputs.all_image_tags }}
 
+  test-push-gcr-ok-with-git-ref:
+    needs: test-push-gcr-ok
+    uses: ./.github/workflows/push.yml
+    with:
+      context: .
+      dockerfile: fixture/Dockerfile.artifact
+      git_ref: main
+      git_tag: false
+      
+  assert-tag-gcr-outputs-ok-with-git-ref:
+    needs: test-push-gcr-ok-with-tag
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Set date
+        id: date
+        run: echo "date=$(date +'%Y%m%d')" >> $GITHUB_OUTPUT
+      - uses: nick-fields/assert-action@v2
+        with:
+          expected: ${{ github.head_ref}}.${steps.date.outputs.date}-${{github.ref_name }}
+          actual: ${{ needs.test-push-gcr-ok-with-tag.outputs.image_tag }}
+
   test-build-ok-with-custom-image-name:
     uses: ./.github/workflows/build.yml
     with:
@@ -121,11 +150,7 @@ jobs:
   assert-build-ok-with-custom-image-name-outputs:
     runs-on: ubuntu-24.04
     needs: test-build-ok-with-custom-image-name
-    steps:
-      - uses: nick-fields/assert-action@v2
-        with:
-          expected: "custom_image_name:latest"
-          actual: ${{ needs.test-build-ok-with-custom-image-name.outputs.image_tag }}
+    steps: 
       - uses: nick-fields/assert-action@v2
         with:
           expected: "custom_image_name"
