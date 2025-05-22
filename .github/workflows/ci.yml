@@ -138,7 +138,7 @@ jobs:
         run: echo "date=$(date +'%Y%m%d')" >> $GITHUB_OUTPUT
       - uses: nick-fields/assert-action@v2
         with:
-          expected: ${{ github.head_ref}}.${{steps.date.outputs.date}}-main
+          expected: lower(${{ github.head_ref}}).${{steps.date.outputs.date}}-main
           actual: ${{ needs.test-push-gcr-ok-with-git-ref.outputs.image_tag }}
 
   test-build-ok-with-custom-image-name:
