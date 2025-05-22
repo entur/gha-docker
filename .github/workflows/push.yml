@@ -35,7 +35,7 @@ on:
         type: boolean
         default: true
       git_ref:
-        description: 'Option to override git reference to checkout before push'
+        description: 'Option to override git reference to checkout before push, will replace the SHA in default image_tag'
         type: string
         required: false
         
@@ -106,9 +106,13 @@ jobs:
         id: set-image-tag
         shell: bash
         run: |
-          SHA=${GITHUB_SHA}
-          SHORT_SHA=${SHA:0:7}
-          echo "GHA_DOCKER_PUSH_IMAGE_TAG=${GHA_DOCKER_PUSH_BRANCH_NAME}.${GHA_DOCKER_PUSH_DATE}-SHA${SHORT_SHA}" >> $GITHUB_ENV
+          SHA_SHORT="${GITHUB_SHA:0:7}"
+          if [ -n "$GHA_GIT_REF" ]; then
+            TAG="${GHA_DOCKER_PUSH_BRANCH_NAME}.${GHA_DOCKER_PUSH_DATE}-${GHA_GIT_REF}"
+          else
+            TAG="${GHA_DOCKER_PUSH_BRANCH_NAME}.${GHA_DOCKER_PUSH_DATE}-SHA${SHA_SHORT}"
+          fi
+          echo "GHA_DOCKER_PUSH_IMAGE_TAG=$TAG" >> "$GITHUB_ENV"
 
       - if: env.GHA_DOCKER_PUSH_CLOUD_PROVIDER  == 'az'
         name: Set Azure registry
