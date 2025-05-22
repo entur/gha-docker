@@ -91,6 +91,15 @@ jobs:
       dockerfile: fixture/Dockerfile.artifact
       image_tag: ci-test-tag
       git_tag: false
+      
+  test-push-gcr-ok-with-git-ref:
+    needs: test-push-gcr-ok
+    uses: ./.github/workflows/push.yml
+    with:
+      context: .
+      dockerfile: fixture/Dockerfile.artifact
+      git_ref: ${{github.ref_name}}
+      git_tag: false
 
   assert-tag-gcr-outputs-ok:
     needs: test-push-gcr-ok-with-tag
