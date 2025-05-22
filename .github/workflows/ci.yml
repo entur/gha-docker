@@ -91,16 +91,7 @@ jobs:
       dockerfile: fixture/Dockerfile.artifact
       image_tag: ci-test-tag
       git_tag: false
-      
-  test-push-gcr-ok-with-git-ref:
-    needs: test-push-gcr-ok
-    uses: ./.github/workflows/push.yml
-    with:
-      context: .
-      dockerfile: fixture/Dockerfile.artifact
-      git_ref: ${{github.ref_name}}
-      git_tag: false
-
+       
   assert-tag-gcr-outputs-ok:
     needs: test-push-gcr-ok-with-tag
     runs-on: ubuntu-24.04
@@ -128,6 +119,27 @@ jobs:
         with:
           expected: "ci-test-tag,ci-test-tag-2,ci-test-tag-3"
           actual: ${{ needs.test-push-gcr-ok-with-multiple-tags.outputs.all_image_tags }}
+
+  test-push-gcr-ok-with-git-ref:
+    needs: test-push-gcr-ok
+    uses: ./.github/workflows/push.yml
+    with:
+      context: .
+      dockerfile: fixture/Dockerfile.artifact
+      git_ref: main
+      git_tag: false
+      
+  assert-tag-gcr-outputs-ok-with-git-ref:
+    needs: test-push-gcr-ok-with-tag
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Set date
+        id: date
+        run: echo "date=$(date +'%Y%m%d')" >> $GITHUB_OUTPUT
+      - uses: nick-fields/assert-action@v2
+        with:
+          expected: ${{ github.head_ref}}.${steps.date.outputs.date}-${{github.ref_name }}
+          actual: ${{ needs.test-push-gcr-ok-with-tag.outputs.image_tag }}
 
   test-build-ok-with-custom-image-name:
     uses: ./.github/workflows/build.yml
