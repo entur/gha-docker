@@ -130,7 +130,7 @@ jobs:
       git_tag: false
       
   assert-tag-gcr-outputs-ok-with-git-ref:
-    needs: test-push-gcr-ok-with-tag
+    needs: test-push-gcr-ok-with-git-ref
     runs-on: ubuntu-24.04
     steps:
       - name: Set date
@@ -138,8 +138,8 @@ jobs:
         run: echo "date=$(date +'%Y%m%d')" >> $GITHUB_OUTPUT
       - uses: nick-fields/assert-action@v2
         with:
-          expected: ${{ github.head_ref}}.${steps.date.outputs.date}-${{github.ref_name }}
-          actual: ${{ needs.test-push-gcr-ok-with-tag.outputs.image_tag }}
+          expected: ${{ github.head_ref}}.${{steps.date.outputs.date}}-main
+          actual: ${{ needs.test-push-gcr-ok-with-git-ref.outputs.image_tag }}
 
   test-build-ok-with-custom-image-name:
     uses: ./.github/workflows/build.yml
