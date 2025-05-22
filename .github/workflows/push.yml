@@ -34,6 +34,11 @@ on:
         description: "Tag the repository default branch with the image_tag? Used by Harness CD to deploy the exact same helm/terraform code"
         type: boolean
         default: true
+      git_ref:
+        description: 'Option to override git reference to checkout before push, will replace the SHA in default image_tag'
+        type: string
+        required: false
+        
     outputs:
       image_name:
         value: ${{ jobs.push.outputs.image_name }}
@@ -54,6 +59,8 @@ env:
   GHA_DOCKER_PUSH_BRANCH_NAME: ""
   GHA_DOCKER_PUSH_DOCKER_REGISTRY: ""
   GHA_DOCKER_PUSH_IMAGE: ""
+  GHA_DOCKER_PUSH_GIT_REF: ${{ inputs.git_ref }}
+  
 jobs:
   push:
     name: Docker Push
@@ -99,9 +106,13 @@ jobs:
         id: set-image-tag
         shell: bash
         run: |
-          SHA=${GITHUB_SHA}
-          SHORT_SHA=${SHA:0:7}
-          echo "GHA_DOCKER_PUSH_IMAGE_TAG=${GHA_DOCKER_PUSH_BRANCH_NAME}.${GHA_DOCKER_PUSH_DATE}-SHA${SHORT_SHA}" >> $GITHUB_ENV
+          SHA_SHORT="${GITHUB_SHA:0:7}"
+          if [ -n "$GHA_GIT_REF" ]; then
+            TAG="${GHA_DOCKER_PUSH_BRANCH_NAME}.${GHA_DOCKER_PUSH_DATE}-${GHA_GIT_REF}"
+          else
+            TAG="${GHA_DOCKER_PUSH_BRANCH_NAME}.${GHA_DOCKER_PUSH_DATE}-SHA${SHA_SHORT}"
+          fi
+          echo "GHA_DOCKER_PUSH_IMAGE_TAG=$TAG" >> "$GITHUB_ENV"
 
       - if: env.GHA_DOCKER_PUSH_CLOUD_PROVIDER  == 'az'
         name: Set Azure registry
@@ -124,9 +135,19 @@ jobs:
           echo "GHA_DOCKER_PUSH_IMAGE=${GHA_DOCKER_PUSH_DOCKER_REGISTRY}/${GHA_DOCKER_PUSH_IMAGE_NAME}" >> $GITHUB_ENV
 
       - name: Checkout code
+        id: checkout-code
         uses: actions/checkout@v4
+        if: env.GHA_GIT_REF == ''
         with:
           submodules: recursive
+
+      - name: Checkout code with reference
+        id: checkout-code-ref
+        uses: actions/checkout@v4
+        if: env.GHA_GIT_REF != ''
+        with:
+          submodules: recursive
+          ref: ${{ env.GHA_GIT_REF }}
 
       - name: Download docker image from the artifact storage
         uses: actions/download-artifact@v4
@@ -154,7 +175,7 @@ jobs:
         id: docker-push-tags
         shell: bash
         run: |
-          local_tag="${GHA_DOCKER_PUSH_IMAGE_NAME}:${GITHUB_SHA}"
+          local_tag="${GHA_DOCKER_PUSH_IMAGE_NAME}"
           tags="${GHA_DOCKER_PUSH_IMAGE_TAG},${GHA_DOCKER_PUSH_EXTRA_IMAGE_TAGS}"
           echo "GHA_ALL_IMAGE_TAGS=${tags}" >> $GITHUB_ENV
 
@@ -168,7 +189,7 @@ jobs:
           done
 
       # Tag the git commit with the image tag (used by Harness CD to deploy)
-      - if: inputs.git_tag
+      - if: inputs.git_tag && github.event_name == 'pull_request'
         name: Tag default branch with the container image tag ${{ env.GHA_DOCKER_PUSH_IMAGE_TAG }}
         id: tag-version
         run: |
