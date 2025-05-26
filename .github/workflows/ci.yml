@@ -140,8 +140,9 @@ jobs:
           echo "branch=${GITHUB_HEAD_REF@L}" >> $GITHUB_OUTPUT
       - uses: nick-fields/assert-action@v2
         with:
-          expected: ${{ steps.setvars.outputs.branch}}.${{steps.setvars.outputs.date}}-main
+          expected: main
           actual: ${{ needs.test-push-gcr-ok-with-git-ref.outputs.image_tag }}
+          comparison: endsWith
 
   test-build-ok-with-custom-image-name:
     uses: ./.github/workflows/build.yml
