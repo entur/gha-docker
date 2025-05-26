@@ -132,12 +132,7 @@ jobs:
   assert-tag-gcr-outputs-ok-with-git-ref:
     needs: test-push-gcr-ok-with-git-ref
     runs-on: ubuntu-24.04
-    steps:
-      - name: Set vars
-        id: setvars
-        run: |
-          echo "date=$(date +'%Y%m%d')" >> $GITHUB_OUTPUT
-          echo "branch=${GITHUB_HEAD_REF@L}" >> $GITHUB_OUTPUT
+    steps: 
       - uses: nick-fields/assert-action@v2
         with:
           expected: main
