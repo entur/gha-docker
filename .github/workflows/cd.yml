@@ -31,3 +31,7 @@ jobs:
   release:
     needs: [update-push-doc]
     uses: entur/gha-meta/.github/workflows/release.yml@v1
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
