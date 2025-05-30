@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.8.0](https://github.com/entur/gha-docker/compare/v1.7.1...v1.8.0) (2025-05-30)
+
+
+### Features
+
+* Add option to override git reference to checkout ([#165](https://github.com/entur/gha-docker/issues/165)) ([6712c02](https://github.com/entur/gha-docker/commit/6712c02c67a8121b6ce97582cdd19de6b0095d4a))
+
+
+### Bug Fixes
+
+* Add release-please permissions ([#168](https://github.com/entur/gha-docker/issues/168)) ([c2eceb0](https://github.com/entur/gha-docker/commit/c2eceb084e0e330bf15f6cad87a1b346511a1fad))
+* bug in git-ref testing ([#167](https://github.com/entur/gha-docker/issues/167)) ([1b5448e](https://github.com/entur/gha-docker/commit/1b5448e85e615b90f2e4ef1bbfaa61b509d7e99d))
+
 ## [1.7.1](https://github.com/entur/gha-docker/compare/v1.7.0...v1.7.1) (2025-03-12)
 
 
