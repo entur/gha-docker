@@ -35,18 +35,22 @@ on:
         type: boolean
         default: true
       git_ref:
-        description: 'Option to override git reference to checkout before push, will replace the SHA in default image_tag'
+        description: "Option to override git reference to checkout before push, will replace the SHA in default image_tag"
         type: string
         required: false
-        
+
     outputs:
       image_name:
+        description: "Name of the Docker image"
         value: ${{ jobs.push.outputs.image_name }}
       image_tag:
+        description: "Tag of the Docker image"
         value: ${{ jobs.push.outputs.image_tag }}
       image_and_tag:
+        description: "Full image name with tag"
         value: "${{ jobs.push.outputs.image_name }}:${{ jobs.push.outputs.image_tag }}"
       all_image_tags:
+        description: "All image tags pushed to the registry, comma separated"
         value: ${{ jobs.push.outputs.all_image_tags }}
 env:
   GHA_DOCKER_PUSH_IMAGE_NAME: ${{ inputs.image_name }}
@@ -60,7 +64,7 @@ env:
   GHA_DOCKER_PUSH_DOCKER_REGISTRY: ""
   GHA_DOCKER_PUSH_IMAGE: ""
   GHA_DOCKER_PUSH_GIT_REF: ${{ inputs.git_ref }}
-  
+
 jobs:
   push:
     name: Docker Push
@@ -107,7 +111,7 @@ jobs:
         shell: bash
         run: |
           SHA_SHORT="${GITHUB_SHA:0:7}"
-          if [ -n "${GHA_DOCKER_PUSH_GIT_REF}" ]; then 
+          if [ -n "${GHA_DOCKER_PUSH_GIT_REF}" ]; then
             TAG="${GHA_DOCKER_PUSH_BRANCH_NAME}.${GHA_DOCKER_PUSH_DATE}-${GHA_DOCKER_PUSH_GIT_REF}"
           else
             TAG="${GHA_DOCKER_PUSH_BRANCH_NAME}.${GHA_DOCKER_PUSH_DATE}-SHA${SHA_SHORT}"
@@ -189,7 +193,9 @@ jobs:
           done
 
       # Tag the git commit with the image tag (used by Harness CD to deploy)
-      - if: inputs.git_tag && github.event_name == 'pull_request'
+      # - requires workflow write permissions to the repository (repo settings => actions => workflow permissions)
+      # - TODO: remove after Harness CD is decommissioned, or rethink how to handle this
+      - if: inputs.git_tag
         name: Tag default branch with the container image tag ${{ env.GHA_DOCKER_PUSH_IMAGE_TAG }}
         id: tag-version
         run: |
