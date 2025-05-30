@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.8.1](https://github.com/entur/gha-docker/compare/v1.8.0...v1.8.1) (2025-05-30)
+
+
+### Bug Fixes
+
+* run tag even if not in a PR ([#170](https://github.com/entur/gha-docker/issues/170)) ([12a8412](https://github.com/entur/gha-docker/commit/12a841251f4d593484da39e4d7f0fb4967596ce2))
+
 ## [1.8.0](https://github.com/entur/gha-docker/compare/v1.7.1...v1.8.0) (2025-05-30)
 
 
