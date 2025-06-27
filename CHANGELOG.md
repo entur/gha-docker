@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.9.0](https://github.com/entur/gha-docker/compare/v1.8.1...v1.9.0) (2025-06-27)
+
+
+### Features
+
+* add support for overwriting docker registry for push reusable workflow ([#174](https://github.com/entur/gha-docker/issues/174)) ([6646875](https://github.com/entur/gha-docker/commit/664687510b5a60805f6e2ad36aeca59b98304bd0))
+
 ## [1.8.1](https://github.com/entur/gha-docker/compare/v1.8.0...v1.8.1) (2025-05-30)
 
 
