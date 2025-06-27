@@ -129,8 +129,14 @@ jobs:
         name: Set GCP registry
         id: set-registry-gcp
         shell: bash
+        env:
+          DOCKER_REGISTRY: ${{ vars.DOCKER_REGISTRY }}
         run: |
-          echo "GHA_DOCKER_PUSH_DOCKER_REGISTRY=eu.gcr.io/entur-system-1287" >> $GITHUB_ENV
+          if [ -z "$DOCKER_REGISTRY" ]; then
+            echo "GHA_DOCKER_PUSH_DOCKER_REGISTRY=eu.gcr.io/entur-system-1287" >> $GITHUB_ENV
+          else
+            echo "GHA_DOCKER_PUSH_DOCKER_REGISTRY=${DOCKER_REGISTRY}" >> $GITHUB_ENV
+          fi
 
       - name: Set full registry url and image name
         id: set-image
@@ -166,7 +172,7 @@ jobs:
 
       - name: Authenticate with the cloud provider
         id: auth
-        uses: entur/gha-meta/.github/actions/docker-auth@v1
+        uses: entur/gha-meta/.github/actions/docker-auth@CLOUD-2470-europe-west1-gar-login
         with:
           cloud_provider: ${{ env.GHA_DOCKER_PUSH_CLOUD_PROVIDER }}
           gcp_workload_identity_provider: ${{ vars.CI_WORKLOAD_IDENTITY_PROVIDER }}
