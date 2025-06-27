@@ -172,7 +172,7 @@ jobs:
 
       - name: Authenticate with the cloud provider
         id: auth
-        uses: entur/gha-meta/.github/actions/docker-auth@v1
+        uses: entur/gha-meta/.github/actions/docker-auth@CLOUD-2470-europe-west1-gar-login
         with:
           cloud_provider: ${{ env.GHA_DOCKER_PUSH_CLOUD_PROVIDER }}
           gcp_workload_identity_provider: ${{ vars.CI_WORKLOAD_IDENTITY_PROVIDER }}
