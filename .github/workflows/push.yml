@@ -129,8 +129,14 @@ jobs:
         name: Set GCP registry
         id: set-registry-gcp
         shell: bash
+        env:
+          DOCKER_REGISTRY: ${{ vars.DOCKER_REGISTRY }}
         run: |
-          echo "GHA_DOCKER_PUSH_DOCKER_REGISTRY=eu.gcr.io/entur-system-1287" >> $GITHUB_ENV
+          if [ -z "$DOCKER_REGISTRY" ]; then
+            echo "GHA_DOCKER_PUSH_DOCKER_REGISTRY=eu.gcr.io/entur-system-1287" >> $GITHUB_ENV
+          else
+            echo "GHA_DOCKER_PUSH_DOCKER_REGISTRY=${DOCKER_REGISTRY}" >> $GITHUB_ENV
+          fi
 
       - name: Set full registry url and image name
         id: set-image
