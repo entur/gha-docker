@@ -1,0 +1,8 @@
+apiVersion: orchestrator.entur.io/github/v1
+kind: GitHubManifest
+metadata:
+  id: gha-docker
+  trigger: 1755517002
+spec:
+  environments:
+  - dev
