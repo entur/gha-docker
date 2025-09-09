@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.9.1](https://github.com/entur/gha-docker/compare/v1.9.0...v1.9.1) (2025-09-09)
+
+
+### Miscellaneous Chores
+
+* release 1.9.1 ([#180](https://github.com/entur/gha-docker/issues/180)) ([2cab825](https://github.com/entur/gha-docker/commit/2cab825307781c81643f87290190fcb935d5dd2f))
+
 ## [1.9.0](https://github.com/entur/gha-docker/compare/v1.8.1...v1.9.0) (2025-06-27)
 
 
