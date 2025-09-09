@@ -146,14 +146,14 @@ jobs:
 
       - name: Checkout code
         id: checkout-code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         if: env.GHA_DOCKER_PUSH_GIT_REF== ''
         with:
           submodules: recursive
 
       - name: Checkout code with reference
         id: checkout-code-ref
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         if: env.GHA_DOCKER_PUSH_GIT_REF!= ''
         with:
           submodules: recursive
