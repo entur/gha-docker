@@ -1,5 +1,5 @@
 apiVersion: orchestrator.entur.io/github/v1
-kind: Repository
+kind: GitHubActions
 metadata:
   id: gha-docker
   trigger: 1755517002
