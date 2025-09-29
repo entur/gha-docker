@@ -27,7 +27,7 @@ jobs:
       HADOLINT_RESULTS: ""
     steps:
       - uses: actions/checkout@v5
-      - uses: hadolint/hadolint-action@v3.1.0
+      - uses: hadolint/hadolint-action@v3.3.0
         id: hadolint
         continue-on-error: true
         with:
