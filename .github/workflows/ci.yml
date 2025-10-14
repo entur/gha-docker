@@ -96,6 +96,7 @@ jobs:
     with:
       context: .
       dockerfile: fixture/Dockerfile.artifacts
+      image_name: gha-docker-additional_artifacts
       build_artifact_name: build_artifact_additional
       build_artifact_path: data
       additional_artifacts_name: extras
