@@ -92,7 +92,7 @@ jobs:
 
   test-build-ok-with-additional-artifacts:
     uses: ./.github/workflows/build.yml
-    needs: test-build-prepare-multiple-artifacts
+    needs: test-build-prepare-additional-artifacts
     with:
       context: .
       dockerfile: fixture/Dockerfile.artifacts
@@ -109,7 +109,7 @@ jobs:
       - uses: nick-fields/assert-action@v2
         with:
           expected: "additional-artifacts"
-          actual: ${{ needs.test-build-ok-with-additional-artifacts.outputs.additional_artifacts }}
+          actual: ${{ needs.test-build-prepare-additional-artifacts.outputs.additional_artifacts }}
 
   test-push-gcr-ok:
     needs: test-build-ok-with-artifact
