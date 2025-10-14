@@ -46,7 +46,6 @@ on:
         description: 'Name of GitHub artifact to contain additional artifacts.'
         type: string
         required: false
-        default: "additional-artifacts"
       additional_artifacts_paths:
         description: 'List of paths to additional artifacts to be saved to Github artifact storage.'
         type: string
@@ -166,6 +165,6 @@ jobs:
         id: save-additional-artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: additional-artifacts
+          name: ${{ env.GHA_ADDITIONAL_ARTIFACTS_NAME }}-${{ github.run_id }}-${{ github.run_attempt }}
           path: ${{ env.GHA_ADDITIONAL_ARTIFACTS_PATHS }}
           retention-days: 4 # TODO discuss this or make it a parameter

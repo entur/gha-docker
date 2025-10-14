@@ -76,14 +76,14 @@ jobs:
       build_artifact_name: build_artifact
       build_artifact_path: data
 
-  test-build-prepare-multiple-artifacts:
+  test-build-prepare-additional-artifacts:
     needs: test-lint-ok
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v5
       - uses: actions/upload-artifact@v4
         with:
-          name: build_artifact_additional
+          name: build_artifact
           path: |
             fixture/additional_artifact.txt
             fixture/test/additional_artifact_2.txt
@@ -96,8 +96,9 @@ jobs:
     with:
       context: .
       dockerfile: fixture/Dockerfile.artifacts
-      build_artifact_name: build_artifact_additional
+      build_artifact_name: build_artifact
       build_artifact_path: data
+      additional_artifacts_name: additional_artifact
       additional_artifacts_paths: |
         fixture/test/additional_artifact_2.txt
   
