@@ -76,6 +76,40 @@ jobs:
       build_artifact_name: build_artifact
       build_artifact_path: data
 
+  test-build-prepare-multiple-artifacts:
+    needs: test-lint-ok
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/upload-artifact@v4
+        with:
+          name: build_artifact
+          path: |
+            fixture/additional_artifact.txt
+            fixture/test/additional_artifact_2.txt
+          retention-days: 1
+          overwrite: true
+
+  test-build-ok-with-additional-artifacts:
+    uses: ./.github/workflows/build.yml
+    needs: test-build-prepare-multiple-artifacts
+    with:
+      context: .
+      dockerfile: fixture/Dockerfile.artifacts
+      build_artifact_name: build_artifact
+      build_artifact_path: data
+      additional_artifacts_paths: |
+        fixture/test/additional_artifact_2.txt
+  
+  assert-additional-artifacts-outputs-ok:
+    needs: test-build-ok-with-additional-artifacts
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: nick-fields/assert-action@v2
+        with:
+          expected: "additional-artifacts"
+          actual: ${{ needs.test-build-ok-with-additional-artifacts.outputs.additional_artifacts }}
+
   test-push-gcr-ok:
     needs: test-build-ok-with-artifact
     uses: ./.github/workflows/push.yml
@@ -201,6 +235,7 @@ jobs:
         assert-tag-acr-outputs-ok,
         assert-multiple-tags-acr-outputs-ok,
         assert-build-ok-with-custom-image-name-outputs,
+        assert-additional-artifacts-outputs-ok,
       ]
     uses: entur/gha-meta/.github/workflows/auto-doc.yml@v1
     with:
