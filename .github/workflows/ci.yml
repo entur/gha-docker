@@ -99,7 +99,7 @@ jobs:
       dockerfile: fixture/Dockerfile.artifacts
       build_artifact_name: build_artifact
       build_artifact_path: data
-      additional-artifacts: |
+      additional_artifacts_paths: |
         fixture/artifact2.txt
         test/artifact3.txt
   
