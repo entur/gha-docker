@@ -165,6 +165,6 @@ jobs:
         id: save-additional-artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.GHA_ADDITIONAL_ARTIFACTS_NAME }}-${{ github.run_id }}-${{ github.run_attempt }}
+          name: ${{ env.GHA_ADDITIONAL_ARTIFACTS_NAME }}
           path: ${{ env.GHA_ADDITIONAL_ARTIFACTS_PATHS }}
           retention-days: 4 # TODO discuss this or make it a parameter
