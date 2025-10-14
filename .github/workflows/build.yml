@@ -42,6 +42,11 @@ on:
         description: 'Option to override git reference to checkout before build'
         type: string
         required: false
+      additional_artifacts_name:
+        description: 'Name of GitHub artifact to contain additional artifacts.'
+        type: string
+        required: false
+        default: "additional_artifacts"
       additional_artifacts_paths:
         description: 'List of paths to additional artifacts to be saved to Github artifact storage.'
         type: string
@@ -66,7 +71,7 @@ jobs:
       id-token: write
     outputs:
       image_artifact: ${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}
-      additional_artifacts: ${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}
+      additional_artifacts: ${{ env.GHA_ADDITIONAL_ARTIFACTS_NAME }}
     env:
       GHA_DOCKER_BUILD_CONTEXT: ${{ inputs.context }}
       GHA_DOCKER_BUILD_DOCKERFILE: ${{ inputs.dockerfile }}
@@ -76,6 +81,7 @@ jobs:
       GHA_DOCKER_PUSH_CLOUD_PROVIDER: ${{ inputs.cloud_provider }}
       GHA_DOCKER_BUILD_ARGS: ${{ inputs.build_args }}
       GHA_GIT_REF: ${{inputs.git_ref}}
+      GHA_ADDITIONAL_ARTIFACTS_NAME: ${{inputs.additional_artifacts_name}}
       GHA_ADDITIONAL_ARTIFACTS_PATHS: ${{inputs.additional_artifacts_paths}}
       
     steps:
