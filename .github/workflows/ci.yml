@@ -87,7 +87,7 @@ jobs:
           path: fixture/artifact.txt
           retention-days: 1
           overwrite: true
-          additional-artifacts: |
+          additional_artifacts_pathsg: |
             fixture/artifact2.txt
             test/artifact3.txt
 
