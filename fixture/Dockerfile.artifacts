@@ -1,5 +1,5 @@
 FROM busybox:1.37
 WORKDIR /usr/src/app
 COPY fixture/artifact.txt .
-COPY fixture/artifact2.txt .
-COPY test/artifact3.txt .
+COPY fixture/additional_artifact.txt .
+COPY test/test/additional_artifact_2.txt .
