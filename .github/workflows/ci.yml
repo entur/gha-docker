@@ -99,7 +99,6 @@ jobs:
       build_artifact_name: build_artifact
       build_artifact_path: data
       additional_artifacts_paths: |
-        fixture/additional_artifact.txt
         fixture/test/additional_artifact_2.txt
   
   assert-additional-artifacts-outputs-ok:
