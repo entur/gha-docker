@@ -46,7 +46,7 @@ on:
         description: 'Name of GitHub artifact to contain additional artifacts.'
         type: string
         required: false
-        default: "additional_artifacts"
+        default: "additional-artifacts"
       additional_artifacts_paths:
         description: 'List of paths to additional artifacts to be saved to Github artifact storage.'
         type: string
