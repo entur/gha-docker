@@ -156,7 +156,7 @@ jobs:
           retention-days: 4 # TODO discuss this or make it a parameter
 
       - name: Save additional artifacts to the artifact storage
-        if: ${{ !env.GHA_ADDITIONAL_ARTIFACTS_PATHS }}
+        if: ${{ !inputs.additional_artifacts_paths }}
         id: save-additional-artifacts
         uses: actions/upload-artifact@v4
         with:
