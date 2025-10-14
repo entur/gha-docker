@@ -84,11 +84,11 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: build_artifact
-          path: fixture/additional_artifact.txt
+          path: |
+            fixture/additional_artifact.txt
+            fixture/test/additional_artifact_2.txt
           retention-days: 1
           overwrite: true
-          additional_artifacts_paths: |            
-            fixture/test/additional_artifact_2.txt
 
   test-build-ok-with-additional-artifacts:
     uses: ./.github/workflows/build.yml
