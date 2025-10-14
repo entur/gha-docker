@@ -88,8 +88,8 @@ jobs:
           retention-days: 1
           overwrite: true
           additional_artifacts_paths: |
-            fixture/artifact2.txt
-            test/artifact3.txt
+            fixture/additional_artifact.txt
+            fixture/test/additional_artifact_2.txt
 
   test-build-ok-with-additional-artifacts:
     uses: ./.github/workflows/build.yml
