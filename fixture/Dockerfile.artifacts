@@ -1,0 +1,4 @@
+FROM busybox:1.37
+WORKDIR /usr/src/app
+COPY fixture/additional_artifact.txt .
+COPY fixture/test/additional_artifact_2.txt .
