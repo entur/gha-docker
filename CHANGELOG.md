@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.10.0](https://github.com/entur/gha-docker/compare/v1.9.1...v1.10.0) (2025-10-15)
+
+
+### Features
+
+* Add support for saving additional artifacts to the artifact storage ([#186](https://github.com/entur/gha-docker/issues/186)) ([c1ebc37](https://github.com/entur/gha-docker/commit/c1ebc373d1c36632996ff3aa2cf1077faf8de2a7))
+
 ## [1.9.1](https://github.com/entur/gha-docker/compare/v1.9.0...v1.9.1) (2025-09-09)
 
 
