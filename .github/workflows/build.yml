@@ -81,7 +81,6 @@ jobs:
       GHA_DOCKER_BUILD_ARGS: ${{ inputs.build_args }}
       GHA_GIT_REF: ${{inputs.git_ref}}
       GHA_ADDITIONAL_ARTIFACTS_NAME: ${{inputs.additional_artifacts_name}}
-      GHA_ADDITIONAL_ARTIFACTS_PATHS: ${{inputs.additional_artifacts_paths}}
       
     steps:
       - name: Set variables
@@ -167,6 +166,7 @@ jobs:
           mkdir -p /tmp/artifacts
 
           # Get the most recently created image
+          echo "$(docker images)"
           IMAGE_ID=$(docker images --format "{{.ID}}" | head -n 1)
           
           docker create --name temp-container "$IMAGE_ID"
