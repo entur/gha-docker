@@ -164,6 +164,8 @@ jobs:
       - name: Extract additional artifacts
         if: inputs.additional_artifacts_paths != ''
         run: |
+          mkdir -p /tmp/artifacts
+
           # Get the most recently created image
           IMAGE_ID=$(docker images --format "{{.ID}}" | head -n 1)
           
@@ -174,7 +176,7 @@ jobs:
             [ -n "$path" ] || continue
 
             echo "Extracting: $path"
-            docker cp "temp-container:/$path" "./artifacts/$(basename "$path")"
+            docker cp "temp-container:/$path" "/tmp/artifacts/$(basename "$path")"
           done
 
           echo "Extracted artifacts:"
