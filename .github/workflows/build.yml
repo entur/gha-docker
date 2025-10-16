@@ -164,10 +164,8 @@ jobs:
         if: inputs.additional_artifacts_paths != ''
         run: |
           mkdir -p /tmp/artifacts
-
-          # Get the most recently created image
+          
           docker load -i /tmp/${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}.tar
-          echo "$(docker images)"
           IMAGE_ID=$(docker images --format "{{.ID}}" | head -n 1)
           
           docker create --name temp-container "$IMAGE_ID"
@@ -181,7 +179,7 @@ jobs:
           done
 
           echo "Extracted artifacts:"
-          ls -lah ./artifacts/
+          ls -lah /tmp/artifacts/
 
           docker rm temp-container
 
