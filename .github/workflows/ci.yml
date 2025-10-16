@@ -101,7 +101,7 @@ jobs:
       build_artifact_path: data
       additional_artifacts_name: extras
       additional_artifacts_paths: |
-        fixture/test/additional_artifact_2.txt
+        /usr/src/app/main/resources/additional_artifact_2.txt
   
   assert-additional-artifacts-outputs-ok:
     needs: test-build-ok-with-additional-artifacts
