@@ -81,7 +81,6 @@ jobs:
       GHA_DOCKER_BUILD_ARGS: ${{ inputs.build_args }}
       GHA_GIT_REF: ${{inputs.git_ref}}
       GHA_ADDITIONAL_ARTIFACTS_NAME: ${{inputs.additional_artifacts_name}}
-      GHA_ADDITIONAL_ARTIFACTS_PATHS: ${{inputs.additional_artifacts_paths}}
       
     steps:
       - name: Set variables
@@ -144,6 +143,7 @@ jobs:
           cache-to: type=gha,mode=max
           context: ${{ env.GHA_DOCKER_BUILD_CONTEXT }}
           build-args: ${{ env.GHA_DOCKER_BUILD_ARGS }}
+          load: true
           file: ${{ env.GHA_DOCKER_BUILD_DOCKERFILE }}
           outputs: "type=docker,dest=/tmp/${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}.tar" 
           tags: ${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }} # Need tag to find artifact in push job
@@ -159,6 +159,29 @@ jobs:
           name: ${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}
           path: /tmp/${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}.tar
           retention-days: 4 # TODO discuss this or make it a parameter
+      
+      - name: Extract additional artifacts
+        if: inputs.additional_artifacts_paths != ''
+        run: |
+          mkdir -p /tmp/artifacts
+          
+          docker load -i /tmp/${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}.tar
+          IMAGE_ID=$(docker images --format "{{.ID}}" | head -n 1)
+          
+          docker create --name temp-container "$IMAGE_ID"
+
+          echo "${{ inputs.additional_artifacts_paths }}" | while read -r path; do
+            path=${path// /}  # Remove spaces
+            [ -n "$path" ] || continue
+
+            echo "Extracting: $path"
+            docker cp "temp-container:/$path" "/tmp/artifacts/$(basename "$path")"
+          done
+
+          echo "Extracted artifacts:"
+          ls -lah /tmp/artifacts/
+
+          docker rm temp-container
 
       - name: Save additional artifacts to the artifact storage
         if: inputs.additional_artifacts_paths != ''
@@ -166,5 +189,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.GHA_ADDITIONAL_ARTIFACTS_NAME }}
-          path: ${{ env.GHA_ADDITIONAL_ARTIFACTS_PATHS }}
+          path: /tmp/artifacts
           retention-days: 4 # TODO discuss this or make it a parameter
