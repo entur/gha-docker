@@ -143,7 +143,6 @@ jobs:
           cache-to: type=gha,mode=max
           context: ${{ env.GHA_DOCKER_BUILD_CONTEXT }}
           build-args: ${{ env.GHA_DOCKER_BUILD_ARGS }}
-          load: true
           file: ${{ env.GHA_DOCKER_BUILD_DOCKERFILE }}
           outputs: "type=docker,dest=/tmp/${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}.tar" 
           tags: ${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }} # Need tag to find artifact in push job
