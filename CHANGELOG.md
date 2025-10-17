@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.10.1](https://github.com/entur/gha-docker/compare/v1.10.0...v1.10.1) (2025-10-17)
+
+
+### Bug Fixes
+
+* Additional artifacts not being copied to Github runners ([#189](https://github.com/entur/gha-docker/issues/189)) ([40c7a56](https://github.com/entur/gha-docker/commit/40c7a566a24e169d06ac27fb4089ce544d8be2ac))
+
 ## [1.10.0](https://github.com/entur/gha-docker/compare/v1.9.1...v1.10.0) (2025-10-15)
 
 
