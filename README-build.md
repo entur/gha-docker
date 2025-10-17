@@ -11,6 +11,12 @@ jobs:
     uses: entur/gha-docker/.github/workflows/build.yml@v1
 ```
 
+---
+
+### Advanced inputs examples
+
+#### Secrets
+
 If you need to pass secrets to your Dockerfile, you can use this recipe:
 
 ```yml
@@ -30,6 +36,7 @@ RUN --mount=type=secret,id=ARTIFACTORY_AUTH_USER,env=ARTIFACTORY_AUTH_USER  \
     --mount=type=secret,id=ARTIFACTORY_AUTH_TOKEN,env=ARTIFACTORY_AUTH_TOKEN  ./gradlew build
 ```
 
+#### Additional artifacts
 If you need additional files generated inside your Docker image to be saved to the Github artifact storage, you can use this recipe:
 
 ```yml
