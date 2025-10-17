@@ -11,6 +11,12 @@ jobs:
     uses: entur/gha-docker/.github/workflows/build.yml@v1
 ```
 
+---
+
+### Advanced inputs examples
+
+#### Secrets
+
 If you need to pass secrets to your Dockerfile, you can use this recipe:
 
 ```yml
@@ -29,6 +35,30 @@ You can now mount and use these secrets in your Dockerfile:
 RUN --mount=type=secret,id=ARTIFACTORY_AUTH_USER,env=ARTIFACTORY_AUTH_USER  \
     --mount=type=secret,id=ARTIFACTORY_AUTH_TOKEN,env=ARTIFACTORY_AUTH_TOKEN  ./gradlew build
 ```
+
+#### Additional artifacts
+If you need additional files generated inside your Docker image to be saved to the Github artifact storage, you can use this recipe:
+
+```yml
+jobs:
+  docker-build:
+    uses: entur/gha-docker/.github/workflows/build.yml@v1
+    with:
+      additional_artifacts_name: my-artifact-name
+      additional_artifacts_paths: |
+        /absolute/path/to/test.txt
+        /absolute/path/to/an/openapi.json
+```
+
+This will result in a flat directory structure inside the artifact, i.e. the files will be accessible at the root level of the artifact:
+
+```shell
+├── my-artifact-name
+│   ├── test.txt
+│   ├── openapi.json
+```
+
+You can now download the Github artifact and use it in subsequent jobs in your workflow, or reference the artifact in reusable workflow supporting that.
 
 ## Inputs
 
