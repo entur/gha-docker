@@ -153,7 +153,7 @@ jobs:
 
       - name: Save docker image to the artifact storage
         id: save-image
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: ${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}
           path: /tmp/${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}.tar
@@ -185,7 +185,7 @@ jobs:
       - name: Save additional artifacts to the artifact storage
         if: inputs.additional_artifacts_paths != ''
         id: save-additional-artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: ${{ env.GHA_ADDITIONAL_ARTIFACTS_NAME }}
           path: /tmp/artifacts
