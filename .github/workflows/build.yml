@@ -109,7 +109,7 @@ jobs:
       - if: env.GHA_DOCKER_BUILD_ARTIFACT_NAME != ''
         name: Download artifact ${{ env.GHA_DOCKER_BUILD_ARTIFACT_NAME }}
         id: download-artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: ${{ env.GHA_DOCKER_BUILD_ARTIFACT_NAME }}
           path: ${{ env.GHA_DOCKER_BUILD_ARTIFACT_PATH }}
