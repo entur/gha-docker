@@ -139,8 +139,8 @@ jobs:
         id: build
         uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6.19.2
         with:
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=gha,ignore-error=true
+          cache-to: type=gha,mode=max,ignore-error=true
           context: ${{ env.GHA_DOCKER_BUILD_CONTEXT }}
           build-args: ${{ env.GHA_DOCKER_BUILD_ARGS }}
           file: ${{ env.GHA_DOCKER_BUILD_DOCKERFILE }}
