@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.10.2](https://github.com/entur/gha-docker/compare/v1.10.1...v1.10.2) (2026-04-15)
+
+
+### Bug Fixes
+
+* add  skip caching if error parameter ([#204](https://github.com/entur/gha-docker/issues/204)) ([8ddf078](https://github.com/entur/gha-docker/commit/8ddf078a8455980caf853ab0180ba51cf5bac66a))
+* **deps:** bump docker/setup-buildx-action from 3.12.0 to 4.0.0 ([#200](https://github.com/entur/gha-docker/issues/200)) ([393bf7e](https://github.com/entur/gha-docker/commit/393bf7edc9add79e7ba8b2b8439dfe0d72280806))
+
 ## [1.10.1](https://github.com/entur/gha-docker/compare/v1.10.0...v1.10.1) (2025-10-17)
 
 
