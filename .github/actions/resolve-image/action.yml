@@ -41,7 +41,7 @@ runs:
 
     - name: Sanitize branch name
       id: sanitize
-      uses: ./.github/actions/sanitize-ref
+      uses: entur/gha-docker/.github/actions/sanitize-ref@CLOUD-4144/resolve-image # TODO: switch to @v1 after testing
       with:
         ref: ${{ steps.find-pr.outputs.branch }}
 
