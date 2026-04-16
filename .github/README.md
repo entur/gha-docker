@@ -10,7 +10,7 @@ GitHub Actions for working with Docker
 - [Docker lint](../README-lint.md)
 - [Docker build](../README-build.md)
 - [Docker push](../README-push.md)
-- [Docker resolve-image](../README-resolve-image.md)
+- [Docker resolve-image](actions/resolve-image/README.md)
 
 ## Golden Path
 
