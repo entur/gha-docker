@@ -1,0 +1,33 @@
+name: Sanitize Ref
+description: >
+  Sanitize a git ref name for use in Docker image tags.
+  Truncates to 43 chars, lowercases, removes Norwegian characters,
+  and replaces /, ., ! with hyphens.
+
+inputs:
+  ref:
+    description: "Git ref name to sanitize"
+    required: true
+
+outputs:
+  ref:
+    description: "Sanitized ref name"
+    value: ${{ steps.sanitize.outputs.ref }}
+
+runs:
+  using: composite
+  steps:
+    - name: Sanitize ref
+      id: sanitize
+      shell: bash
+      env:
+        RAW_REF: ${{ inputs.ref }}
+      run: |
+        REF="${RAW_REF}"
+        REF=${REF:0:43}                                                      # truncate to max_len - len(.YYYYMMDD-SHA1234567)
+        REF=$(echo "$REF" | sed 's/[-]$//')                                  # remove trailing -
+        REF=$(echo "$REF" | tr '[:upper:]' '[:lower:]' | tr -d '[ÆØÅæøå]')  # to ASCII lower case
+        REF=${REF//\//-}                                                     # replace / with -
+        REF=${REF//./-}                                                      # replace . with -
+        REF=${REF//!/-}                                                      # replace ! with -
+        echo "ref=${REF}" >> "$GITHUB_OUTPUT"

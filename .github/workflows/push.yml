@@ -84,19 +84,24 @@ jobs:
         shell: bash
         run: |
           echo "GHA_DOCKER_PUSH_DATE=$(date +'%Y%m%d')" >> $GITHUB_ENV
-          # Convert ref name to a valid git & docker tag name
           if [[ "${GITHUB_EVENT_NAME}" = "pull_request" ]]; then
-            BRANCH_NAME=${GITHUB_HEAD_REF}
+            echo "ref=${GITHUB_HEAD_REF}" >> "$GITHUB_OUTPUT"
           else
-            BRANCH_NAME=${GITHUB_REF_NAME}
+            echo "ref=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
           fi
-          BRANCH_NAME=${BRANCH_NAME:0:43} # truncate to max_len - len(.YYYYMMDD-SHA1234567)
-          BRANCH_NAME=$(echo "$BRANCH_NAME" | sed s'/[-]$//') # remove trailing -
-          BRANCH_NAME=$(echo "$BRANCH_NAME" | tr '[:upper:]' '[:lower:]' | tr -d '[ÆØÅæøå]') # to ASCII lower case
-          BRANCH_NAME=${BRANCH_NAME//\//-} # replace / with -
-          BRANCH_NAME=${BRANCH_NAME//./-}  # replace . with -
-          BRANCH_NAME=${BRANCH_NAME//!/-}  # replace ! with -
-          echo "GHA_DOCKER_PUSH_BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
+
+      - name: Sanitize branch name
+        id: sanitize-branch
+        uses: entur/gha-docker/.github/actions/sanitize-ref@CLOUD-4144/resolve-image # TODO: switch to @v1 after testing
+        with:
+          ref: ${{ steps.set-env.outputs.ref }}
+
+      - name: Set sanitized branch name
+        id: set-branch
+        shell: bash
+        env:
+          SANITIZED_REF: ${{ steps.sanitize-branch.outputs.ref }}
+        run: echo "GHA_DOCKER_PUSH_BRANCH_NAME=${SANITIZED_REF}" >> $GITHUB_ENV
 
       - if: env.GHA_DOCKER_PUSH_IMAGE_NAME == 'repo_name'
         name: Set image artifact name

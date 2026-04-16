@@ -1,0 +1,68 @@
+name: Resolve Image
+description: >
+  Resolve the Docker image name and tag for a merged PR by looking up
+  the git tag created by the Docker push workflow. Requires the repository
+  to be checked out with fetch-depth: 0 and fetch-tags: true.
+
+inputs:
+  image_name:
+    description: "Image name to resolve. Defaults to the repository name."
+    default: "repo_name"
+
+outputs:
+  image:
+    description: "Resolved image name and tag (image_name:image_tag), empty if no image was built for the PR"
+    value: ${{ steps.resolve.outputs.image }}
+  image_tag:
+    description: "Resolved image tag, empty if no image was built for the PR"
+    value: ${{ steps.resolve.outputs.image_tag }}
+  pr_number:
+    description: "The PR number that was merged at the current commit"
+    value: ${{ steps.find-pr.outputs.pr_number }}
+
+runs:
+  using: composite
+  steps:
+    - name: Find merged PR
+      id: find-pr
+      shell: bash
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        PR_NUMBER=$(gh pr list --search "$GITHUB_SHA" --state merged --json number --jq '.[0].number')
+        if [ -z "$PR_NUMBER" ]; then
+          echo "::error::Could not find merged PR for commit $GITHUB_SHA"
+          exit 1
+        fi
+        echo "pr_number=${PR_NUMBER}" >> "$GITHUB_OUTPUT"
+
+        BRANCH=$(gh pr view "$PR_NUMBER" --json headRefName --jq '.headRefName')
+        echo "branch=${BRANCH}" >> "$GITHUB_OUTPUT"
+
+    - name: Sanitize branch name
+      id: sanitize
+      uses: entur/gha-docker/.github/actions/sanitize-ref@CLOUD-4144/resolve-image # TODO: switch to @v1 after testing
+      with:
+        ref: ${{ steps.find-pr.outputs.branch }}
+
+    - name: Resolve image from git tag
+      id: resolve
+      shell: bash
+      env:
+        IMAGE_NAME: ${{ inputs.image_name }}
+        BRANCH: ${{ steps.sanitize.outputs.ref }}
+        PR_NUMBER: ${{ steps.find-pr.outputs.pr_number }}
+      run: |
+        if [ "$IMAGE_NAME" = "repo_name" ]; then
+          IMAGE_NAME="${GITHUB_REPOSITORY#*/}"
+        fi
+
+        IMAGE_TAG=$(git tag -l "${BRANCH}.*" --sort=-creatordate | head -1)
+        if [ -z "$IMAGE_TAG" ]; then
+          echo "::warning::No git tag matching '${BRANCH}.*' (PR #${PR_NUMBER}) — no image was built for this PR, skipping deploy"
+          exit 0
+        fi
+
+        echo "Resolved image: ${IMAGE_NAME}:${IMAGE_TAG} (from PR #${PR_NUMBER})"
+        echo "image=${IMAGE_NAME}:${IMAGE_TAG}" >> "$GITHUB_OUTPUT"
+        echo "image_tag=${IMAGE_TAG}" >> "$GITHUB_OUTPUT"
