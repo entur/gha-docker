@@ -23,10 +23,10 @@ updates:
   open-pull-requests-limit: 2
 - package-ecosystem: "github-actions"
   directories:
-  - "/.github/workflows/build.yml"
-  - "/.github/workflows/lint.yml"
-  - "/.github/workflows/push.yml"
-  - "/.github/actions/resolve-image"
+  - ".github/workflows/build.yml"
+  - ".github/workflows/lint.yml"
+  - ".github/workflows/push.yml"
+  - ".github/actions/resolve-image"
   groups:
     minor-and-patch:
       applies-to: version-updates
