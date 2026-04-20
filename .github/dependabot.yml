@@ -8,6 +8,7 @@ updates:
   - ".github/workflows/build.yml"
   - ".github/workflows/lint.yml"
   - ".github/workflows/push.yml"
+  - ".github/actions"
   groups:
     minor-and-patch:
       applies-to: version-updates
@@ -25,6 +26,7 @@ updates:
   - "/.github/workflows/build.yml"
   - "/.github/workflows/lint.yml"
   - "/.github/workflows/push.yml"
+  - "/.github/actions/resolve-image"
   groups:
     minor-and-patch:
       applies-to: version-updates
