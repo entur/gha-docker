@@ -33,7 +33,7 @@ jobs:
         with:
           no-fail: true
           dockerfile: fixture/Dockerfile.bad
-      - uses: nick-fields/assert-action@aa0067e01f0f6545c31755d6ca128c5a3a14f6bf # v2.0.0
+      - uses: nick-fields/assert-action@22dd2a66ef733fe92022d3704183ac007463eecb # v3.0.0
         with:
           expected: "fixture/Dockerfile.bad:4 DL3000 error: Use absolute WORKDIR"
           actual: ${{ env.HADOLINT_RESULTS }}
@@ -107,7 +107,7 @@ jobs:
     needs: test-build-ok-with-additional-artifacts
     runs-on: ubuntu-24.04
     steps:
-      - uses: nick-fields/assert-action@aa0067e01f0f6545c31755d6ca128c5a3a14f6bf # v2.0.0
+      - uses: nick-fields/assert-action@22dd2a66ef733fe92022d3704183ac007463eecb # v3.0.0
         with:
           expected: "extras"
           actual: ${{ needs.test-build-ok-with-additional-artifacts.outputs.additional_artifacts }}
@@ -132,7 +132,7 @@ jobs:
     needs: test-push-gcr-ok-with-tag
     runs-on: ubuntu-24.04
     steps:
-      - uses: nick-fields/assert-action@aa0067e01f0f6545c31755d6ca128c5a3a14f6bf # v2.0.0
+      - uses: nick-fields/assert-action@22dd2a66ef733fe92022d3704183ac007463eecb # v3.0.0
         with:
           expected: "ci-test-tag"
           actual: ${{ needs.test-push-gcr-ok-with-tag.outputs.image_tag }}
@@ -151,7 +151,7 @@ jobs:
     needs: test-push-gcr-ok-with-multiple-tags
     runs-on: ubuntu-24.04
     steps:
-      - uses: nick-fields/assert-action@aa0067e01f0f6545c31755d6ca128c5a3a14f6bf # v2.0.0
+      - uses: nick-fields/assert-action@22dd2a66ef733fe92022d3704183ac007463eecb # v3.0.0
         with:
           expected: "ci-test-tag,ci-test-tag-2,ci-test-tag-3"
           actual: ${{ needs.test-push-gcr-ok-with-multiple-tags.outputs.all_image_tags }}
@@ -169,7 +169,7 @@ jobs:
     needs: test-push-gcr-ok-with-git-ref
     runs-on: ubuntu-24.04
     steps: 
-      - uses: nick-fields/assert-action@aa0067e01f0f6545c31755d6ca128c5a3a14f6bf # v2.0.0
+      - uses: nick-fields/assert-action@22dd2a66ef733fe92022d3704183ac007463eecb # v3.0.0
         with:
           expected: main
           actual: ${{ needs.test-push-gcr-ok-with-git-ref.outputs.image_tag }}
@@ -185,7 +185,7 @@ jobs:
     runs-on: ubuntu-24.04
     needs: test-build-ok-with-custom-image-name
     steps: 
-      - uses: nick-fields/assert-action@aa0067e01f0f6545c31755d6ca128c5a3a14f6bf # v2.0.0
+      - uses: nick-fields/assert-action@22dd2a66ef733fe92022d3704183ac007463eecb # v3.0.0
         with:
           expected: "custom_image_name"
           actual: ${{ needs.test-build-ok-with-custom-image-name.outputs.image_artifact }}
@@ -204,7 +204,7 @@ jobs:
     runs-on: ubuntu-24.04
     needs: test-push-acr-ok-with-tag
     steps:
-      - uses: nick-fields/assert-action@aa0067e01f0f6545c31755d6ca128c5a3a14f6bf # v2.0.0
+      - uses: nick-fields/assert-action@22dd2a66ef733fe92022d3704183ac007463eecb # v3.0.0
         with:
           expected: "ci-test-az-tag"
           actual: ${{ needs.test-push-acr-ok-with-tag.outputs.image_tag }}
@@ -224,7 +224,7 @@ jobs:
     runs-on: ubuntu-24.04
     needs: test-push-acr-ok-with-multiple-tags
     steps:
-      - uses: nick-fields/assert-action@aa0067e01f0f6545c31755d6ca128c5a3a14f6bf # v2.0.0
+      - uses: nick-fields/assert-action@22dd2a66ef733fe92022d3704183ac007463eecb # v3.0.0
         with:
           expected: "ci-test-az-tag,ci-test-az-tag-2,ci-test-az-tag-3"
           actual: ${{ needs.test-push-acr-ok-with-multiple-tags.outputs.all_image_tags }}
