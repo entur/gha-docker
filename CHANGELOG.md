@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.11.0](https://github.com/entur/gha-docker/compare/v1.10.2...v1.11.0) (2026-04-20)
+
+
+### Features
+
+* add resolve-image action ([#201](https://github.com/entur/gha-docker/issues/201)) ([3b4a222](https://github.com/entur/gha-docker/commit/3b4a2221fd281eb172bc8881a882aef41679c2ab))
+
 ## [1.10.2](https://github.com/entur/gha-docker/compare/v1.10.1...v1.10.2) (2026-04-15)
 
 
