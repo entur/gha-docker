@@ -1,2 +1,2 @@
-FROM busybox:1.37
+FROM busybox:1.38
 WORKDIR /usr/src/app
