@@ -80,6 +80,8 @@ jobs:
 | `min`           | Only the layers of the final image             | Intermediate stages are large but rarely reused                                            |
 | `off`           | Nothing, the cache is neither read nor written | The cache is never hit anyway, e.g. every layer depends on source that changes per commit  |
 
+An empty value falls back to `max`, so forwarding an input the caller leaves unset keeps the default behaviour.
+
 ## Inputs
 
 <!-- AUTO-DOC-INPUT:START - Do not remove or modify this section -->

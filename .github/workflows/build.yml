@@ -96,17 +96,22 @@ jobs:
             echo "GHA_DOCKER_BUILD_IMAGE_NAME=${GITHUB_REPOSITORY#*/}" >> "$GITHUB_ENV"
           fi
 
-          case "${GHA_DOCKER_BUILD_CACHE}" in
+          # An empty value bypasses the input default, which only applies when
+          # 'cache' is omitted entirely, so a caller forwarding an unset input
+          # of its own lands here with an empty string. Fall back to the default.
+          CACHE_MODE="${GHA_DOCKER_BUILD_CACHE:-max}"
+
+          case "${CACHE_MODE}" in
             max|min)
               echo "GHA_DOCKER_BUILD_CACHE_FROM=type=gha,ignore-error=true" >> "$GITHUB_ENV"
-              echo "GHA_DOCKER_BUILD_CACHE_TO=type=gha,mode=${GHA_DOCKER_BUILD_CACHE},ignore-error=true" >> "$GITHUB_ENV"
+              echo "GHA_DOCKER_BUILD_CACHE_TO=type=gha,mode=${CACHE_MODE},ignore-error=true" >> "$GITHUB_ENV"
               ;;
             off)
               echo "GHA_DOCKER_BUILD_CACHE_FROM=" >> "$GITHUB_ENV"
               echo "GHA_DOCKER_BUILD_CACHE_TO=" >> "$GITHUB_ENV"
               ;;
             *)
-              echo "::error::Invalid value for input 'cache': '${GHA_DOCKER_BUILD_CACHE}'. Must be one of: off, min, max"
+              echo "::error::Invalid value for input 'cache': '${CACHE_MODE}'. Must be one of: off, min, max"
               exit 1
               ;;
           esac
