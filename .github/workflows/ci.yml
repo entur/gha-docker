@@ -175,6 +175,27 @@ jobs:
           actual: ${{ needs.test-push-gcr-ok-with-git-ref.outputs.image_tag }}
           comparison: endsWith
 
+  test-build-ok-with-cache-min:
+    uses: ./.github/workflows/build.yml
+    with:
+      dockerfile: fixture/Dockerfile.good
+      image_name: ci-test-cache-min
+      cache: min
+
+  test-build-ok-with-cache-off:
+    uses: ./.github/workflows/build.yml
+    with:
+      dockerfile: fixture/Dockerfile.good
+      image_name: ci-test-cache-off
+      cache: off
+
+  test-build-ok-with-cache-empty:
+    uses: ./.github/workflows/build.yml
+    with:
+      dockerfile: fixture/Dockerfile.good
+      image_name: ci-test-cache-empty
+      cache: ""
+
   test-build-ok-with-custom-image-name:
     uses: ./.github/workflows/build.yml
     with:
@@ -238,6 +259,9 @@ jobs:
         assert-multiple-tags-acr-outputs-ok,
         assert-build-ok-with-custom-image-name-outputs,
         assert-additional-artifacts-outputs-ok,
+        test-build-ok-with-cache-min,
+        test-build-ok-with-cache-off,
+        test-build-ok-with-cache-empty,
       ]
     uses: entur/gha-meta/.github/workflows/auto-doc.yml@v1
     with:
