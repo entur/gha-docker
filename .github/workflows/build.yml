@@ -96,13 +96,12 @@ jobs:
             echo "GHA_DOCKER_BUILD_IMAGE_NAME=${GITHUB_REPOSITORY#*/}" >> "$GITHUB_ENV"
           fi
 
-          # 'false' is treated as 'off' in case a YAML parser coerces the unquoted literal
           case "${GHA_DOCKER_BUILD_CACHE}" in
             max|min)
               echo "GHA_DOCKER_BUILD_CACHE_FROM=type=gha,ignore-error=true" >> "$GITHUB_ENV"
               echo "GHA_DOCKER_BUILD_CACHE_TO=type=gha,mode=${GHA_DOCKER_BUILD_CACHE},ignore-error=true" >> "$GITHUB_ENV"
               ;;
-            off|false)
+            off)
               echo "GHA_DOCKER_BUILD_CACHE_FROM=" >> "$GITHUB_ENV"
               echo "GHA_DOCKER_BUILD_CACHE_TO=" >> "$GITHUB_ENV"
               ;;
