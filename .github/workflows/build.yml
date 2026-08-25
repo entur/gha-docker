@@ -50,6 +50,10 @@ on:
         description: 'List of paths to additional artifacts to be saved to Github artifact storage.'
         type: string
         required: false
+      cache:
+        description: "Docker layer cache mode - 'max' caches all build stages, 'min' caches only the final image layers, 'off' disables caching."
+        type: string
+        default: "max"
               
     secrets:
       BUILD_SECRETS:
@@ -81,6 +85,7 @@ jobs:
       GHA_DOCKER_BUILD_ARGS: ${{ inputs.build_args }}
       GHA_GIT_REF: ${{inputs.git_ref}}
       GHA_ADDITIONAL_ARTIFACTS_NAME: ${{inputs.additional_artifacts_name}}
+      GHA_DOCKER_BUILD_CACHE: ${{ inputs.cache }}
       
     steps:
       - name: Set variables
@@ -88,8 +93,24 @@ jobs:
         shell: bash
         run: |
           if [[ "${GHA_DOCKER_BUILD_IMAGE_NAME}" = "repo_name" ]]; then
-            echo "GHA_DOCKER_BUILD_IMAGE_NAME=${GITHUB_REPOSITORY#*/}" >> $GITHUB_ENV
+            echo "GHA_DOCKER_BUILD_IMAGE_NAME=${GITHUB_REPOSITORY#*/}" >> "$GITHUB_ENV"
           fi
+
+          # 'false' is treated as 'off' in case a YAML parser coerces the unquoted literal
+          case "${GHA_DOCKER_BUILD_CACHE}" in
+            max|min)
+              echo "GHA_DOCKER_BUILD_CACHE_FROM=type=gha,ignore-error=true" >> "$GITHUB_ENV"
+              echo "GHA_DOCKER_BUILD_CACHE_TO=type=gha,mode=${GHA_DOCKER_BUILD_CACHE},ignore-error=true" >> "$GITHUB_ENV"
+              ;;
+            off|false)
+              echo "GHA_DOCKER_BUILD_CACHE_FROM=" >> "$GITHUB_ENV"
+              echo "GHA_DOCKER_BUILD_CACHE_TO=" >> "$GITHUB_ENV"
+              ;;
+            *)
+              echo "::error::Invalid value for input 'cache': '${GHA_DOCKER_BUILD_CACHE}'. Must be one of: off, min, max"
+              exit 1
+              ;;
+          esac
 
       - name: Checkout code
         id: checkout-code
@@ -139,8 +160,8 @@ jobs:
         id: build
         uses: docker/build-push-action@d08e5c354a6adb9ed34480a06d141179aa583294 # v7.0.0
         with:
-          cache-from: type=gha,ignore-error=true
-          cache-to: type=gha,mode=max,ignore-error=true
+          cache-from: ${{ env.GHA_DOCKER_BUILD_CACHE_FROM }}
+          cache-to: ${{ env.GHA_DOCKER_BUILD_CACHE_TO }}
           context: ${{ env.GHA_DOCKER_BUILD_CONTEXT }}
           build-args: ${{ env.GHA_DOCKER_BUILD_ARGS }}
           file: ${{ env.GHA_DOCKER_BUILD_DOCKERFILE }}

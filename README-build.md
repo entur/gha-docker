@@ -60,6 +60,26 @@ This will result in a flat directory structure inside the artifact, i.e. the fil
 
 You can now download the Github artifact and use it in subsequent jobs in your workflow, or reference the artifact in reusable workflow supporting that.
 
+#### Build cache
+
+Layers are cached to and from the [GitHub Actions cache](https://docs.docker.com/build/cache/backends/gha/) with `mode=max` by default, so every intermediate build stage is exported.
+
+For large multi-stage builds the export can cost more time than the cache saves. If the `Build image` step spends most of its time in `exporting cache to GitHub Actions Cache`, lower the cache mode:
+
+```yml
+jobs:
+  docker-build:
+    uses: entur/gha-docker/.github/workflows/build.yml@v1
+    with:
+      cache: min
+```
+
+| `cache`         | Exports                                        | Use when                                                                                  |
+|-----------------|------------------------------------------------|-------------------------------------------------------------------------------------------|
+| `max` (default) | All stages, including intermediate ones        | Rebuilds reuse intermediate stages, e.g. dependency layers that rarely change              |
+| `min`           | Only the layers of the final image             | Intermediate stages are large but rarely reused                                            |
+| `off`           | Nothing, the cache is neither read nor written | The cache is never hit anyway, e.g. every layer depends on source that changes per commit  |
+
 ## Inputs
 
 <!-- AUTO-DOC-INPUT:START - Do not remove or modify this section -->
@@ -71,6 +91,7 @@ You can now download the Github artifact and use it in subsequent jobs in your w
 |                         <a name="input_build_args"></a>[build_args](#input_build_args)                         | string |  false   |                      |                                                                  List of build args to <br>pass to docker build. Warning! <br>Do not pass secrets into <br>docker args.                                                                    |
 |           <a name="input_build_artifact_name"></a>[build_artifact_name](#input_build_artifact_name)            | string |  false   |                      |                                                                                                Name of GitHub artifact to <br>add to build                                                                                                 |
 |           <a name="input_build_artifact_path"></a>[build_artifact_path](#input_build_artifact_path)            | string |  false   |    `"build/libs"`    |                                                                                                            Path to the artifact                                                                                                            |
+|                                 <a name="input_cache"></a>[cache](#input_cache)                                 | string |  false   |       `"max"`        |                                                                    Docker layer cache mode - <br>'max' caches all build stages, <br>'min' caches only the final <br>image layers, 'off' disables caching.                                                                    |
 |                   <a name="input_cloud_provider"></a>[cloud_provider](#input_cloud_provider)                   | string |  false   |       `"gcp"`        |                                                                             Which cloud service provider to <br>use - Google Cloud: 'gcp' <br>or Azure: 'az'                                                                               |
 |                             <a name="input_context"></a>[context](#input_context)                              | string |  false   |        `"."`         |                                                                                               Build context, default root of <br>repository                                                                                                |
 |                         <a name="input_dockerfile"></a>[dockerfile](#input_dockerfile)                         | string |  false   |    `"Dockerfile"`    |                                                                                                        Dockerfile to use for build                                                                                                         |
