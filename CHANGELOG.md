@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.12.0](https://github.com/entur/gha-docker/compare/v1.11.0...v1.12.0) (2026-08-25)
+
+
+### Features
+
+* **build:** add cache input to control docker layer cache mode ([#216](https://github.com/entur/gha-docker/issues/216)) ([26f036e](https://github.com/entur/gha-docker/commit/26f036e73c74ba9482c46fe9c43ec0eb4d28b53c))
+
 ## [1.11.0](https://github.com/entur/gha-docker/compare/v1.10.2...v1.11.0) (2026-04-20)
 
 
