@@ -196,6 +196,13 @@ jobs:
       image_name: ci-test-cache-empty
       cache: ""
 
+  test-build-ok-with-pull:
+    uses: ./.github/workflows/build.yml
+    with:
+      dockerfile: fixture/Dockerfile.good
+      image_name: ci-test-pull
+      pull: true
+
   test-build-ok-with-custom-image-name:
     uses: ./.github/workflows/build.yml
     with:
