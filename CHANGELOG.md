@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.13.0](https://github.com/entur/gha-docker/compare/v1.12.0...v1.13.0) (2026-09-18)
+
+
+### Features
+
+* Add pull parameter ([#221](https://github.com/entur/gha-docker/issues/221)) ([20c7344](https://github.com/entur/gha-docker/commit/20c7344bd20161a3cfaa8c943bb8e3b1059a8f4f))
+
 ## [1.12.0](https://github.com/entur/gha-docker/compare/v1.11.0...v1.12.0) (2026-08-25)
 
 
