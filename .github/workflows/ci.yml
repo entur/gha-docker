@@ -196,6 +196,14 @@ jobs:
       image_name: ci-test-cache-empty
       cache: ""
 
+  test-build-ok-with-cache-registry:
+    uses: ./.github/workflows/build.yml
+    with:
+      dockerfile: fixture/Dockerfile.good
+      image_name: ci-test-cache-registry
+      cache: registry
+      cache_ref: eu.gcr.io/entur-system-1287/gha-docker-ci-test:cache-registry-test
+
   test-build-ok-with-pull:
     uses: ./.github/workflows/build.yml
     with:
@@ -269,6 +277,7 @@ jobs:
         test-build-ok-with-cache-min,
         test-build-ok-with-cache-off,
         test-build-ok-with-cache-empty,
+        test-build-ok-with-cache-registry,
       ]
     uses: entur/gha-meta/.github/workflows/auto-doc.yml@v1
     with:
