@@ -51,9 +51,13 @@ on:
         type: string
         required: false
       cache:
-        description: "Docker layer cache mode - 'max' caches all build stages, 'min' caches only the final image layers, 'off' disables caching."
+        description: "Docker layer cache mode - 'max' caches all build stages, 'min' caches only the final image layers, 'off' disables caching, 'registry' caches to/from a registry image (requires cache_ref)."
         type: string
         default: "max"
+      cache_ref:
+        description: "Registry image reference to use for cache storage when cache is 'registry', e.g. 'eu.gcr.io/entur-system-1287/myapp:buildcache'. Must resolve to a registry this workflow already authenticates against (eu.gcr.io or europe-west1-docker.pkg.dev for gcp, acrentur001.azurecr.io for az) -- an arbitrary third-party registry has no credentials here. Required when cache is 'registry', ignored otherwise."
+        type: string
+        required: false
       pull:
         description: "Always attempt to pull a newer version of the base image"
         type: boolean
@@ -90,6 +94,7 @@ jobs:
       GHA_GIT_REF: ${{inputs.git_ref}}
       GHA_ADDITIONAL_ARTIFACTS_NAME: ${{inputs.additional_artifacts_name}}
       GHA_DOCKER_BUILD_CACHE: ${{ inputs.cache }}
+      GHA_DOCKER_BUILD_CACHE_REF: ${{ inputs.cache_ref }}
       GHA_DOCKER_PULL: ${{ inputs.pull }}
 
     steps:
@@ -115,8 +120,16 @@ jobs:
               echo "GHA_DOCKER_BUILD_CACHE_FROM=" >> "$GITHUB_ENV"
               echo "GHA_DOCKER_BUILD_CACHE_TO=" >> "$GITHUB_ENV"
               ;;
+            registry)
+              if [[ -z "${GHA_DOCKER_BUILD_CACHE_REF}" ]]; then
+                echo "::error::Input 'cache: registry' requires 'cache_ref' to be set to a registry image reference."
+                exit 1
+              fi
+              echo "GHA_DOCKER_BUILD_CACHE_FROM=type=registry,ref=${GHA_DOCKER_BUILD_CACHE_REF},ignore-error=true" >> "$GITHUB_ENV"
+              echo "GHA_DOCKER_BUILD_CACHE_TO=type=registry,ref=${GHA_DOCKER_BUILD_CACHE_REF},mode=max,ignore-error=true" >> "$GITHUB_ENV"
+              ;;
             *)
-              echo "::error::Invalid value for input 'cache': '${CACHE_MODE}'. Must be one of: off, min, max"
+              echo "::error::Invalid value for input 'cache': '${CACHE_MODE}'. Must be one of: off, min, max, registry"
               exit 1
               ;;
           esac
