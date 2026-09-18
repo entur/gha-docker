@@ -54,6 +54,10 @@ on:
         description: "Docker layer cache mode - 'max' caches all build stages, 'min' caches only the final image layers, 'off' disables caching."
         type: string
         default: "max"
+      pull:
+        description: "Always attempt to pull a newer version of the base image"
+        type: boolean
+        default: false
               
     secrets:
       BUILD_SECRETS:
@@ -86,7 +90,8 @@ jobs:
       GHA_GIT_REF: ${{inputs.git_ref}}
       GHA_ADDITIONAL_ARTIFACTS_NAME: ${{inputs.additional_artifacts_name}}
       GHA_DOCKER_BUILD_CACHE: ${{ inputs.cache }}
-      
+      GHA_DOCKER_PULL: ${{ inputs.pull }}
+
     steps:
       - name: Set variables
         id: set-vars
@@ -172,6 +177,7 @@ jobs:
           outputs: "type=docker,dest=/tmp/${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }}.tar" 
           tags: ${{ env.GHA_DOCKER_BUILD_IMAGE_NAME }} # Need tag to find artifact in push job
           push: false
+          pull: ${{ env.GHA_DOCKER_PULL }}
           provenance: false 
           secrets: |
             ${{ secrets.BUILD_SECRETS }}
