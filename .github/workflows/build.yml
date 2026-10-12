@@ -27,7 +27,7 @@ on:
         type: string
         default: "gcp"
       authenticate:
-        description: "Authenticate with the cloud provider before building. Set to false for repositories without GitHub Factory setup, e.g. open source repositories."
+        description: "Authenticate with the cloud provider before building. Set to false for repositories without GitHub Factory setup."
         type: boolean
         default: true
       timeout_minutes:
