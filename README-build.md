@@ -82,6 +82,20 @@ jobs:
 
 An empty value falls back to `max`, so forwarding an input the caller leaves unset keeps the default behaviour.
 
+#### Skip cloud authentication
+
+By default the workflow authenticates with the cloud provider (GCP or Azure) before building, using the variables provided by GitHub Factory. Repositories that are not set up with GitHub Factory, such as open source repositories, can skip this step:
+
+```yml
+jobs:
+  docker-build:
+    uses: entur/gha-docker/.github/workflows/build.yml@v1
+    with:
+      authenticate: false
+```
+
+Note that the workflow still declares `id-token: write`, so the calling workflow must permit it (or leave permissions at their defaults).
+
 ## Inputs
 
 <!-- AUTO-DOC-INPUT:START - Do not remove or modify this section -->
@@ -93,6 +107,7 @@ An empty value falls back to `max`, so forwarding an input the caller leaves uns
 |                         <a name="input_build_args"></a>[build_args](#input_build_args)                         | string  |  false   |                      |                                                                  List of build args to <br>pass to docker build. Warning! <br>Do not pass secrets into <br>docker args.                                                                    |
 |           <a name="input_build_artifact_name"></a>[build_artifact_name](#input_build_artifact_name)            | string  |  false   |                      |                                                                                                Name of GitHub artifact to <br>add to build                                                                                                 |
 |           <a name="input_build_artifact_path"></a>[build_artifact_path](#input_build_artifact_path)            | string  |  false   |    `"build/libs"`    |                                                                                                            Path to the artifact                                                                                                            |
+|                   <a name="input_authenticate"></a>[authenticate](#input_authenticate)                          | boolean |  false   |        `true`        |                                  Authenticate with the cloud provider <br>before building. Set to false <br>for repositories without GitHub Factory <br>setup, e.g. open source repositories.                                  |
 |                                <a name="input_cache"></a>[cache](#input_cache)                                 | string  |  false   |       `"max"`        |                                                  Docker layer cache mode - <br>'max' caches all build stages, <br>'min' caches only the final <br>image layers, 'off' disables caching.                                                    |
 |                   <a name="input_cloud_provider"></a>[cloud_provider](#input_cloud_provider)                   | string  |  false   |       `"gcp"`        |                                                                             Which cloud service provider to <br>use - Google Cloud: 'gcp' <br>or Azure: 'az'                                                                               |
 |                             <a name="input_context"></a>[context](#input_context)                              | string  |  false   |        `"."`         |                                                                                               Build context, default root of <br>repository                                                                                                |
