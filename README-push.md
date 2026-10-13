@@ -12,12 +12,29 @@ jobs:
     uses: entur/gha-docker/.github/workflows/push.yml@v1
 ```
 
+### Downloading the image artifact from another repository
+
+By default the image artifact is fetched from the current workflow run. To fetch it from another repository, set `artifact_repository` and `artifact_run_id`, and pass a token with `actions:read` on that repository:
+
+```yml
+jobs:
+  docker-push:
+    uses: entur/gha-docker/.github/workflows/push.yml@v1
+    with:
+      artifact_repository: my-org/other-repo
+      artifact_run_id: ${{ needs.build.outputs.run_id }}
+    secrets:
+      artifact_github_token: ${{ secrets.OTHER_REPO_TOKEN }}
+```
+
 ## Inputs
 
 <!-- AUTO-DOC-INPUT:START - Do not remove or modify this section -->
 
 |                                      INPUT                                       |  TYPE   | REQUIRED |    DEFAULT     |                                                                                 DESCRIPTION                                                                                  |
 |----------------------------------------------------------------------------------|---------|----------|----------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|  <a name="input_artifact_repository"></a>[artifact_repository](#input_artifact_repository) | string  |  false   | `""` | Repository (owner/name) to download the <br>Docker image artifact from. Defaults <br>to the current repository |
+|  <a name="input_artifact_run_id"></a>[artifact_run_id](#input_artifact_run_id) | string  |  false   | `""` | Workflow run ID to download the <br>Docker image artifact from. Defaults <br>to the current run. Required <br>when artifact_repository is another repository |
 |    <a name="input_cloud_provider"></a>[cloud_provider](#input_cloud_provider)    | string  |  false   |    `"gcp"`     |                                              Which cloud service provider to <br>use - Google Cloud: 'gcp' <br>or Azure: 'az'                                                |
 |              <a name="input_context"></a>[context](#input_context)               | string  |  false   |     `"."`      |                                                                Build context, default root of <br>repository                                                                 |
 |          <a name="input_dockerfile"></a>[dockerfile](#input_dockerfile)          | string  |  false   | `"Dockerfile"` |                                                                    Dockerfile name to use for <br>build                                                                      |
