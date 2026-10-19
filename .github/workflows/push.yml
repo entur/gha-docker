@@ -38,6 +38,18 @@ on:
         description: "Option to override git reference to checkout before push, will replace the SHA in default image_tag"
         type: string
         required: false
+      artifact_repository:
+        description: "Repository (owner/name) to download the Docker image artifact from. Defaults to the current repository"
+        type: string
+        default: ""
+      artifact_run_id:
+        description: "Workflow run ID to download the Docker image artifact from. Defaults to the current run. Required when artifact_repository is another repository"
+        type: string
+        default: ""
+    secrets:
+      artifact_github_token:
+        description: "GitHub token with actions:read on artifact_repository. Required when downloading artifacts from another repository"
+        required: false
 
     outputs:
       image_name:
@@ -169,6 +181,9 @@ jobs:
         with:
           name: ${{ env.GHA_DOCKER_PUSH_IMAGE_NAME }}
           path: /tmp
+          repository: ${{ inputs.artifact_repository || github.repository }}
+          run-id: ${{ inputs.artifact_run_id || github.run_id }}
+          github-token: ${{ secrets.artifact_github_token || github.token }}
 
       - name: Load docker image
         run: |
