@@ -27,6 +27,9 @@ jobs:
       artifact_github_token: ${{ secrets.OTHER_REPO_TOKEN }}
 ```
 
+> [!NOTE]
+> `artifact_github_token` is required when `artifact_repository` is another repository, including internal ones. If it is omitted, the workflow falls back to the default `GITHUB_TOKEN`, which can only access the current repository. The download step will then fail with a "Not Found" / "Artifact not found" error.
+
 ## Inputs
 
 <!-- AUTO-DOC-INPUT:START - Do not remove or modify this section -->
