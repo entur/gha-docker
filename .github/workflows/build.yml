@@ -26,6 +26,10 @@ on:
         description: "Which cloud service provider to use - Google Cloud: 'gcp' or Azure: 'az'"
         type: string
         default: "gcp"
+      authenticate:
+        description: "Authenticate with the cloud provider before building. Set to false for repositories without GitHub Factory setup."
+        type: boolean
+        default: true
       timeout_minutes:
         description: "Timeout in minutes"
         type: number
@@ -156,6 +160,7 @@ jobs:
 
       - name: Authenticate with the cloud provider
         id: auth
+        if: inputs.authenticate
         uses: entur/gha-meta/.github/actions/docker-auth@v1
         with:
           cloud_provider: ${{ env.GHA_DOCKER_PUSH_CLOUD_PROVIDER }}
