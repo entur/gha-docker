@@ -14,18 +14,21 @@ jobs:
 
 ### Downloading the image artifact from another repository
 
-By default the image artifact is fetched from the current workflow run. To fetch it from another repository, set `artifact_repository` and `artifact_run_id`, and pass a token with `actions:read` on that repository:
+By default the image artifact is fetched from the current workflow run. To fetch it from another repository, set `artifact_repository` and `artifact_run_id`, and pass a token with `actions:read` on that repository. The artifact name is the source build's `image_name`, which defaults to the name of the repository the build ran in, so set `image_name` explicitly when the source repository has a different name than the one calling push:
 
 ```yml
 jobs:
   docker-push:
     uses: entur/gha-docker/.github/workflows/push.yml@v1
     with:
+      image_name: my-image # Image name used by the build in other-repo
       artifact_repository: my-org/other-repo
-      artifact_run_id: ${{ needs.build.outputs.run_id }}
+      artifact_run_id: "1234567890" # ID of the workflow run in other-repo that built the image
     secrets:
       artifact_github_token: ${{ secrets.OTHER_REPO_TOKEN }}
 ```
+
+The run ID can come from anywhere you can get it, e.g. a `workflow_dispatch` input, a `workflow_run` event, or an output of an earlier job.
 
 > [!NOTE]
 > `artifact_github_token` is required when `artifact_repository` is another repository, including internal ones. If it is omitted, the workflow falls back to the default `GITHUB_TOKEN`, which can only access the current repository. The download step will then fail with a "Not Found" / "Artifact not found" error.
