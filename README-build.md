@@ -89,12 +89,15 @@ By default the workflow authenticates with the cloud provider (GCP or Azure) bef
 ```yml
 jobs:
   docker-build:
+    permissions:
+      id-token: write
+      contents: read
     uses: entur/gha-docker/.github/workflows/build.yml@v1
     with:
       authenticate: false
 ```
 
-Note that the workflow still declares `id-token: write`, so the calling workflow must permit it (or leave permissions at their defaults).
+Note that the workflow still declares `id-token: write`, even when `authenticate` is `false`. Callers outside the owning organization or enterprise must therefore grant `id-token: write` (and `contents: read`) explicitly, as shown above. Otherwise workflow validation can fail before the build starts.
 
 ## Inputs
 
