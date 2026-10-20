@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.14.0](https://github.com/entur/gha-docker/compare/v1.13.0...v1.14.0) (2026-10-20)
+
+
+### Features
+
+* **build:** Make cloud auth optional with default true ([#224](https://github.com/entur/gha-docker/issues/224)) ([5dd149b](https://github.com/entur/gha-docker/commit/5dd149bfb9b8756b3bcf084e0f8714f4e01c88d5))
+
 ## [1.13.0](https://github.com/entur/gha-docker/compare/v1.12.0...v1.13.0) (2026-09-18)
 
 
