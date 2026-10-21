@@ -82,6 +82,23 @@ jobs:
 
 An empty value falls back to `max`, so forwarding an input the caller leaves unset keeps the default behaviour.
 
+#### Skip cloud authentication
+
+By default the workflow authenticates with the cloud provider (GCP or Azure) before building, using the variables provided by GitHub Factory. Repositories that are not set up with GitHub Factory, such as open source repositories, can skip this step:
+
+```yml
+jobs:
+  docker-build:
+    permissions:
+      id-token: write
+      contents: read
+    uses: entur/gha-docker/.github/workflows/build.yml@v1
+    with:
+      authenticate: false
+```
+
+Note that the workflow still declares `id-token: write`, even when `authenticate` is `false`. Callers outside the owning organization or enterprise must therefore grant `id-token: write` (and `contents: read`) explicitly, as shown above. Otherwise workflow validation can fail before the build starts.
+
 ## Inputs
 
 <!-- AUTO-DOC-INPUT:START - Do not remove or modify this section -->
@@ -90,6 +107,7 @@ An empty value falls back to `max`, so forwarding an input the caller leaves uns
 |----------------------------------------------------------------------------------------------------------------|---------|----------|----------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 |  <a name="input_additional_artifacts_name"></a>[additional_artifacts_name](#input_additional_artifacts_name)   | string  |  false   |                      |                                                                                       Name of GitHub artifact to <br>contain additional artifacts.                                                                                         |
 | <a name="input_additional_artifacts_paths"></a>[additional_artifacts_paths](#input_additional_artifacts_paths) | string  |  false   |                      |                                                                           List of paths to additional <br>artifacts to be saved to <br>Github artifact storage.                                                                            |
+|                      <a name="input_authenticate"></a>[authenticate](#input_authenticate)                      | boolean |  false   |        `true`        |                                                       Authenticate with the cloud provider <br>before building. Set to false <br>for repositories without GitHub Factory <br>setup.                                                        |
 |                         <a name="input_build_args"></a>[build_args](#input_build_args)                         | string  |  false   |                      |                                                                  List of build args to <br>pass to docker build. Warning! <br>Do not pass secrets into <br>docker args.                                                                    |
 |           <a name="input_build_artifact_name"></a>[build_artifact_name](#input_build_artifact_name)            | string  |  false   |                      |                                                                                                Name of GitHub artifact to <br>add to build                                                                                                 |
 |           <a name="input_build_artifact_path"></a>[build_artifact_path](#input_build_artifact_path)            | string  |  false   |    `"build/libs"`    |                                                                                                            Path to the artifact                                                                                                            |
