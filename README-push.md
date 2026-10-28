@@ -32,6 +32,8 @@ The run ID can come from anywhere you can get it, e.g. a `workflow_dispatch` inp
 
 > [!NOTE]
 > `artifact_github_token` is required when `artifact_repository` is another repository, including internal ones. If it is omitted, the workflow falls back to the default `GITHUB_TOKEN`, which can only access the current repository. The download step will then fail with a "Not Found" / "Artifact not found" error.
+>
+> `artifact_run_id` is also required when `artifact_repository` is set. If it is omitted, it falls back to the current run's ID, which almost certainly doesn't exist in the other repository and will fail the same way.
 
 ## Inputs
 
