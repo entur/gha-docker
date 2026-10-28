@@ -175,6 +175,68 @@ jobs:
           actual: ${{ needs.test-push-gcr-ok-with-git-ref.outputs.image_tag }}
           comparison: endsWith
 
+  test-push-gcr-ok-with-explicit-artifact-source:
+    needs: test-build-ok-with-artifact
+    uses: ./.github/workflows/push.yml
+    with:
+      context: .
+      dockerfile: fixture/Dockerfile.artifact
+      image_tag: ci-test-artifact-source
+      git_tag: false
+      artifact_repository: ${{ github.repository }}
+      artifact_run_id: ${{ github.run_id }}
+
+  assert-explicit-artifact-source-outputs-ok:
+    needs: test-push-gcr-ok-with-explicit-artifact-source
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: nick-fields/assert-action@0efd6166067d9c59d89c710fab4f79fb066f8985 # v4.0.1
+        with:
+          expected: "ci-test-artifact-source"
+          actual: ${{ needs.test-push-gcr-ok-with-explicit-artifact-source.outputs.image_tag }}
+
+  test-push-gcr-ok-with-artifact-token:
+    needs: test-build-ok-with-artifact
+    uses: ./.github/workflows/push.yml
+    with:
+      context: .
+      dockerfile: fixture/Dockerfile.artifact
+      image_tag: ci-test-artifact-token
+      git_tag: false
+      artifact_repository: ${{ github.repository }}
+      artifact_run_id: ${{ github.run_id }}
+    secrets:
+      artifact_github_token: ${{ github.token }}
+
+  assert-artifact-token-outputs-ok:
+    needs: test-push-gcr-ok-with-artifact-token
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: nick-fields/assert-action@0efd6166067d9c59d89c710fab4f79fb066f8985 # v4.0.1
+        with:
+          expected: "ci-test-artifact-token"
+          actual: ${{ needs.test-push-gcr-ok-with-artifact-token.outputs.image_tag }}
+
+  test-push-gcr-ok-with-empty-artifact-source:
+    needs: test-build-ok-with-artifact
+    uses: ./.github/workflows/push.yml
+    with:
+      context: .
+      dockerfile: fixture/Dockerfile.artifact
+      image_tag: ci-test-artifact-empty
+      git_tag: false
+      artifact_repository: ""
+      artifact_run_id: ""
+
+  assert-empty-artifact-source-outputs-ok:
+    needs: test-push-gcr-ok-with-empty-artifact-source
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: nick-fields/assert-action@0efd6166067d9c59d89c710fab4f79fb066f8985 # v4.0.1
+        with:
+          expected: "ci-test-artifact-empty"
+          actual: ${{ needs.test-push-gcr-ok-with-empty-artifact-source.outputs.image_tag }}
+
   test-build-ok-with-cache-min:
     uses: ./.github/workflows/build.yml
     with:
@@ -306,6 +368,9 @@ jobs:
         assert-tag-acr-outputs-ok,
         assert-multiple-tags-acr-outputs-ok,
         assert-build-ok-with-custom-image-name-outputs,
+        assert-explicit-artifact-source-outputs-ok,
+        assert-artifact-token-outputs-ok,
+        assert-empty-artifact-source-outputs-ok,
         update-build-doc,
       ]
     uses: entur/gha-meta/.github/workflows/auto-doc.yml@v1
