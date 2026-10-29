@@ -79,8 +79,20 @@ jobs:
 | `max` (default) | All stages, including intermediate ones        | Rebuilds reuse intermediate stages, e.g. dependency layers that rarely change              |
 | `min`           | Only the layers of the final image             | Intermediate stages are large but rarely reused                                            |
 | `off`           | Nothing, the cache is neither read nor written | The cache is never hit anyway, e.g. every layer depends on source that changes per commit  |
+| `registry`      | All stages, to/from a registry image (`cache_ref`) | The GitHub Actions cache backend is a 10GB budget shared across the whole repo -- other caches (test/lint caches, other jobs' `gha` build caches) can evict a large build cache before the next run gets to reuse it. A registry cache isn't subject to that shared cap. |
 
 An empty value falls back to `max`, so forwarding an input the caller leaves unset keeps the default behaviour.
+
+`registry` mode requires `cache_ref`, and only works against a registry this workflow already authenticates to (`eu.gcr.io` or `europe-west1-docker.pkg.dev`). It therefore needs `cloud_provider: gcp` (the default) and `authenticate: true` (the default):
+
+```yml
+jobs:
+  docker-build:
+    uses: entur/gha-docker/.github/workflows/build.yml@v1
+    with:
+      cache: registry
+      cache_ref: eu.gcr.io/my-project/my-app:buildcache
+```
 
 #### Skip cloud authentication
 
@@ -111,7 +123,8 @@ Note that the workflow still declares `id-token: write`, even when `authenticate
 |                         <a name="input_build_args"></a>[build_args](#input_build_args)                         | string  |  false   |                      |                                                                  List of build args to <br>pass to docker build. Warning! <br>Do not pass secrets into <br>docker args.                                                                    |
 |           <a name="input_build_artifact_name"></a>[build_artifact_name](#input_build_artifact_name)            | string  |  false   |                      |                                                                                                Name of GitHub artifact to <br>add to build                                                                                                 |
 |           <a name="input_build_artifact_path"></a>[build_artifact_path](#input_build_artifact_path)            | string  |  false   |    `"build/libs"`    |                                                                                                            Path to the artifact                                                                                                            |
-|                                <a name="input_cache"></a>[cache](#input_cache)                                 | string  |  false   |       `"max"`        |                                                  Docker layer cache mode - <br>'max' caches all build stages, <br>'min' caches only the final <br>image layers, 'off' disables caching.                                                    |
+|                                <a name="input_cache"></a>[cache](#input_cache)                                 | string  |  false   |       `"max"`        |                                     Docker layer cache mode - <br>'max' caches all build stages, <br>'min' caches only the final <br>image layers, 'off' disables caching, <br>'registry' caches to/from a <br>registry image (requires cache_ref).                                     |
+|                        <a name="input_cache_ref"></a>[cache_ref](#input_cache_ref)                             | string  |  false   |                       | Registry image reference to use <br>for cache storage when cache <br>is 'registry', e.g. 'eu.gcr.io/entur-system-1287/myapp:buildcache'. Must <br>resolve to a registry this <br>workflow already authenticates against <br>(eu.gcr.io or europe-west1-docker.pkg.dev), so <br>cloud_provider must be gcp <br>and authenticate must be true. An arbitrary <br>third-party registry has no <br>credentials here. Required when <br>cache is 'registry', ignored <br>otherwise. |
 |                   <a name="input_cloud_provider"></a>[cloud_provider](#input_cloud_provider)                   | string  |  false   |       `"gcp"`        |                                                                             Which cloud service provider to <br>use - Google Cloud: 'gcp' <br>or Azure: 'az'                                                                               |
 |                             <a name="input_context"></a>[context](#input_context)                              | string  |  false   |        `"."`         |                                                                                               Build context, default root of <br>repository                                                                                                |
 |                         <a name="input_dockerfile"></a>[dockerfile](#input_dockerfile)                         | string  |  false   |    `"Dockerfile"`    |                                                                                                        Dockerfile to use for build                                                                                                         |
